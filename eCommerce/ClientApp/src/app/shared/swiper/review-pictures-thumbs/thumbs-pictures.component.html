@@ -1,0 +1,31 @@
+<div class="client-thumbnails">
+  <app-simple-slider2 *ngIf="sliderConfig.slides?.length"
+  [config]="sliderConfig"
+  [slideTemplate]="SimpleSlideTemplate"></app-simple-slider2>
+
+<ng-template #SimpleSlideTemplate let-slide="slide" let-index="index">
+  <!--add index img to 0-->
+ <div class="client-image-container"
+  (click)="modalAvaliable ? GalleryModal?.openModal(index) : '' ">
+  
+          <div class="center-body" style="position: absolute;" *ngIf="imageLoading == 1">
+            <div class="circle-loader"></div>
+          </div>
+                <!-- Display product images if available -->
+                <img *ngIf="slide.src !== undefined"
+                [src]="slide.src?.length > 0 ? getImageSrc(slide.src) : defaultImage"
+                [alt]="alt"
+                class="img-thumbnail rounded lazy-loading"
+                (load)="onImageLoad()"
+                (error)="onImageError()" />
+
+  <div class="overlay">
+    <i class="las la-eye"></i>
+  </div>
+</div>
+</ng-template>
+</div>
+
+<app-gallery-modal *ngIf="modalAvaliable" [imageObjects]="imageObjects" #galleryModal></app-gallery-modal>
+
+<hr class="desktop-only-visiblity" *ngIf="this.imageObjects?.length > 0" />

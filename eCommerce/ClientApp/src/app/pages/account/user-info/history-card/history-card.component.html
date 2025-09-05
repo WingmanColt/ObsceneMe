@@ -1,0 +1,114 @@
+<input type="checkbox" [id]="this.orderHistory.id">
+<label class="order-preview" [class]="getApproveText()" [for]="this.orderHistory.id">
+    <div class="order-preview-general">
+        <p class="order-preview-general__number">{{'Order Code' | translate}} {{this.orderHistory.orderCode}},
+            {{getFormatedDate(this.orderHistory.createdOn)}}</p>
+        <p class="order-preview-general__status">{{ getApproveText() | translate }}</p>
+    </div>
+    <div class="order-preview-sum">
+        <p class="order-preview-sum__title">{{'Subtotal' | translate}}</p>
+        <p class="order-preview-sum__number">{{ calcCurrency(this.orderHistory.cost -
+            this.orderHistory.discount) | asCurrency : this.orderHistory.currency }}</p>
+    </div>
+    <div class="order-preview-mobile">
+        <p class="order-preview-mobile__status">{{ getApproveText() | translate }}</p>
+        <p class="order-preview-mobile__number">{{ calcCurrency(this.orderHistory.cost -
+            this.orderHistory.discount) | asCurrency : this.orderHistory.currency }}</p>
+    </div>
+    <div class="order-preview-images">
+        <div class="order-preview-images-item">
+            <img [lazyLoad]="this.orderHistory.logoSrc?.length > 0 ? this.orderHistory.logoSrc : this.defaultImage" />
+        </div>
+    </div>
+</label>
+<div class="order-content">
+    <div class="order-content__left">
+        <div class="order-products">
+
+            <div class="order-product" *ngFor="let product of orderHistory.products; let i = index">
+                <a class="order-product__image" [routerLink]="['/shop/product/info/', product?.id]">
+                    <img [lazyLoad]="product.images[0]?.src?.length > 0 ? product.images[0]?.src : this.defaultImage" />
+                </a>
+
+                <div class="order-product__description">
+                    <a [routerLink]="['/shop/product/info/', product?.id]">
+                        <p>{{ product.title }}</p>
+                        <span style="font-size:.9em">{{ product.details?.substring(0, 30) }}</span>
+
+                    </a>
+                </div>
+
+                <div class="order-product__amount">
+                    <div class="qty-box">
+                        <div class="input-group">
+
+                            <!-- Decrement button -->
+                            <button type="button" class="btn quantity-left-minus"
+                                (click)="decrement(this.orderHistory.id, product?.id)" data-type="minus"
+                                [class.disabled]="product?.quantity <= 1">
+                                <i class="las la-minus"  (click)="decrement(this.orderHistory.id, product?.id)" [class.disabled]="product?.quantity <= 1"></i>
+                            </button>
+
+                            <!-- Display quantity -->
+                            <span class="input" role="textbox">{{ product?.quantity }} {{'qty.' | translate}}</span>
+
+                            <!-- Increment button -->
+                            <button type="button" class="btn quantity-right-plus"
+                                (click)="increment(this.orderHistory.id, product?.id)" data-type="plus">
+                                <i class="las la-plus"></i>
+                            </button>
+
+                        </div>
+                    </div>
+                    <!-- {{this.product?.quantity}} {{'qty.' | translate}}-->
+                </div>
+
+                <div class="order-product__price">
+                    {{ calcCurrency(product.price - product.discountRate,
+                    env.taxOnProduct) | asCurrency : this.orderHistory.currency }}
+                </div>
+
+            </div>
+
+
+
+            <div class="order-product__delivery">
+                <div>
+                    <span>{{'Discount' | translate}}</span>
+                    <p>{{ calcCurrency(this.orderHistory.discount) | asCurrency :
+                        this.orderHistory.currency }}</p>
+                </div>
+
+                <div>
+                    <span>{{'Shipping' | translate}}</span>
+                    <p>
+                        {{this.orderHistory.shipping}}
+                    </p>
+                </div>
+                <div class="order-sum">
+                    <span>{{'Subtotal' | translate}}</span>
+                    <p>{{ calcCurrency(this.orderHistory.cost) | asCurrency : this.orderHistory.currency }}
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="order-content__right">
+        <div class="order-product-info">
+
+            <div>
+                <p>
+                   {{"Phone" | translate}}: {{this.orderHistory.phoneNumber}}
+                </p>
+                <p>{{this.orderHistory.country}}, {{this.orderHistory.state}}, {{this.orderHistory.city}},
+                    {{this.orderHistory.address}}, {{this.orderHistory.postalCode}}</p>
+
+            </div>
+        </div>
+
+    </div>
+</div>

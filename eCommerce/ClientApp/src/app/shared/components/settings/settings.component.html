@@ -1,0 +1,37 @@
+<div class="selectWithIcon col-12">
+  <div class="d-flex flex-md-row gap-5 justify-content-evenly" [class]="flexType">
+    <!-- Language Select -->
+    <div class="d-flex bd-highlight mb-2 mb-md-0">
+      <div class="bd-highlight">
+        <i class="las la-language"></i>
+      </div>
+      <div class="bd-highlight">
+        <select class="form-control customSelectInput" #selectLang (change)="changeLanguage(selectLang.value)">
+          <option selected [value]="selectedLang?.name">{{ selectedLang?.name }}</option>
+          <ng-container *ngFor="let item of languagesArray; let i = index">
+            <option [value]="item.name" *ngIf="item.name !== selectedLang?.name">{{ item.name }}</option>
+          </ng-container>
+        </select>
+      </div>
+    </div>
+
+    <!-- Currency Select -->
+    <div class="d-flex bd-highlight mb-2 mb-md-0">
+      <div class="bd-highlight">
+        <i class="las la-wallet"></i>
+      </div>
+      <div class="bd-highlight">
+        <select class="form-control customSelectInput" #selectCurrency (change)="changeCurrency(selectCurrency.value)">
+          <option selected [value]="selectedCurrency?.name">
+            {{ selectedCurrency?.currency }} ( {{ selectedCurrency?.symbol }} )
+          </option>
+          <ng-container *ngFor="let item of currencyArray; let i = index">
+            <option [value]="item.name" *ngIf="item.name !== selectedCurrency?.name">
+              {{ item.currency }} ( {{ item.symbol }} )
+            </option>
+          </ng-container>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

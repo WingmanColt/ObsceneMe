@@ -1,0 +1,33 @@
+    <div class="collection-collapse-block"  [class.open]="!isCollapsed" *ngIf="trademarkActive">
+      <h3 class="collapse-block-title" (click)="toggleCollapse()">
+        {{ "Manufacturer" | translate }}
+      </h3>
+      <div class="collection-collapse-block-content">
+        <ul class="catalog-alphabet-list">
+          <li class="catalog-alphabet-list__item" *ngFor="let ent of alphabet" (click)="onAlphabetClick(ent)">
+           <input id="input-alphabet-{{ent}}" name="alphabet" type="radio" [value]="ent">
+           <label for="input-alphabet-{{ent}}">{{ent}}</label>
+          </li>
+         </ul>
+
+        <ul class="collection-checkbox-list use-scrolling">
+          <li 
+            class="collection-checkbox-list__item popular"
+            style="display: flex; justify-content: space-between;" 
+            *ngFor="let ent of filteredTrademarks" 
+            [class.checked]="isSelected(ent)" 
+            (click)="onCheckboxChange(ent)"
+            #listItem>
+            <span>{{ ent.label | translate }}</span>
+            <img
+              width="40"
+              *ngIf="!isMobile && collectionSettings.trademarkImageIconUrl"
+              height="20"
+              [lazyLoad]="getIconUrl(ent.label)"
+              class="lazy-loading"
+            />
+          </li>
+        </ul>
+      </div>
+    </div>
+

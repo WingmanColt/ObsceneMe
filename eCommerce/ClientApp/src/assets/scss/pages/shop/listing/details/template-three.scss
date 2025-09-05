@@ -1,0 +1,74 @@
+.product-right {
+    &.Three {
+
+        .input,
+        .textarea {
+            font-size: 1.3rem;
+            padding: 1px 10px;
+            border-bottom: 1px solid #ccc;
+            border-top: 1px solid #ccc;
+        }
+
+        h2 {
+            font-size: 1.1em !important;
+        }
+
+        .sticky-container {
+            position: sticky;
+            top: 0;
+            /* Stick to the top of the viewport */
+            z-index: 10;
+            /* Set a higher z-index if you need it to float above other content */
+            background-color: white;
+            /* You may want to set a background to prevent content underneath from showing through */
+        }
+
+        .fixed-container {
+            position: fixed;
+            bottom: 2%;
+            width: 95%;
+            z-index: 1000;
+            background-color: rgba(3, 5, 11, 0.98);
+            border-radius: 64px;
+            align-items: center;
+            display: flex;
+            /* Enable Flexbox */
+            justify-content: center;
+            /* Center content horizontally */
+            align-items: center;
+            /* Center content vertically */
+
+            .row {
+                width: 100%;
+                display: flex;
+                /* Enable Flexbox for the row */
+                align-items: center;
+                /* Center content vertically */
+            }
+
+            .btn-large {
+                margin-bottom: unset;
+            }
+
+            .btn-buy {
+                padding: 0.5rem 1rem !important;
+                height: unset !important;
+                font-size: 0.9em;
+                border-radius: 64px;
+                cursor: pointer;
+            }
+
+            h3 {
+                color: #cfd4da;
+            }
+
+            .price-label {
+                font-size: 0.9em;
+                color: #999;
+                display: block;
+                font-weight: bold;
+                padding-left: 1%;
+            }
+        }
+    }
+}

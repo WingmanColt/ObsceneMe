@@ -1,0 +1,27 @@
+<ul class="social-icon">
+ <li *ngIf="hasInstagram">
+   <a [href]="instagramUrl" target="_blank">
+     <i class="lab la-instagram"></i>
+   </a>
+ </li>
+ <li *ngIf="hasFacebook">
+   <a [href]="facebookUrl" target="_blank">
+     <i class="lab la-facebook"></i>
+   </a>
+ </li>
+ <li *ngIf="hasTwitter">
+   <a [href]="twitterUrl" target="_blank">
+     <i class="lab la-twitter"></i>
+   </a>
+ </li>
+ <li *ngIf="hasYoutube">
+   <a [href]="youtubeUrl" target="_blank">
+     <i class="lab la-youtube"></i>
+   </a>
+ </li>
+ <li *ngIf="hasTikTok">
+   <a [href]="tiktokUrl" target="_blank">
+     <img src="./assets/icons/tiktok.svg" alt="TikTok Icon" style="margin-bottom: 14px; width: 1.8rem; height: 1.250rem;">
+   </a>
+ </li>
+</ul>

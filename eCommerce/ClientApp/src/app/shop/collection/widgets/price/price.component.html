@@ -1,0 +1,40 @@
+<div class="collection-collapse-block catalog-filter-block__price" [class.open]="!isCollapsed">
+  <h3 class="collapse-block-title" (click)="toggleCollapse()">
+      {{ "Price" | translate }}
+  </h3>
+
+  <div class="collection-collapse-block-content">
+      <ul class="collection-price-list use-scrolling">
+          <li
+              class="catalog-price-list__item"
+              *ngFor="let range of priceRanges"
+              [ngClass]="{ 'selected-range': userMin === range.from && (userMax === range.to || range.to === null) }"
+              (click)="selectPriceRange(range.from, range.to)"
+          >
+              <label>
+                  {{ range.label | translate }} 
+                  <span>{{ baseService.activeCurrency.symbol }}</span>
+              </label>
+          </li>
+      </ul>
+      
+      <div class="catalog-price-row">
+          <div class="input-column">
+            <label for="price-from" class="label">{{ 'from' | translate }}</label>
+            <div class="input-wrap">
+              <input id="input-checkbox-price-from" type="checkbox" name="price_from" [value]="min">
+              <input class="input" type="number" [(ngModel)]="userMin" (change)="onInputChange()" />
+            </div>
+          </div>
+          
+          <div class="input-column">
+            <label for="price-to" class="label">{{ 'to' | translate }}</label>
+            <div class="input-wrap">
+              <input id="input-checkbox-price-to" type="checkbox" name="price_to" [value]="max">
+              <input class="input" type="number" [(ngModel)]="userMax" (change)="onInputChange()" />
+            </div>
+            <span>{{ baseService.activeCurrency.symbol }}</span>
+          </div>
+      </div>
+  </div>
+</div>

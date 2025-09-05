@@ -1,0 +1,23 @@
+<div class="catalog-sort-row" >
+  <div class="catalog-sort-wrapper">
+    <div class="catalog-sort__list-title" (click)="onToggle()">
+       {{'Sort By' | translate}}:&nbsp; 
+       <div class="catalog-sort__list-title-value">
+        {{this.selectedSortItem.label | translate}} 
+      </div>
+    </div>
+
+    <ul class="catalog-sort-list" [class.active]="sortToggle">
+      <li class="catalog-sort-list__item" *ngFor="let option of sortOptions; let i = index" [class.default]="option.default">
+        <input id="input-sort-{{i}}"
+          type="radio"
+          name="{{option.origin}}"
+          [value]="option.id"
+          [checked]="(option.origin === 'first' ? option.id === selectedSortItem?.id : option.id === selectedDirectionItem?.id)"
+          (change)="onSortChange(option)">
+
+        <label for="input-sort-{{i}}">{{ option.label | translate }}</label>
+      </li>
+    </ul>
+  </div>
+</div>

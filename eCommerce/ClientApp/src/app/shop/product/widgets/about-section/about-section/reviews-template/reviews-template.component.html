@@ -1,0 +1,96 @@
+
+<section class="page-section reviews-section">
+ <a id="reviews-section" class="scroll-anchor"></a>
+ <a id="new_reviews" class="scroll-anchor"></a>
+
+ <div class="container reviews-container">
+  <h2 class="page-section-title clearfix">
+   {{ "Rating & Reviews" | translate }}
+  </h2>
+  <hr />
+  <div class="reviews-general-rating pad-sep-xs">
+   <div class="text-center">
+    <p class="review-rating-data">{{ this.product.rating?.toFixed(2) }}</p>
+    <div class="review-rating-stars justify-content-center">
+     <bar-rating [(rate)]="this.product.rating" [max]="5" [readOnly]="true" [showText]="false">
+      <ng-template ratingActive>
+       <i class="las la-star fill"></i>
+      </ng-template>
+      <ng-template ratingInactive>
+       <i class="lar la-star"></i>
+      </ng-template>
+     </bar-rating>
+    </div>
+    <p class="small semibold font-size-sm text-muted">{{ this.product.reviews?.length }} {{ "Reviews" | translate }}</p>
+   </div>
+   <div>
+    <div class="reviews-summary-container">
+     <div class="reviews-summary-bars" *ngFor="let item of StarsArray; index as i">
+      <a class="star-title">{{ i + 1 }} {{ "Stars" | translate }}</a>
+      <a>
+       <div class="progress" *ngIf="item <= 0">
+        <div class="progress-bar" [style]="'width: 0' + '% !important'"></div>
+       </div>
+       <div class="progress" *ngIf="item > 0">
+        <div class="progress-bar" [style]="'width: ' + (item * i + 1) + '% !important'"></div>
+       </div>
+      </a>
+      <a class="star-title"
+       >(<small>{{ item }}</small
+       >)</a
+      >
+     </div>
+    </div>
+   </div>
+   <div class="mobile-flex-split"></div>
+   <div class="verified-reviews">
+    <p class="text-center"><i class="las la-user-check la-2x text-success"></i></p>
+    <p class="semibold">{{ this.product.reviews?.length }}</p>
+    <p class="text-muted text-center">{{ "Customer reviews" | translate }}</p>
+   </div>
+   <div class="vsep"></div>
+   <div class="recommending-reviews js-recommending-reviews">
+    <p class="text-center"><i class="las la-thumbs-up la-2x text-primary"></i></p>
+    <p class="semibold">{{ this.product.positiveRating }}%</p>
+    <p class="text-muted text-center">{{ "Positive reviews" | translate }}</p>
+   </div>
+   <div class="ask-review text-xs-center text-sm-left hidden-xs hidden-sm">
+    <div class="reviews-own-box relative">
+     <p class="title">
+      {{ "You have the product or have used it?" | translate }}
+     </p>
+     <p class="text-gray">{{ "Choose a star to rate the product" | translate }}</p>
+
+     <!--<form [formGroup]="starsForm" class="d-flex justify-content-center">
+      <bar-rating [(rate)]="this.stars" (hover)="onRateHover($event)" [max]="5" (rateChange)="onRateSubmit()" [readOnly]="false" [showText]="false">
+       <ng-template ratingActive>
+        <i class="las la-star" style="margin: 2px; color: #edb867"></i>
+       </ng-template>
+       <ng-template ratingInactive>
+        <i class="lar la-star" style="margin: 2px; color: #d2d2d2"></i>
+       </ng-template>
+      </bar-rating>
+      <br />
+      <span class="star-rating-text">
+       {{ this.onRateChange(this.starsHover) | translate }}
+      </span>
+
+     </form>
+    -->
+     <a *ngIf="detailsSettings.reviewType == 'Modal'" (click)="openReviewModal()" class="btn btn-large btn-dark btn-sm leave-comment">{{ "Leave a comment / Ask a question" | translate }} </a>
+     <a *ngIf="detailsSettings.reviewType == 'Collapse'" (click)="openReviewCollapse()" class="btn btn-large btn-dark btn-sm leave-comment">{{ "Leave a comment / Ask a question" | translate }}</a>
+    </div>
+   </div>
+  </div>
+  <hr />
+
+  <div class="container review-forms" [class.active]="reviewFormCollapse">
+   <app-review-form [isMobile]="isMobile" [isModal]="false" [productId]="product.id"></app-review-form>
+  </div>
+  <!--Client Images-->
+  <app-thumb-pictures-swiper *ngIf="detailsSettings.reviewPicturesActive" [imageObjects]="this.imageObjects" [alt]="product.title" [modalAvaliable]="true"> </app-thumb-pictures-swiper>
+
+  <!--Client Comments-->
+  <app-review-comments *ngIf="detailsSettings.reviewCommentsActive" [reviews]="product.reviews" [pageNo]="this.pageNo" [isMobile]="isMobile"> </app-review-comments>
+ </div>
+</section>

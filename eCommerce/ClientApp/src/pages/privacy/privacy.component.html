@@ -1,0 +1,28 @@
+<app-breadcrumb [title]="'Privacy'" [breadcrumb]="'Privacy'"></app-breadcrumb>
+<!-- section start-->
+<section class="p-0">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <div class="error-section">
+                    <h2>{{'Privacy Policy' | translate}}</h2>
+
+                    <div class="p-5 d-flex row justify-content-evenly">
+                        <a href="javascipt:void(0)" class="btn-large btn-dark btn-full-width">
+                            {{env.socialSettings.email}}</a>
+        
+                            <a href="javascipt:void(0)" class="btn-large btn-dark btn-full-width">
+                            {{env.socialSettings.emailSupport}}</a>        
+                    </div>
+                    
+                    <div *ngFor="let item of env.pagesSettings.Privacy">
+                    <strong>{{item.title | translate}}</strong>
+                    <p>{{item.desc | translate}}</p>
+                </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+</section>
+<!--Section ends-->

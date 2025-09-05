@@ -1,0 +1,31 @@
+<ng-container *ngIf="occasions$ | async as occasionsArray">
+  <ng-container *ngIf="occasionsArray?.length > 0; else noOccasions">
+    <div class="collection-collapse-block"  [class.open]="!isCollapsed">
+      <h3 class="collapse-block-title" (click)="toggleCollapse()">
+        {{ "Occasion" | translate }}
+      </h3>
+      <div class="collection-collapse-block-content">
+        <ul class="collection-checkbox-list use-scrolling">
+          <li 
+            class="collection-checkbox-list__item popular" 
+            *ngFor="let ent of occasionsArray" 
+            [class.checked]="isSelected(ent)" 
+            (click)="onCheckboxChange(ent)">
+            <span>{{ ent.title | translate }}</span>
+            <img
+              width="20"
+              *ngIf="collectionSettings.occasionImageIconUrl"
+              height="20"
+              [lazyLoad]="getIconUrl(ent.icon)"
+              class="lazy-loading"
+            />
+          </li>
+        </ul>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noOccasions>
+
+  </ng-template>
+</ng-container>

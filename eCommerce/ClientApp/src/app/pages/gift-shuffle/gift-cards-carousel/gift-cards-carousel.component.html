@@ -1,0 +1,28 @@
+<div class="container">
+ <div class="row">
+  <div class="col-12">
+ <div id="fps">{{this.fpsText}}</div>
+ <button (click)="spinCarousel()">Spin</button>
+</div>
+</div>
+</div>
+
+<div class="container">
+ <div class="row">
+  <div class="col-12">
+ <div id="contentContainer" class="trans3d"> 
+   <section id="carouselContainer" class="trans3d">
+    <figure [id]="'item'+i" class="carouselItem trans3d" *ngFor="let item of this.products; index as i"
+    (mouseenter)="pauseRotationAnimations()" (mouseleave)="resumeRotationAnimations()">
+    <app-product-base
+      class="carouselItemInner trans3d no-pointer-events"
+      [template]="'clean'"
+      [product]="item"
+    ></app-product-base> 
+  </figure>
+  
+   </section>
+ </div>
+</div>
+</div>
+</div>

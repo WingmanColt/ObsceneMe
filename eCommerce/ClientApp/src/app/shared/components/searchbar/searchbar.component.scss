@@ -1,0 +1,19 @@
+.btn-outline-secondary {
+ height: 60px;
+ 
+ &:hover {
+ background-color: transparent;
+ color: inherit;
+ transform: scale(1.1);
+ transition: 0.5s ease;
+ }
+}
+
+.main-searchMenu .searchMenu .search-result ul li a {
+ background-color: unset !important;
+}
+
+
+.main-searchMenu .searchMenu .search-result {
+ overflow-y: scroll;
+}

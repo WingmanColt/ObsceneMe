@@ -1,0 +1,13 @@
+
+.catalog-sort-list{
+ display: flex;
+ visibility: hidden;
+ opacity: 0;
+ transition: opacity 0.3s ease;
+
+  &.active {
+   visibility: visible;
+   opacity: 1;
+   transition: opacity 0.3s ease;
+  }
+}

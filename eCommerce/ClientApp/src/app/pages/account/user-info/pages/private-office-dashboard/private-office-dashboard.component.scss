@@ -1,0 +1,88 @@
+// Affiliate Dashboard
+.affiliate-link-section {
+padding-top: 20px;
+padding-bottom: 20px;
+}
+ .ibox-footer {
+  color: inherit;
+  border-top: 1px solid #e7eaec;
+  font-size: 90%;
+  background: #ffffff;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  
+    .affiliate-link-action {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;      /* Ensures same line */
+    gap: 10px;              /* Space between buttons */
+    }
+    .affiliate-link-section .ibox-footer,.network-link-box .ibox-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center
+}
+
+.affiliate-link-action button[disabled] i {
+    color: #acbac8
+}
+
+.affiliate-share {
+    display: flex;
+    flex-direction: row;
+    align-items: center
+}
+
+.affiliate-share h5 {
+    margin: 0 10px 0 0
+}
+
+.affiliate-share .social-button-container {
+    margin: 0!important
+}
+
+.affiliate-additional-info {
+    display: flex;
+    height: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between
+}
+
+.affiliate-additional-info>div {
+    width: 49%
+}
+
+.shorten-link-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between
+}
+
+.shorten-link-container>div {
+    width: 100%
+}
+
+.shorten-link-container>button {
+    width: max-content
+}
+
+.network-link-box .affiliate-share {
+    justify-content: flex-end
+}
+
+}
+.ibox-title {
+    color: rgba(18, 18, 18, .9);
+    font-size: 1.5rem;
+    i {
+        font-size: 1rem
+    }
+}

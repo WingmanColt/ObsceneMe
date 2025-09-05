@@ -1,0 +1,31 @@
+<app-breadcrumb [breadcrumbs]="currBreadCrumb"></app-breadcrumb>
+
+<!-- section start-->
+<section class="faq-section section-b-space" *ngIf="enabled">
+ <div class="container">
+  <div class="row">
+   <div class="col">
+    <div class="error-section">
+     <h2>{{ "FAQ" | translate }}</h2>
+
+     <!--<div class="p-5 d-flex row justify-content-evenly">
+      <a href="javascipt:void(0)" class="btn-large btn-dark btn-card w-auto"> {{ env.socialSettings.email }}</a>
+
+      <a href="javascipt:void(0)" class="btn-large btn-dark btn-card w-auto"> {{ env.socialSettings.emailSupport }}</a>
+     </div>-->
+
+     <ngb-accordion [closeOthers]="true" activeIds="static-1" class="accordion theme-accordion" id="accordionExample">
+      <ngb-panel [id]="'static-' + i" [title]="item.question | translate" *ngFor="let item of settings; index as i">
+       <ng-template ngbPanelContent>
+        <p class="mb-0">
+         {{ item.answer | translate }}
+        </p>
+       </ng-template>
+      </ngb-panel>
+     </ngb-accordion>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+<!--Section ends-->

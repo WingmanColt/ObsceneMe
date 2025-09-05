@@ -1,0 +1,78 @@
+<!-- Navigation Buttons -->
+<div class="slider__controls margin" *ngIf="config.slides?.length > 1 && config.navEnabled && config.navPosition !== 'centered' || config.paginationEnabled && config.paginationPosition == 'thumbs-up' || config.title?.length">
+  <div *ngIf="config.title?.length" class="slider-header">{{ config.title | translate }}</div>
+
+  <div class="slider-buttons-container" >
+  <div class="slider-button left" *ngIf="config.navEnabled" [class.disabled]="!canClickPrevious" title="Previous" (click)="onPreviousClick()">
+  </div>
+  <div class="slider-button right" *ngIf="config.navEnabled" [class.disabled]="!canClickNext" title="Next" (click)="onNextClick()">
+  </div>
+
+  <div *ngIf=" config.paginationEnabled && config.paginationPosition == 'thumbs-up'" class="thumbs">
+    <div class="thumb-dots">
+      <div *ngFor="let dot of pager.visibleDots; let i = index">
+        <span class="thumb-dot"
+          [class.active]="dot === pager.currentPage" 
+          [class.inactive]="dot !== pager.currentPage" >
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="slider" [class.slider--nav-static]="config.navEnabled && !config.navHoverable" [class.slider--nav-hoverable]="config.navEnabled && config.navHoverable" [class.slider-draggable]="config.draggable" [class.slider-vertical]="config.vertical" *ngIf="config.slides?.length > 0">
+
+  <!-- Slide Wrapper -->
+  <div class="slider__wrapper" [style.transform]="this.translateStyle">    
+    
+    <div *ngFor="let slide of config.slides; let i = index; trackBy: trackBySlideId"
+         class="slide"
+         (click)="handleOnSlideClick(i)"
+         [class.slide-draggable]="isDragStarted"
+         [ngClass]="{'slide--current': selectedSlide === i}"
+         [style.width]="config.slideWidth + '%'" >
+         
+     <div class="slide-content">
+      <div class="drag-handle"
+        (mousedown)="onStart($event)"
+        (touchstart)="onStart($event)"
+        (mousemove)="onMove($event)"
+        (touchmove)="onMove($event)"
+        (mousemove)="onThrottledMove($event)"
+        (touchmove)="onThrottledMove($event)"
+        (mouseup)="onEnd($event)"
+        (touchend)="onEnd($event)"
+        (mouseleave)="onLeave()"
+        (touchcancel)="onLeave()">
+
+        <ng-container *ngTemplateOutlet="slideTemplate; context: { slide: slide, index: i, sliding: slideChanging }" ></ng-container>
+      </div>
+    </div>
+    </div>
+  </div>
+    
+</div>
+
+
+<div class="slider__bottom_controls"  *ngIf="config.slides?.length > 1 && config.navEnabled && config.navPosition == 'centered'">
+  <div (click)="onPreviousClick()" [class.disabled]="!canClickPrevious"  class="slider-arrow-prev"></div>
+  <div (click)="onNextClick()" [class.disabled]="!canClickNext" class="slider-arrow-next"></div>
+  </div>
+  
+  <div *ngIf="config.paginationEnabled && config.paginationPosition == 'thumbs-bottom'" class="thumbs">
+    <div class="thumb-dots">
+      <div *ngFor="let dot of pager.visibleDots; let i = index">
+        <span 
+          class="thumb-dot"
+          [class.active]="dot === pager.currentPage" 
+          [class.inactive]="dot !== pager.currentPage" >
+        </span>
+      </div>
+    </div>
+  </div>
+
+<!--          
+  'slide--next': !isPreviousSlide(i) && isNextSlide(i) && !isCurrentSlide(i),
+  'slide--previous': isPreviousSlide(i) && !isNextSlide(i) && !isCurrentSlide(i)
+-->

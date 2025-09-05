@@ -1,0 +1,55 @@
+<div class="product-conversations-list">
+  <!-- <h2 class="products-related-title">{{ "Comments" | translate }}</h2>-->
+  <div class="product-review-item row"
+    *ngFor="let review of this.reviewsList">
+    <div class="col-md-2">
+      <div class="product-review-head">
+        <div class="product-review-user-avatar">
+          <div class="thumb"
+            [ngStyle]="{ 'background-color': review.colour }">
+            <div class="thumb-text">{{ review.firstname?.substring(0, 1) }} {{ review.lastname?.substring(0, 1) }}</div>
+          </div>
+        </div>
+        <div class="product-review-user-meta pt-2"
+          [ngStyle]="{ 'vertical-align': isMobile ? 'unset' : 'middle' }">
+          <p class="product-review-author mrg-top-xs semibold">{{ review?.firstname }} {{ review?.lastname }}</p>
+          <p class="small text-muted date">{{ review.formattedCreatedOn }}</p>
+        </div>
+        <p class="verified-order mobile-only">
+          <i class="las la-user-check la-1x text-success"></i>&nbsp;<span class="semibold"
+            *ngIf="!isMobile">{{ "Verified" | translate }} {{ "Client" | translate }}</span>
+        </p>
+      </div>
+    </div>
+    <div class="col-md-10">
+      <div class="product-review-body">
+        <h3 class="product-review-title">
+          <a>{{ this.onRateChange(review.productStars) | translate }}</a>
+        </h3>
+        <div class="star-rating-container">
+          <bar-rating [(rate)]="review.productStars"
+            [max]="5"
+            [readOnly]="true"
+            [showText]="false"
+            style="--br-font-size: 0.8em">
+            <ng-template ratingActive>
+              <i class="las la-star fill"></i>
+            </ng-template>
+            <ng-template ratingInactive>
+              <i class="lar la-star"></i>
+            </ng-template>
+          </bar-rating>
+          <p class="verified-order desktop-only">
+            <i class="las la-user-check la-1x text-success"></i>&nbsp;<span class="semibold">{{ "Verified" | translate
+              }} {{ "Client" | translate }}</span>
+          </p>
+        </div>
+        <br />
+        <div class="review-body-container"> {{ review?.about }} </div>
+      </div>
+    </div>
+  </div>
+  <app-pagination [items]="this.reviews"
+    [paginate]="paginate"
+    (setPage)="setPage($event)"> </app-pagination>
+</div>

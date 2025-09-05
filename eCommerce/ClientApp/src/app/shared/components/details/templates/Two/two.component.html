@@ -1,0 +1,112 @@
+<div [class]="cols">
+    <div class="left-col" [ngSwitch]="isMobile ? detailsSettings.swiperSectionMobile : detailsSettings.swiperSection">
+        <app-thumbnail-swiper *ngSwitchCase="'thumbnail-swiper'" [thumbImages]="thumbImages" [activeImage]="activeImage"
+            [swiperBack]="swiperBack" [swiperLike]="swiperLike" [alt]="product?.title"></app-thumbnail-swiper>
+        <app-like-swiper *ngSwitchCase="'app-like-swiper'" [thumbImages]="thumbImages" [activeImage]="activeImage"
+            [swiperBack]="swiperBack" [swiperLike]="swiperLike" [alt]="product?.title"></app-like-swiper>
+    </div>
+</div>
+
+<div [class]="cols">
+    <div class="product-right Two">
+        <div class="container pb-2">
+            <div class="row">
+                <div class="col-12">
+                    <small class="brandTitle">{{ product?.brand?.title }}</small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <div class="rating-container" *ngIf="detailsSettings.reviewsActive">
+                        <i class="las la-star star"></i>
+                        <i class="las la-star star-fill" [ngStyle]="{ width: progress * 100 + '%' }"></i>
+                        <span class="rating-text">{{ product.rating.toFixed(2) }} ({{ product?.reviews?.length }} {{
+                            "Reviews" | translate }})</span>
+                    </div>
+
+                    <h2>{{ product?.title | titlecase }}</h2>
+                </div>
+
+                <div class="col-4">
+                    <h3>
+                        <del *ngIf="product?.discountRate">{{ baseService.calcCurrency(product?.price)
+                            | asCurrency : baseService.activeCurrency }}</del>
+                        {{ baseService.calcCurrency(product?.price - product?.discountRate) |
+                        asCurrency : baseService.activeCurrency }}
+                    </h3>
+                </div>
+            </div>
+
+            <hr />
+
+            <app-select-variants [variants]="this.variants" (selectedItems)="selectedItems($event)"
+                (chartModal)="openChartModal($event)" *ngIf="variants"></app-select-variants>
+
+            <hr />
+
+            <div class="container pb-3 pt-3">
+                <div class="row">
+                    <div class="col">
+                        <div class="qty-box qty-xs borderless">
+                            <div class="input-group">
+                                <span class="input-group-prepend">
+                                    <button type="button" class="btn quantity-left-minus" data-type="minus"
+                                        (click)="decrementCounter()" [class.disabled]="counter <= product?.quantity">
+                                        <i class="las la-minus"></i>
+                                    </button>
+                                </span>
+                                <span class="input" role="textbox" contenteditable>{{ counter }}</span>
+                                <span class="input-group-prepend">
+                                    <button type="button" class="btn quantity-right-plus" data-type="plus"
+                                        (click)="incrementCounter()" [class.disabled]="counter > product?.quantity">
+                                        <i class="las la-plus"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <a class="btn-large btn-dark btn-xs-leftSideRounded"
+                            [title]="'Before purchasing select variant' | translate"
+                            [class.disabled]="counter > product?.quantity"
+                            [class.disabled]="detailsSettings.disableButtonsIfVariantIsNotSelected && variants && this.selectedVariants.length <= 0"
+                            (click)="this.isInCart == 0 ? AddToCart(product, false) : this.FinishPurchase()"
+                            [ngSwitch]="this.isInCart">
+                            <span *ngSwitchCase="0">
+                                <i class="las la-cart-plus"></i>
+                                {{ "Buy Now" | translate }}
+                            </span>
+                            <span *ngSwitchCase="1">
+                                <i class="las la-check"></i>
+                                {{ "Finish" | translate }}</span>
+                            <span *ngSwitchCase="2">
+                                <span class="spinner-border spinner-border-sm"></span>
+                                {{ "Processing" | translate }}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-product p-4" *ngIf="detailsSettings.fastOrderActive">
+                <h5 class="product-title">
+                    {{ "Fast Order" | translate }}
+                    <span data-bs-toggle="tooltip" data-bs-placement="right"
+                        [title]="'Enter your phone number, order and we`ll call you back with details.' | translate"
+                        class="las la-question-circle"> </span>
+                </h5>
+                <small>{{ "We will call you." | translate }}</small>
+                <br />
+                <app-fast-order [col]="'col-10 center'" [product]="product"
+                    [isVariantSelected]="this.variants && this.selectedVariants.length <= 0"></app-fast-order>
+            </div>
+
+            <div class="border-product p-4" *ngIf="!isQuickView && detailsSettings.shareOnSocialActive">
+                <h5 class="product-title">{{ "Share it" | translate }}</h5>
+                <div class="product-icon">
+                    <app-social></app-social>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

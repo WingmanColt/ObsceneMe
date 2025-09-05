@@ -1,0 +1,56 @@
+<div
+  class="elementor-element elementor-element-70e71bd imagelayout-preset-default elementor-widget kitify elementor-kitify-images-layout">
+    <h2 class="page-section-title clearfix text-center mb-4 mt-4">
+      {{ "Photos from customers" | translate }}
+    </h2>
+  <div class="elementor-widget-container">
+    <div
+      class="kitify-images-layout layout-type-grid preset-default kitify-masonry-wrapper cover-img-bg"
+      data-item_selector=".kitify-images-layout__item"
+      data-kitifymasonry_itemselector=".kitify-images-layout__item"
+      data-kitifymasonry_wrap=".kitify-images-layout__list"
+      [attr.data-kitifymasonry_layouts]="
+        '{&quot;container_width&quot;:1170,&quot;item_width&quot;:300,&quot;item_height&quot;:300}'
+      "
+    >
+      <div class="kitify-images-layout__list_wrapper">
+        <div class="kitify-images-layout__list col-row" style="position: relative; height: 1143px;">
+          <div
+            *ngFor="let img of reviewImages; let i = index"
+            class="kitify-images-layout__item col-desk-4 col-lap-4 col-tab-4 col-tabp-4 kitify-disable-cols-style item-loaded"
+            [ngStyle]="{
+              width: '381px',
+              height: '381px',
+              position: 'absolute',
+              left: getLeft(i),
+              top: getTop(i),
+              '--effect-delay': i
+            }"
+            data-element-loaded="true"
+          >
+            <div class="kitify-images-layout__inner">
+              <div class="kitify-images-layout__link">
+                <div class="kitify-images-layout__image">
+                  <img
+                    [src]="img"
+                    [attr.data-src]="img"
+                    alt=""
+                    loading="lazy"
+                    class="kitify-images-layout__image-instance"
+                    width="1000"
+                    height="1000"
+                    [attr.srcset]="img"
+                    style="--img-height:1000px"
+                  />
+                </div>
+                <div class="kitify-images-layout__content">
+                  <!--<h5 class="kitify-images-layout__title">Image #{{ i + 1 }}</h5>-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

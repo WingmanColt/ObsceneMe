@@ -1,0 +1,70 @@
+<ng-container *ngIf="brands$ | async as brandsArray">
+  <div class="collection-collapse-block" [class.open]="!isCollapsed">
+    <h3 class="collapse-block-title" (click)="toggleCollapse()">
+      {{ "Brand" | translate }}
+    </h3>
+    <div class="collection-collapse-block-content">
+      <ul class="collection-checkbox-list use-scrolling">
+        <li
+          *ngFor="let brand of brandsArray"
+          class="collection-checkbox-list__item popular"
+          [class.checked]="isSelectedBrand(brand)"
+          (click)="onBrandSelect(brand)"
+        >
+          <span>{{ brand.title | translate }}</span>
+          <img
+            *ngIf="brand.icon"
+            [src]="getIconUrl(brand.icon)"
+            width="20"
+            height="20"
+          />
+        </li>
+      </ul>
+    </div>
+  </div>
+<!-- Series Block -->
+<ng-container *ngIf="selectedBrands.length > 0">
+  <div *ngFor="let brand of selectedBrands" class="collection-collapse-block" [class.open]="!isCollapsedSeries">
+    <h3 class="collapse-block-title" (click)="toggleCollapseSeries()"> 
+      {{ "Series" | translate }}
+    </h3>
+    <div class="collection-collapse-block-content">
+      <ul class="collection-checkbox-list use-scrolling">
+        <li
+          *ngFor="let series of brand.series"
+          class="collection-checkbox-list__item popular"
+          [class.checked]="isSelectedSeries(series)"
+          (click)="onSeriesSelect(series, brand.shortName)"
+        >
+          <span>{{ series.title | translate }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Sub-Brands Block -->
+<ng-container *ngIf="selectedSeries.length > 0">
+  <div class="collection-collapse-block" [class.open]="!isCollapsedSubBrands">
+    <h3 class="collapse-block-title" (click)="toggleCollapseSubBrands()">
+      {{ "Model" | translate }}
+    </h3>
+    <div class="collection-collapse-block-content">
+      <ul class="collection-checkbox-list use-scrolling">
+        <li
+          *ngFor="let subBrand of getSubBrands()"
+          class="collection-checkbox-list__item popular"
+          [class.checked]="subBrand.isSelected"
+          (click)="onSubBrandSelect(subBrand, subBrand.seriesShortName)"
+        >
+          <input type="checkbox" [(ngModel)]="subBrand.isSelected" />
+          <span>{{ subBrand.title | translate }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-container>
+
+
+
+</ng-container>

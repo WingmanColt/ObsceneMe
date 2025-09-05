@@ -1,0 +1,98 @@
+<app-breadcrumb [breadcrumbs]="currBreadCrumb"></app-breadcrumb>
+
+ <div class="contact-style">
+
+  <section class="contact-page section-b-space">
+    <div class="container">
+      <div class="row justify-content-center text-center">
+        <div class="col-lg-10">
+          <h2 class="contact-title">{{ 'CONTACT.TITLE' | translate }}</h2>
+          <p class="contact-text text-default">
+            <strong>{{settings.webName}}</strong> {{ 'CONTACT.DESCRIPTION_PART1' | translate }}<br />
+            {{ 'CONTACT.DESCRIPTION_PART2' | translate }}<br />
+            {{ 'CONTACT.DESCRIPTION_PART3' | translate }}
+          </p>
+        </div>
+      </div>
+
+      <div class="row justify-content-center text-center contact-form">
+        <div class="col-6">
+          <form [formGroup]="messageForm" (ngSubmit)="onSubmit(messageForm.value)" class="theme-form">
+
+            <div class="contact__fields">
+              <div class="field-wrapper" *ngFor="let field of ['firstname', 'lastname']">
+                <div class="field">
+                  <input
+                    type="text"
+                    class="field__input"
+                    placeholder=" "
+                    [formControl]="messageForm.controls[field]"
+                    required
+                    autocomplete="off"
+                  />
+                  <label class="field__label">{{ ('CONTACT.' + field.toUpperCase()) | translate }}</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-wrapper">
+              <div class="field">
+                <input
+                  type="text"
+                  class="field__input"
+                  placeholder=" "
+                  [formControl]="messageForm.controls['email']"
+                  required
+                  autocomplete="off"
+                />
+                <label class="field__label">{{ 'CONTACT.EMAIL' | translate }}</label>
+              </div>
+            </div>
+
+            <div class="field-wrapper">
+              <div class="field">
+                <textarea
+                  rows="10"
+                  id="ContactForm-body"
+                  class="text-area field__input"
+                  [formControl]="messageForm.controls['about']"
+                  placeholder=" "
+                ></textarea>
+                <label class="field__label" for="ContactForm-body">{{ 'CONTACT.MESSAGE' | translate }}</label>
+              </div>
+            </div>
+
+            <div class="contact__button">
+              <button type="submit" class="button button--full-width" [class.disabled]="this.btnSubmitLoader == 2">
+                
+                    <span *ngIf="this.btnSubmitLoader == 0">
+                        <i *ngIf="!messageForm?.valid" class="las la-lock"></i>
+                        <i
+                          *ngIf="messageForm?.valid"
+                          class="las la-envelope"
+                        ></i>
+                        {{ 'Send' | translate }}
+                    </span>
+
+                    <span *ngIf="this.btnSubmitLoader == 1">
+                        <span class="spinner-border spinner-border-sm"></span>
+                        {{ "Processing" | translate }}
+                    </span>
+
+                    <span *ngIf="this.btnSubmitLoader == 2">
+                        <i *ngIf="!messageForm?.valid" class="las la-lock"></i>
+                        <i
+                          *ngIf="messageForm?.valid"
+                          class="las la-check-double"
+                        ></i>
+                        {{ 'Successfuly Sent' | translate }}
+                    </span>
+            </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

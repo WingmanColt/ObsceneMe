@@ -1,0 +1,134 @@
+<div *ngIf="!isPerformanceLoading">
+    <div class="row">
+      <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12">
+        <div class="ibox float-e-margins">
+         <div class="private-office-order-history container">
+                <nav>
+                <div class="private-office__category-wrap">
+                    <ul class="private-office__category-list">
+                        <li  (click)="activeTab = 'commission'" [class.active] class="private-office__category-list__item">{{'Commission' | translate}}</li>
+                        <li  (click)="activeTab = 'program'" [class.active] class="private-office__category-list__item">{{'Program Details' | translate}}</li>
+                    </ul>
+                </div>
+                </nav>
+
+
+            <div class="private-office__wish-list-wrap">
+                <!-- Commission Tab -->
+                <div *ngIf="activeTab === 'commission'" class="row text-center">
+                <div class="col-12 col-sm-4 mb-3">
+                    <div class="p-3 bg-light border rounded text-dark font-weight-bold">
+                    <div class="h4 mb-1"> {{ affiliateUser?.pendingCash | asCurrency : baseService.activeCurrency
+                     }}</div>
+                    <div>{{'Pending' | translate}}</div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4 mb-3">
+                    <div class="p-3 bg-success text-white border rounded font-weight-bold">
+                    <div class="h4 mb-1"> {{ affiliateUser?.approvedCash  | asCurrency : baseService.activeCurrency }}</div>
+                    <div>{{'Approved' | translate}}</div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4 mb-3">
+                    <div class="p-3 bg-primary text-white border rounded font-weight-bold">
+                        <div class="h4 mb-1"> {{ affiliateUser?.paidCash| asCurrency : baseService.activeCurrency }}</div>
+                    <div>{{'Paid' | translate}}</div>
+                    </div>
+                </div>
+                </div>
+
+                <!-- Program Details Tab -->
+                <div *ngIf="activeTab === 'program'" class="p-3 bg-white border rounded">
+                <p><strong>Name:</strong> Standard Affiliate Commission</p>
+                <p><strong>Description:</strong> You will get 10% sales credit on total referral sales when a customer makes a purchase through your affiliate link or uses your coupon code.</p>
+                <p><strong>Commission type:</strong> Percent of sale</p>
+                <p><strong>Commission amount:</strong> 10.00%</p>
+                </div>
+            </div>
+         </div>
+         </div>
+    </div>
+ </div>
+
+<div class="row">
+<div class="col-md-12 col-sm-12 col-lg-12 col-xs-12 affiliate-link-section">
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                      {{'Affiliate Link' | translate}}
+                     <i class="las la-info-circle" appTooltip="When a customer clicks on the affiliate link and buys, you will get a commission."></i>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="col-md-10 col-sm-12 col-lg-8 col-xs-12 affiliate-link-section">
+                     <label for="referral_link_ip">{{'Affiliate Link' | translate}}</label>
+                        <div class="input-group mb-3">
+                        <input type="text" class="form-control" [value]="generatedLink" placeholder="Generated Link" aria-label="Generated Link" aria-describedby="basic-addon2" disabled  #refLinkInput>
+                        <a href="javascript:void(0)" (click)="copyToClipboard(refLinkInput.value)" class="input-group-text" id="basic-addon2">{{'Copy' | translate}}</a>
+                        </div>
+                      </div>
+                     </div>
+
+    <div class="ibox-footer">
+     <div class="affiliate-link-action">
+        <button (click)="onGenerateCode()" class="button private-office__submit-button mr-2" [disabled]="referralLink">
+            {{"Generate Referral Link" | translate}}
+        </button>
+            <!--
+        <button type="submit" class="button private-office__submit-button mr-2 mt-xs-1">
+            {{"Get link with source" | translate}}
+        </button>
+           -->                                                                            
+    </div>
+                            <div class="affiliate-share mt-xs-2">
+         
+                                <div class="social-button-container">
+                                    <a href="https://www.facebook.com/sharer.php?u={{generatedLink}}" data-toggle-t="tooltip" data-placement="top" data-original-title="Share on Facebook" class="social-sharing facebook" target="_blank">
+                                        <i class="lab la-facebook-f"></i>
+                                    </a>
+
+                                    <a href="https://twitter.com/intent/tweet?url={{generatedLink}}" 
+                                    title="Share on X"
+                                    class="social-sharing x" 
+                                    target="_blank">
+                                    <!-- X SVG (optional updated icon) -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16">
+                                        <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
+                                    </svg>
+                                    </a>
+
+                                    <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{generatedLink}}" data-toggle-t="tooltip" data-placement="top" data-original-title="Share on Linkedin" class="social-sharing linkedin" target="_blank">
+                                        <i class="lab la-linkedin"></i>
+                                    </a>
+
+                                    <a href="http://pinterest.com/pin/create/link/?url={{generatedLink}}" data-toggle-t="tooltip" data-placement="top" data-original-title="Share on Pinterest" class="social-sharing pinterest" target="_blank"><i class="lab la-pinterest-p"></i></a>
+
+                                </div>
+                            </div>
+                        </div>
+                </div>
+        </div>
+        
+<div class="row">
+<div class="col-md-12 col-sm-12 col-lg-12 col-xs-12 affiliate-link-section">
+<div class="ibox">
+                    <div class="ibox-title">
+                            {{'Performance' | translate}}
+                    </div>
+                    <div class="ibox-content">
+                        
+        <canvas baseChart
+        [data]="{ labels: chartLabels, datasets: chartData }"
+        [options]="chartOptions"
+        [type]="'line'">
+        </canvas>
+        </div>
+        </div>
+
+        </div>
+    </div>
+
+ </div>
+<div *ngIf="isPerformanceLoading" class="text-center my-4">
+  <app-loading></app-loading>
+  <p>{{ 'Loading performance data...' | translate }}</p>
+</div>

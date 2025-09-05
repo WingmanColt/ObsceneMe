@@ -1,0 +1,118 @@
+#fps {
+	margin-top: 5px;
+	margin-left: 35px;
+}
+
+.trans3d {
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	-ms-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	transform: translate3d(0, 0, 0);
+}
+
+#contentContainer {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 1000px;
+	height: 700px;
+	transform-style: preserve-3d;
+	transform: translate3d(-50%, -50%, 0);
+}
+
+#carouselContainer {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 1000px;
+	height: 1000px;
+	transform-style: preserve-3d;
+	transform: translate3d(-50%, -50%, 0);
+}
+
+.carouselItem {
+	width: 320px;
+	height: 130px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -160px;
+	margin-top: -90px;
+	visibility: hidden;
+}
+
+.carouselItemInner {
+	width: 320px;
+	height: 130px;
+	position: absolute;
+	background-color: rgba(255, 255, 255, .75);
+	border: 10px solid rgba(255, 255, 255, .5);
+	color: aqua;
+	font-size: 72px;
+	left: 50%;
+	top: 50%;
+	margin-left: -160px;
+	margin-top: -90px;
+	text-align: center;
+	padding-top: 50px;
+}
+
+
+.cards-flipping {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	justify-content: center;
+	width: 100vw;
+	height: 100vh;
+	background:
+			linear-gradient(
+					to bottom right,
+					rgba(89, 81, 92, .12),
+					rgba(89, 81, 92, .54)
+			),
+			url(https://dl.dropboxusercontent.com/s/unb0wnsgqzhs1hq/bg.jpg) 0 / cover no-repeat;
+}
+.card-box {
+	padding: 10px;
+	perspective: 600px;
+}
+.card-box:hover .card {
+	transform: rotateY(180deg);
+}
+.card {
+	position: relative;
+	width: 209px;
+	height: 300px;
+	transform-style: preserve-3d;
+	transition: transform .6s;
+}
+.card .front,
+.card .back {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 209px;
+	height: 300px;
+	background-image: url(https://dl.dropbox.com/s/lltin4d6yzdcrpp/sprites.svg);
+	backface-visibility: hidden;
+}
+.card .front {
+	transform: rotateY(180deg);
+}
+.card .back {
+	background-position: 0 -1200px;
+}
+.a-diamonds .front {
+	background-position: 0 -300px;
+}
+.a-clubs .front {
+	background-position: 0 0;
+}
+.a-hearts .front {
+	background-position: 0 -600px;
+}
+.a-spades .front {
+	background-position: 0 -900px;
+}

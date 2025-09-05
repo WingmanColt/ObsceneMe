@@ -1,0 +1,48 @@
+<div [class]="cols">
+ <div class="left-col pt-3">
+  <ngx-skeleton-loader
+   appearance="line"
+   animation="progress"
+   [theme]="{
+    height: '300px',
+    'border-radius': '12px'
+   }"></ngx-skeleton-loader>
+ </div>
+</div>
+
+<div [class]="cols">
+ <div class="product-right Three">
+  <div class="container pb-2">
+   <div class="row">
+    <div class="col-12 pt-3">
+     <div class="col-3">
+      <ngx-skeleton-loader appearance="line" animation="progress-dark" count="1"></ngx-skeleton-loader>
+     </div>
+
+     <ngx-skeleton-loader appearance="line" animation="progress-dark" count="2"></ngx-skeleton-loader>
+    </div>
+    <hr />
+
+    <div class="col-6">
+     <ngx-skeleton-loader appearance="line" animation="progress-dark" count="1"></ngx-skeleton-loader>
+    </div>
+    <div class="col-6">
+     <ngx-skeleton-loader appearance="line" animation="progress-dark" count="1"></ngx-skeleton-loader>
+    </div>
+    <hr />
+    <div class="col-6 offset-3">
+     <ngx-skeleton-loader appearance="line" animation="progress-dark" count="1"></ngx-skeleton-loader>
+    </div>
+    <hr />
+    <div class="col-8 offset-2">
+     <ngx-skeleton-loader appearance="line" animation="progress-dark" count="1" [theme]="{ height: '70px' }"></ngx-skeleton-loader>
+    </div>
+   </div>
+  </div>
+ </div>
+ <div class="row">
+  <div class="col-12 pt-3">
+   <ngx-skeleton-loader appearance="line" animation="progress-dark" count="2"></ngx-skeleton-loader>
+  </div>
+ </div>
+</div>

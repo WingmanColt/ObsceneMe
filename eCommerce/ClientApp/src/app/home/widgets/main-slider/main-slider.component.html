@@ -1,0 +1,141 @@
+<app-simple-slider2 #HomeMainSlider  [hidden]="!sliderConfig.slides?.length"
+      [config]="sliderConfig" id="HomeMainSlider"
+      [slideTemplate]="HomeMainSliderTemplate" (onSlideChange)="onSlideChange($event)"></app-simple-slider2>
+
+
+  <ng-template #HomeMainSliderTemplate let-slide="slide" let-index="currentSlide">
+
+    
+  <!-- Show video only if current slide -->
+  <div class="video-container position-relative w-100 h-100">
+      <app-loading [style]="1" *ngIf="slide.isLoading"></app-loading>
+
+      <div *ngIf="!slide.isLoading"
+          class="slide-logo position-absolute d-flex justify-content-center align-items-center">
+        <img [src]="slide.logoWhite" alt="logo" class="slide-logo-img" >
+      </div>
+
+      <video
+        #bgVideo
+        [muted]="slide.muted"   
+        loop
+        autoplay
+        playsinline
+        preload="auto"
+        poster="{{ slide.image }}"
+        class="slider-background-video-embed"
+        style="width:100%; height:100%; object-fit:cover;"
+        (loadstart)="onVideoLoadStart(slide)"
+        (loadeddata)="onVideoLoaded(slide)"
+        (error)="onVideoError(slide)"
+      >
+        <source [src]="slide.videoSrc" type="video/mp4" />
+        <source [src]="slide.videoWebmSrc" type="video/webm" />
+      </video>
+
+    <button class="video-volume-btn position-absolute" 
+            (click)="toggleMute(slide, bgVideo)"
+            [title]="slide.muted ? 'Unmute' : 'Mute'">
+      <i class="las" [class.la-volume-mute]="slide.muted"
+                    [class.la-volume-up]="!slide.muted"></i>
+    </button>
+  </div>
+
+
+
+
+
+            <!-- Check if the slide is a video or an image
+            <ng-container *ngIf="isVideoSlide(slide); else imageTemplate">
+
+              <iframe class="slider-background-video-embed"
+               frameborder="0" 
+               loading="lazy"
+               allowfullscreen="" 
+               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+               referrerpolicy="strict-origin-when-cross-origin" 
+               [src]="sanitize(slide.videoUrl)" 
+               [srcdoc]="generatePreview(slide.videoUrl)"
+               width="100"
+               height="100"
+               ></iframe>
+            </ng-container>
+  
+            <ng-template #imageTemplate>
+
+                <img *ngIf="!slide.image?.startsWith('https://')" [lazyOptimizedImage]="slide.image"  
+                [ngStyle]="{ 'border-bottom-left-radius': slide.imageBottomBorderRadius, 'border-bottom-right-radius': slide.imageBottomBorderRadius }"
+                [alt]="slide.desc" style="object-fit: contain;">
+
+              <img *ngIf="slide.image?.startsWith('https://')" [lazyLoad]="slide.image"   
+                [ngStyle]="{ 'border-bottom-left-radius': slide.imageBottomBorderRadius, 'border-bottom-right-radius': slide.imageBottomBorderRadius }"
+                [alt]="slide.desc" style="object-fit: contain;">
+            </ng-template>-->
+  
+    <!-- Slide inner content -->
+    <div class="slide-inner position-absolute w-100 h-100 d-flex flex-column justify-content-center align-items-center" 
+      [ngStyle]="{ 'top': 0, 'left': 0 }">
+            
+      <!-- ✅ Centered Logo 
+      <div *ngIf="slide.logo" 
+          class="slide-logo position-absolute d-flex justify-content-center align-items-center">
+        <img [src]="slide.logo" alt="logo" class="slide-logo-img">
+      </div>-->
+
+      <div class="container">
+        <!-- Title -->
+        <div *ngIf="isMobile; else desktopTitle">
+          <div *ngIf="slide.titleMobile" class="slide-title" 
+            [ngStyle]="applyStyles(slide.titleAlignMobile, slide.titleColor, 1)">
+            <h2 data-translate="component.title">{{ slide.titleMobile | translate }}</h2>
+          </div>
+        </div>
+        <ng-template #desktopTitle>
+          <div *ngIf="slide.title" class="slide-title" 
+            [ngStyle]="applyStyles(slide.titleAlign, slide.titleColor, 1)">
+            <h2 data-translate="component.title">{{ slide.title | translate }}</h2>
+          </div>
+        </ng-template>
+
+        <!-- Description -->
+        <div *ngIf="isMobile; else desktopDesc">
+          <div *ngIf="slide.descMobile" class="slide-text" 
+            [ngStyle]="applyStyles(slide.titleAlignMobile, slide.descColor, 2)">
+            <p data-translate="component.description">{{ slide.descMobile | translate }}</p>
+          </div>
+        </div>
+        <ng-template #desktopDesc>
+          <div *ngIf="slide.desc" class="slide-text" 
+            [ngStyle]="applyStyles(slide.titleAlign, slide.descColor, 2)">
+            <p data-translate="component.description">{{ slide.desc | translate }}</p>
+          </div>
+        </ng-template>
+
+        <!-- Buttons -->
+        <div class="slide-btns d-flex" #dragContainer 
+          [ngStyle]="{ 'flex-direction': isMobile ? slide.buttonsDirectionMobile : slide.buttonsDirection, 'align-items': isMobile ? slide.buttonsAlignMobile : slide.buttonsAlign }">
+          <ng-container *ngIf="(slide.btnDevice === 'Mobile' && isMobile) || (slide.btnDevice === 'All')">
+            <a [href]="slide.btnLink" 
+               [target]="slide.btnLinkNewBlank ? '_blank' : '_self'" 
+               [ngCarouselPreventGhostClick]="dragContainer"
+               [ngStyle]="{ 'background-color': slide.btnColor, color: slide.btnTextColor }" 
+               class="theme-btn-s2" 
+               data-translate="component.btnText">{{ slide.btnText | translate }}
+            </a>
+          </ng-container>
+          
+          <ng-container *ngIf="(slide.btn2Device === 'Mobile' && isMobile) || (slide.btn2Device === 'All')">
+            <a *ngIf="slide.btn2Text" [href]="slide.btn2Link" 
+               [target]="slide.btn2LinkNewBlank ? '_blank' : '_self'" 
+               [ngStyle]="{ 'background-color': slide.btn2Color, color: slide.btn2TextColor }" 
+               class="theme-btn-s2" 
+               data-translate="component.btnText">{{ slide.btn2Text | translate }}
+            </a>
+          </ng-container>
+        </div>
+      </div>
+
+    </div>
+
+</ng-template>
+

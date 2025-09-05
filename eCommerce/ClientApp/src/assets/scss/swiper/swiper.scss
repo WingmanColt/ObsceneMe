@@ -1,0 +1,29 @@
+@import "categories-home";
+//@import "categories-collection";
+//@import "home-one-swiper";
+//@import "home-two-swiper";
+//@import "plugins/swiper-home";
+//@import "homeProducts";
+//@import "produdctListing/clientsSwiper";
+//@import "produdctListing/clientPictures";
+@import "./categories-collection.scss";
+
+@import "thumbs-pictures";
+@import "simple-swiper";
+
+
+// Swiper when gallery modal is opened
+@import "swiper-gallery";
+
+// Ad Banner
+.swiper-adBanner {
+ .img-container {
+   position: relative;
+   display: inline-block;
+ 
+   img {
+     width: 100%;
+     height: 100%;
+   }
+ }
+ }

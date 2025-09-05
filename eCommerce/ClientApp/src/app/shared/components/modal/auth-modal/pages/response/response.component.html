@@ -1,0 +1,30 @@
+<div class="login-card-logoBox">
+  <img [lazyLoad]="getLogoUrl(1)" class="cl-logoImage rounded" [alt]="settings.webName">
+    
+    <a [routerLink]="['/']" >
+        {{ settings.webName }}
+    </a>
+</div>
+
+<div class="login-card-body">
+<div class="demo1">
+	<div class="ui-success">
+		<svg viewBox="0 0 87 87" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+				<g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+						<g id="Group-3" transform="translate(2.000000, 2.000000)">
+							<circle id="Oval-2" stroke="rgba(0, 0, 0, 0.3)" stroke-width="4" cx="41.5" cy="41.5" r="41.5"></circle>
+								<circle  class="ui-success-circle" id="Oval-2" stroke="black" stroke-width="4" cx="41.5" cy="41.5" r="41.5"></circle>
+								<polyline class="ui-success-path" id="Path-2" stroke="black" stroke-width="4" points="19 38.8036813 31.1020744 54.8046875 63.299221 28"></polyline>
+						</g>
+				</g>
+		</svg>
+	</div>
+  </div>
+</div>
+
+    <div class="login-card-header d-flex justify-content-center align-items-center">
+    <h1> {{ "🎉 Welcome back!" | translate }}</h1>
+    <br>
+    <h2> {{ "You've successfully logged in." | translate }}</h2>
+    </div>
+

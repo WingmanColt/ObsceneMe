@@ -1,0 +1,26 @@
+<div class="dropdown">
+  <button class="dropdown-button custom-button"
+    [ngStyle]="{ 'height': calculateMaxHeight() + 'px' }"
+    (click)="toggleDropdown()">
+    <!-- Show selected items or button label -->
+    {{ selectedTitles.length > 0 ? selectedTitles.join(', ') : buttonLabel }} &#9662;
+  </button>
+  
+  <div class="dropdown-content" [ngClass]="{ 'show': isOpen }">
+    <!-- Search bar -->
+    <input type="text"
+      *ngIf="searchBar"
+      placeholder="Search ..."
+      [(ngModel)]="searchQuery"
+      (ngModelChange)="onSearch($event)"
+      class="search-input">
+    
+    <!-- List of filtered items -->
+    <div *ngFor="let item of filteredItems" 
+      (click)="onItemSelect(item)"
+      class="dropdown-item"
+      [ngClass]="{ 'selected': isItemSelected(item) }">
+      {{ item.title }}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,202 @@
+<div class="container container-xxxl" *ngIf="!isMobile || (collectionSettings.collectionPageBreadcrumb && isMobile)">
+  <h1 class="page-header page-header_category">
+    {{ (selectedSubCategory ? selectedSubCategory?.title : (selectedCategory ? selectedCategory?.title : 'Shopping Center')) | translate }}
+  </h1>
+  
+  <div class="bread-crumbs" style="margin: 0;">
+    <button class="bread-crumbs__back" (click)="goBack()">
+      <i class="las la-arrow-left"></i>
+    </button>
+    <ol class="mr-2">
+      <ng-container *ngFor="let breadcrumb of currBreadCrumb; let i = index">
+        <li>
+          <a href="javascript:void(0)" 
+             [queryParams]="breadcrumb.params" 
+             [class.active]="i === currBreadCrumb.length - 1">
+            <span>{{ breadcrumb.title | translate }}</span>
+          </a>
+        </li>
+      </ng-container>
+    </ol>
+  </div>
+</div>
+
+<section [ngClass]="isMobile ? 'section-mobile-space' : 'section-b-space'">
+
+  <!-- Desktop View -->
+  <div *ngIf="!isMobile" class="collection-wrapper">
+    <div class="container-xxxl">
+      <div class="row">
+
+
+        <div class="col-3">
+          <app-floating-filter [selectedFilters]="searchParams" [totalItems]="totalItems" (selectedCategories)="setSelectedCategories($event)" *ngIf="!collectionSettings.showFiltersAsButtons">
+          </app-floating-filter>
+        </div>
+
+        <!-- Desktop Collection Content -->
+        <div class="collection-content col-9 mx-auto">
+          <div class="page-main-content">
+            <div class="row">
+              <div class="collection-product-wrapper">
+
+                <div class="catalog__selected-filters">
+                  <div class="selected-filter-list" >
+                    <div class="selected-filter-list">
+                      <label *ngFor="let filter of selectedFilters; let i = index" 
+                             [id]="filter" 
+                             class="selected-filter-list__item" (click)="removeFilter(filter)">
+                          <span>{{ filter | translate }}</span>
+                      </label>
+                  </div>
+                </div>
+
+                  <div class="selected-filter-list__item cancel-filter active" *ngIf="selectedFilters?.length > 0" (click)="removeAllFilters()">
+                    <span>{{'Clear filters' | translate}}</span>
+                  </div>
+              </div>
+
+                <div class="catalog-sort-row">
+                  <div class="catalog-sort__total" *ngIf="isNotEmptyState()">{{totalItems}} {{'products'|translate}}</div>
+                  <div class="catalog-sort__total" *ngIf="isEmptyState()">0 {{'products'|translate}}</div>
+
+                  <div class="catalog-sort-wrapper">
+                    <!--Only for desktop-->
+                    <app-sort-desktop></app-sort-desktop>
+                    </div>
+                  </div>
+
+                <div *ngIf="clientProducts.length > 0 && loaderState !== LoaderState.Empty && loaderState !== LoaderState.Filtering">
+                <!-- Product Results with Infinite Scroll for Desktop -->
+                <div 
+                  infiniteScroll 
+                  class="search-results" 
+                  [infiniteScrollDistance]="0" 
+                  [infiniteScrollThrottle]="50" 
+                  (scrolled)="onScroll()">
+
+                  <app-collection-result 
+                    [products]="clientProducts" 
+                    [colClass]="'col-grid-box'" 
+                    [grid]="grid" 
+                    [isMobile]="false"
+                    [animToBottom]="true"
+                    [settings]="collectionSettings">
+                  </app-collection-result>
+                </div>
+              </div>
+
+            <!--At this time is used only for decoration later we will add pagination !-->
+              <div class="catalog-bottom-row" *ngIf="loaderState === LoaderState.Empty"> 
+                <div class="button button_secondary button-more disabled">{{'More Products' | translate}}</div>
+              </div>
+
+              <!-- Loader for Desktop -->
+              <div class="container-xxl" *ngIf="loaderState !== LoaderState.None">
+                <div class="row">
+                  <!-- Loader for Fetching Data -->
+                  <div *ngIf="isNotEmptyState()" class="col-12">
+                    <div class="ajax-loadable-slider loading"></div>
+                  </div>
+              
+                  <!-- Loader for Empty State -->
+                  <div *ngIf="loaderState === LoaderState.Empty" class="col-12 centered">
+                    <p>{{'No products found.' | translate}}</p>
+                  </div>
+              
+                  <!-- Loader for Empty But Filtered -->
+                  <div *ngIf="loaderState === LoaderState.EmptyFiltered" class="col-12 centered">
+                    <p>{{'No products match your filters. Try removing some filters.' | translate}}</p>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile View -->
+  <div *ngIf="isMobile" class="collection-wrapper">
+    <div class="container-xxl">
+      <div class="row">
+      
+        <!-- Mobile Sort and Filter Buttons -->
+        <div class="catalog-mobile-buttons" *ngIf="collectionSettings.showFiltersAsButtons">
+          <span class="button button_secondary" (click)="toggleFilters()">
+            <span class="button__filter-icon"></span>{{ "Filters" | translate }}
+          </span>
+          <span class="button button_secondary" (click)="toggleSortBy()">
+            {{ "Sort By" | translate }}<span class="button__sort-icon"></span>
+          </span>
+        </div>
+
+        <app-floating-filter [selectedFilters]="searchParams" [totalItems]="totalItems" *ngIf="!collectionSettings.showFiltersAsButtons">
+        </app-floating-filter>
+
+        <div *ngIf="loaderState !== LoaderState.Filtering && isNotEmptyState()"> <!--clientProducts.length > 0 && -->
+        <!-- Product Results with Infinite Scroll for Mobile -->
+        <div 
+          infiniteScroll 
+          class="search-results" 
+          [infiniteScrollDistance]="1" 
+          [infiniteScrollThrottle]="150" 
+          (scrolled)="onScroll()">
+
+          <app-collection-result 
+            [products]="clientProducts" 
+            [colClass]="'col-grid-box'" 
+            [grid]="grid" 
+            [isMobile]="true"
+            [settings]="collectionSettings">
+          </app-collection-result>
+        </div>
+       </div>
+
+       <div class="container-xxl" *ngIf="loaderState !== LoaderState.None">
+        <div class="row">
+          <!-- Loader for Fetching Data -->
+          <div *ngIf="isNotEmptyState()" class="col-12">
+            <div class="ajax-loadable-slider loading"></div>
+          </div>
+      
+          <!-- Loader for Empty State -->
+          <div *ngIf="loaderState === LoaderState.Empty" class="col-12 centered">
+            <p>{{'No products found.' | translate}}</p>
+          </div>
+      
+          <!-- Loader for Empty But Filtered -->
+          <div *ngIf="loaderState === LoaderState.EmptyFiltered" class="col-12 centered">
+            <p>{{'No products match your filters. Try removing some filters.' | translate}}</p>
+          </div>
+        </div>
+      </div>
+
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- Footer Subscribe Form -->
+<form *ngIf="collectionSettings.subscribeFooter" class="footer-subscribe tab-bg">
+  <input type="hidden" name="form" value="footer" />
+  <div class="footer-subscribe-wrapper">
+    <div class="footer-subscribe-header">
+      {{ "SUBSCRIBE TO RECEIVE INFORMATION ON NEW PRODUCTS AND DISCOUNTS!" | translate }}
+    </div>
+    <div class="footer-input-row">
+      <div class="footer-input-group">
+        <input type="email" name="email" required="" placeholder=" " />
+        <span class="bar"></span>
+        <label>{{ "Email Address" | translate }}</label>
+      </div>
+      <button type="submit" class="btn-unset footer-submit text-default">
+        {{ "SUBSCRIBE" | translate }}
+      </button>
+    </div>
+  </div>
+</form>

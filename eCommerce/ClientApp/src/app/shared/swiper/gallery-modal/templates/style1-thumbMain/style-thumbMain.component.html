@@ -1,0 +1,146 @@
+<div class="modal-header">
+  <button type="button" class="close border-0" (click)="close()">
+    <i class="las la-times"></i>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="product-info">
+    <span class="product-item__name">{{ imageObjects[0]?.productTitle }}</span>
+    <span class="product-item__category">{{ imageObjects[0]?.categoryTitle | translate }}</span>
+  </div>
+  <div class="columns-container">
+    
+    <div class="col-1" *ngIf="!isMobile && gallerySettings.thumbsActiveOnDesktop" [class.overflow-y]="true">
+     <app-simple-slider2 #ThumbsSlider *ngIf="sliderConfigThumbs.slides?.length"
+      [config]="sliderConfigThumbs" id="GalleryThumbsSlider"
+      [slideTemplate]="GalleyThumbsSlideTemplate" (onSlideChange)="onSlideChangeThumbs($event)"></app-simple-slider2>
+    
+
+    <ng-template #GalleyThumbsSlideTemplate let-slide="slide" let-index="index">
+      <div class="center-body" style="position: absolute;" *ngIf="imageLoading == 1">
+        <div class="circle-loader"></div>
+      </div>
+
+      <img
+      [src]="slide.src?.length > 0 ? getImageSrc(slide.src) : defaultImage"
+      [alt]="productTitle"
+      class="img-thumbnail rounded lazy-loading"
+      (load)="onImageLoad()"
+      (error)="onImageError()"
+    />
+    </ng-template>
+  
+      <!--<div class="swiper-container swiper-thumbs-left" [class.pl-2]="!isMobile" [class-overflow-y]="true">
+        <div
+          class="swiper-wrapper"
+          [class]="gallerySettings.thumbsAlignDesktop"
+        >
+          <div
+            *ngFor="let image of imageObjects; index as i"
+            class="swiper-slide"
+          >
+            <div class="slider__image">
+              <img
+                [lazyLoad]="image.src"
+                [alt]="productTitle"
+                class="img-thumbnail rounded"
+                fill
+              />
+            </div>
+          </div>
+        </div>
+      </div>-->
+    </div>
+
+    <!-- Swiper Main -->
+    <div [class.col-10]="!isMobile" [class.col-12]="isMobile" >
+      <app-simple-slider2 #MainSlider *ngIf="sliderConfigMain.slides?.length"
+      [config]="sliderConfigMain" id="GalleryMainSlider"
+      [slideTemplate]="GalleryMainSlideTemplate" (onSlideChange)="onSlideChangeMain($event)"></app-simple-slider2>
+    
+    <ng-template #GalleryMainSlideTemplate let-slide="slide" let-index="index">
+      <div class="center-body" style="position: absolute;" *ngIf="imageLoading == 1">
+        <div class="circle-loader"></div>
+      </div>
+
+      <img 
+      [src]="slide.src?.length > 0 ? getImageSrc(slide.src) : defaultImage"
+      [alt]="productTitle"
+      (load)="onImageLoad()"
+      (error)="onImageError()"
+    />
+    </ng-template>
+       <!--<div class="swiper-container swiper-main-gallery">
+        <div class="swiper-wrapper">
+          <div *ngFor="let image of imageObjects; let i = index" class="swiper-slide">
+            <div class="swiper-zoom-container" [class.overflow-visible]="isMobile">
+              <ng-container *ngIf="gallerySettings.zoom">
+              <img *ngIf="!isMobile"
+                [src]="image.src"
+                [redZoom]="image.src"
+                redZoomBehavior="hover"
+                redZoomClass="red-zoom--style--overlay"
+                [class.zoom-enabled]="false"
+              />
+              <img *ngIf="isMobile"
+              [lazyLoad]="image.src"
+              [class.allow-zoom-mobile]="true"
+            />
+            </ng-container>
+            <ng-container *ngIf="!gallerySettings.zoom">
+              <img 
+              [lazyLoad]="image.src"
+              [alt]="image.alt"
+            />
+            </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>-->
+      
+    </div>
+  </div>
+
+  <div class="columns-container h-25" *ngIf="isMobile && gallerySettings.thumbsActiveOnMobile">
+    <!-- Swiper Thumbs Mobile-->
+    <div class="col-12">
+      <app-simple-slider2 #ThumbsSlider *ngIf="sliderConfigThumbs.slides?.length"
+      [config]="sliderConfigThumbs" id="GalleryThumbsSlider"
+      [slideTemplate]="GalleyThumbsSlideTemplate" (onSlideChange)="onSlideChangeThumbs($event)"></app-simple-slider2>
+    
+
+    <ng-template #GalleyThumbsSlideTemplate let-slide="slide" let-index="index">
+      <div class="center-body" style="position: absolute;" *ngIf="imageLoading == 1">
+        <div class="circle-loader"></div>
+      </div>
+
+      <img
+      [src]="slide.src?.length > 0 ? getImageSrc(slide.src) : defaultImage"
+      [alt]="productTitle"
+      class="img-thumbnail rounded lazy-loading"
+      (load)="onImageLoad()"
+      (error)="onImageError()"
+      fill
+    />
+    </ng-template>
+      <!--
+      <div class="swiper-container swiper-thumbs-left" [class-overflow-x]="true">
+        <div class="swiper-wrapper" [class]="gallerySettings.thumbsAlignMobile">
+          <div
+            *ngFor="let image of imageObjects; index as i"
+            class="swiper-slide"
+          >
+            <div class="slider__image">
+              <img
+                [lazyLoad]="image.src"
+                [alt]="productTitle"
+                class="img-thumbnail rounded"
+                fill
+              />
+            </div>
+          </div>
+        </div>
+      </div>-->
+    </div>
+  </div>
+</div>

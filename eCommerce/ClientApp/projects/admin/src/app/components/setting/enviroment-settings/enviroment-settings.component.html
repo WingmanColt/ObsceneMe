@@ -1,0 +1,41 @@
+<div class="form-group">
+  <label for="envSelect" class="mb-1">Select Environment :</label>
+  <select id="envSelect" class="form-control" (change)="onEnvChange($event)">
+    <option value="dev" [selected]="currentEnv === 'dev'">Development</option>
+    <option value="prod" [selected]="currentEnv === 'prod'">Production</option>
+  </select>
+</div>
+
+<div class="form-group">
+  <h4>Current Environment Settings:</h4>
+  <ul class="list-group">
+    <li *ngFor="let config of allConfig | keyvalue" class="list-group-item">
+      <label><strong>{{ config.key }}:</strong></label>
+      <button class="btn btn-secondary mt-2" (click)="toggleDetails(config.key)">
+        {{ expandedConfig[config.key] ? 'Hide Details' : 'Show Details' }}
+      </button>
+
+      <div *ngIf="expandedConfig[config.key]" class="settings-details mt-2">
+        <!-- Handle nested arrays -->
+        <ng-container *ngIf="isArray(config.value)">
+          <app-array [arrayData]="config.value"></app-array>
+        </ng-container>
+
+        <!-- Handle nested objects -->
+        <ng-container *ngIf="isObject(config.value)">
+          <app-object [objectData]="config.value"></app-object>
+        </ng-container>
+
+        <!-- Handle primitive values -->
+        <ng-container *ngIf="!isArray(config.value) && !isObject(config.value)">
+          <app-primitive [value]="config.value" (updateValue)="config.value = $event"></app-primitive>
+        </ng-container>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- Save button for all changes -->
+<button (click)="updateAllConfig()" class="btn btn-primary mt-3">
+  Update All Config
+</button>

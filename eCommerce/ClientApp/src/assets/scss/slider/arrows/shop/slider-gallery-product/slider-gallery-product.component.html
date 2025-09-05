@@ -1,0 +1,50 @@
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+        <app-simple-slider2 #ProductMainSlider *ngIf="sliderConfigMain.slides?.length"
+        [config]="sliderConfigMain" id="ProductGalleryMainSlider"
+        [slideTemplate]="GalleryMainSlideTemplate" (onSlideChange)="onSlideChangeMain($event)"></app-simple-slider2>
+      
+    <ng-template #GalleryMainSlideTemplate let-slide="slide" let-index="index" let-sliding="sliding">
+
+
+        <img *ngIf="!isMobile"
+        [productImage]="this.baseService.getImageFull(slide.src, this.product?.id)"
+        [alt]="product?.title"
+
+        [redZoom]="this.baseService.getImageFull(slide.src, this.product?.id)"
+        [redZoomLazy]="true"
+        redZoomClass="red-zoom--style--magnifier"
+        class="zoom"
+      />
+
+      <img *ngIf="isMobile"
+      [productImage]="this.baseService.getImageFull(slide.src, this.product?.id)" />
+    </ng-template>
+
+  </div>
+
+<div class="row justify-content-center p-3 desktop-only">
+  <div class="col-md-12">
+    <div class="slider__thumbs">
+      <app-simple-slider2 #ProductThumbsSlider *ngIf="sliderConfigThumbs.slides?.length"
+      [config]="sliderConfigThumbs" id="ProductGalleryThumbsSlider"
+      [slideTemplate]="GalleyThumbsSlideTemplate" (onSlideChange)="onSlideChangeThumbs($event)"></app-simple-slider2>
+
+        <ng-template #GalleyThumbsSlideTemplate let-slide="slide" let-index="index">
+
+          <img
+          [productImage]="this.baseService.getImageFull(slide.src, this.product?.id)"
+          [alt]="product?.title"
+          class="img-thumbnail rounded" />
+          
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<app-gallery-modal
+  [imageObjects]="imageObjects"
+  #galleryModal
+></app-gallery-modal>

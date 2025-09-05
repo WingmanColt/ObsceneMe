@@ -1,0 +1,18 @@
+.payment-icons {
+ -webkit-user-select: none;
+ user-select: none;
+ cursor: default;
+}
+.inline-list {
+ padding: 0;
+ margin: 0;
+}
+.payment-icons li {
+ cursor: default;
+ margin: 0 4px;
+}
+.inline-list li {
+ display: inline-block;
+ margin-bottom: 0;
+ vertical-align: middle;
+}

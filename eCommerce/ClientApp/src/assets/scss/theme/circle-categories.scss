@@ -1,0 +1,190 @@
+
+
+.circle-categories-container {
+ position: relative;
+
+ .link-container {
+   display: flex;
+   align-items: center;
+   justify-content: flex-start;
+   margin-bottom: 20px;
+ }
+
+ .link-text {
+   color: #222;
+   line-height: 17px;
+   font-weight: 600;
+   max-width: 100%;
+ }
+
+ .icon-text-container {
+   display: flex;
+   align-items: center;
+   cursor: pointer;
+ }
+
+ .icon {
+   width: 16px;
+   height: 16px;
+   margin-left: 2px;
+   fill: #222;
+   color: #222;
+   flex-shrink: 0;
+ }
+
+ .grid-container {
+   width: 100%;
+   display: flex;
+   flex-wrap: wrap;
+
+   .grid-item {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     text-align: center;
+     padding: 1rem;
+     transition: transform 0.25s ease-out;
+     margin: 5px; // Add margin for spacing between items
+
+     &:hover {
+       transform: scale(1.1); // Hover scale effect
+     }
+
+     .image-wrapper {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       width: 100%;
+       margin-bottom: 10px; // Space between image and text
+
+       img {
+         background-size: contain;
+         background-repeat: no-repeat;
+         background-position: center;
+         width: 100%;
+         height: auto; // Maintain aspect ratio
+       }
+     }
+
+     .text-container {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       width: 100%;
+     }
+
+     .item-title {
+       font-weight: 600;
+       color: #222;
+       text-align: center;
+     }
+   }
+ }
+}
+
+// Desktop Styles
+@media (min-width: 1024px) {
+ .grid-item {
+   width: 150px; // Width for desktop
+ }
+
+ .item-title {
+   font-size: 16px; // Font size for desktop
+ }
+
+ .link-text {
+   font-size: 18px; // Link text size for desktop
+ }
+}
+
+// Tablet Styles
+@media (max-width: 1024px) and (min-width: 768px) {
+ .grid-item {
+   width: 100px !important; // Reduced width for tablets
+ }
+
+ .item-title {
+   font-size: 14px; // Font size for tablets
+ }
+
+ .link-text {
+   font-size: 16px; // Link text size for tablets
+ }
+
+ .icon {
+   width: 14px; // Reduce icon size for tablets
+   height: 14px; // Reduce icon size for tablets
+ }
+
+ .circle-categories-container {
+   height: auto; // Set to auto for responsiveness
+   overflow-x: hidden;
+   overflow-y: auto;
+ }
+
+ .link-section {
+   padding: unset !important;
+ }
+
+ .categories-container .mega-box .link-section .menu-title h5 {
+   font-size: 12px !important;
+ }
+
+ .categories-container .mega-box .link-section .column-title {
+   font-size: 14px !important;
+ }
+}
+
+// Mobile Styles
+@media (max-width: 480px) {
+ .grid-item {
+   width: 100px; // Reduced width for mobile
+ }
+
+ .item-title {
+   font-size: 12px; // Font size for mobile
+ }
+
+ .link-text {
+   font-size: 14px; // Link text size for mobile
+ }
+
+ .icon {
+   width: 12px; // Further reduce icon size for mobile
+   height: 12px; // Further reduce icon size for mobile
+ }
+
+ .link-section{
+  padding: unset;
+  width: 100%;
+  overflow: hidden;
+  transition: width 0.3s ease;
+ 
+  &.collapsed {
+   width: 50%; // Set this to the desired height for expanded content
+  }
+ }
+ .link-container {
+   margin-left: 20px; // Add margin to the left container
+ }
+
+ .circle-categories-container {
+   height: auto; // Set to auto for responsiveness
+   overflow-x: hidden;
+   overflow-y: auto;
+ }
+
+ .categories-container .mega-box .link-section .menu-title h5 {
+   font-size: 10px !important;
+ }
+
+ .categories-container .mega-box .link-section .column-title {
+   font-size: 12px !important;
+ }
+
+ .categories-container .mega-box .link-section .menu-title {
+   margin-bottom: 1px !important;
+   padding: 0.2em !important;
+ }
+}
+

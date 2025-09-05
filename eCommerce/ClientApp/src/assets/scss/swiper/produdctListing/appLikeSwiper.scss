@@ -1,0 +1,310 @@
+.slider {
+ &.thumbnailSlider {
+  .swiper-container {
+   &.swiper-app {
+    position: relative;
+   }
+   width: 100%;
+   height: 100%;
+
+   --swiper-pagination-color: #cfd4da;
+   --swiper-pagination-bullet-width: 8px;
+   --swiper-pagination-bullet-height: 7px;
+   --swiper-pagination-bullet-inactive-opacity: 0.5;
+
+   .swiper-zoom-container {
+    //width: 100%;
+    //height: 100%;
+    //overflow: hidden;
+    //display: flex;
+    img {
+     // max-width: inherit;
+     // max-height: inherit;
+     // height: inherit;
+     //   height: 90%;
+     //width: inherit;
+     object-fit: cover;
+    }
+   }
+
+   .swiper-slide {
+    height: 60vh;
+
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+   }
+
+   .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1rem;
+    top: 2%;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+
+    p {
+     font-size: 0.7rem;
+     font-weight: 800;
+     text-transform: uppercase;
+     margin: 0 10px; /* spacing between the text and icons */
+    }
+
+    span {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     text-align: center;
+     line-height: 0;
+     width: 28px;
+     height: 28px;
+     border-radius: 100%;
+     background-color: rgba(26, 16, 7, 0.83);
+
+     &:hover i {
+      font-weight: 600;
+      color: #cd1d3a;
+     }
+     .icon-left,
+     .icon-right {
+      // width: 28px;
+      // height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .icon-right:hover {
+       cursor: pointer;
+       color: #cd1d3a;
+      }
+
+      .icon-left:hover {
+       cursor: pointer;
+      }
+
+      i {
+       font-size: 1.1rem;
+       color: #fff;
+      }
+     }
+    }
+   }
+   .swiper-next-button {
+    right: 5px;
+   }
+   .swiper-prev-button {
+    left: 5px;
+   }
+
+   .swiper-next-button,
+   .swiper-prev-button {
+    position: absolute;
+    z-index: 99;
+    outline: none;
+    transition: all 0.2s linear;
+    width: 32px;
+    height: 20px;
+    top: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #00000087;
+
+    cursor: pointer;
+
+    &:hover {
+     background-color: darken(#000, 10%);
+    }
+
+    &.swiper-button-disabled {
+     opacity: 0.2;
+    }
+   }
+
+   .swiper-pagination-bullet-active {
+    background: #ffffff;
+    width: 15px;
+    transition-delay: 0.2s;
+    opacity: 0.9;
+   }
+   .gallery-slider__pagination {
+    text-align: center;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+
+    width: auto;
+    position: fixed;
+    z-index: 11;
+    display: flex;
+
+    &.pagination-overlay {
+     position: absolute;
+     padding-left: 0.5em;
+     padding-right: 0.5em;
+     width: -webkit-fit-content;
+     width: -moz-fit-content;
+     width: fit-content;
+     margin: 1em auto;
+     border-radius: 20px;
+     background-color: rgba(98, 96, 96, 0.86);
+    }
+
+    .swiper-pagination-bullet {
+     width: 8px;
+     height: 7px;
+     display: inline-block;
+     background: #cfd4da;
+     margin: 0 5px;
+     border-radius: 20px;
+     // animation: smoothToLeft 0.5s;
+     transition: opacity 0.2s, background-color 0.2s, width 0.2s;
+     transition-delay: 0.2s, 0.2s, 0s;
+    }
+   }
+  }
+ }
+}
+
+.gallery-slider__pagination {
+ text-align: center;
+ bottom: 0;
+ left: 0;
+ right: 0;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ margin: 0 auto;
+
+ width: auto;
+ position: fixed;
+ z-index: 11;
+ display: flex;
+
+ &.pagination-overlay {
+  position: absolute;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 1em auto;
+  border-radius: 20px;
+  background-color: rgba(98, 96, 96, 0.86);
+ }
+
+ .swiper-pagination-bullet {
+  width: 8px;
+  height: 7px;
+  display: inline-block;
+  background: #cfd4da;
+  margin: 0 5px;
+  border-radius: 20px;
+  // animation: smoothToLeft 0.5s;
+  transition: opacity 0.2s, background-color 0.2s, width 0.2s;
+  transition-delay: 0.2s, 0.2s, 0s;
+ }
+}
+
+.gallery-slider__pagination2 {
+ .swiper-pagination-bullet-active {
+  //  background: transparent;
+  //    width: 0;
+  // transition-delay: 0.2s;
+  display: none;
+ }
+ text-align: center;
+ bottom: 0;
+ left: 0;
+ right: 0;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ margin: 0 auto;
+
+ width: auto;
+ position: fixed;
+ z-index: 11;
+ display: flex;
+
+ font-size: 0.6rem;
+
+ &.pagination-overlay {
+  position: absolute;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 1em auto;
+  border-radius: 20px;
+  background-color: rgba(79, 77, 77, 0.88);
+ }
+
+ .swiper-pagination-bullet {
+  width: 8px;
+  height: 7px;
+  display: none;
+  background: #cfd4da;
+  margin: 0 5px;
+  border-radius: 20px;
+  // animation: smoothToLeft 0.5s;
+  transition: opacity 0.2s, background-color 0.2s, width 0.2s;
+  transition-delay: 0.2s, 0.2s, 0s;
+ }
+}
+
+.gallery-slider__pagination3 {
+ text-align: center;
+ bottom: 0;
+ left: 0;
+ right: 0;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ margin: 0 auto;
+
+ width: auto;
+ position: fixed;
+ z-index: 11;
+ display: flex;
+
+ &.pagination-overlay {
+  position: absolute;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 1em auto;
+  border-radius: 20px;
+  background-color: rgba(98, 96, 96, 0.86);
+ }
+
+ .swiper-pagination-bullet {
+  width: 8px;
+  height: 7px;
+  display: inline-block;
+  background: #cfd4da;
+  margin: 0 5px;
+  border-radius: 20px;
+  // animation: smoothToLeft 0.5s;
+  transition: opacity 0.2s, background-color 0.2s, width 0.2s;
+  transition-delay: 0.2s, 0.2s, 0s;
+ }
+}

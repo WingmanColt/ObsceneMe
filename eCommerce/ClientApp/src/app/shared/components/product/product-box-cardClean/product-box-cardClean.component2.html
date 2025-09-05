@@ -1,0 +1,95 @@
+<div *ngIf="product">
+    <div class="simple-slider-list__item simple-slider-list__item_action" [class.active]="isHovered" 
+    (mouseover)="onMouseOver()" (mouseleave)="onMouseLeaved()">
+
+        <div class="simple-slider-list__link">
+            <div class="simple-slider-list__badge" [ngSwitch]="product.marketStatus">
+                <div class="simple-slider-list__label action" *ngSwitchCase="MarketStatus.Sale">{{ "Sale" | translate }}</div>
+                <div class="simple-slider-list__label action" *ngSwitchCase="MarketStatus.New">{{ "New" | translate }}</div>
+                <div class="simple-slider-list__label action" *ngSwitchCase="MarketStatus.PreOrder">{{ "Pre Order" | translate }}</div>
+                <div class="simple-slider-list__label action" *ngSwitchCase="MarketStatus.Sold">{{ "Sold Out" | translate }}</div>
+                <div class="simple-slider-list__label action" *ngSwitchCase="MarketStatus.Low">{{ "Limited" | translate }}</div>
+            </div>
+
+            <div class="showcase-image-container">
+
+                <a  class="showcase-label-container col-auto" *ngIf="product.trademark !== Trademark.NONE" (click)="handleTrademarkRouting()">
+                    <img src="//ideacdn.net/idea/fu/90/myassets/brands/2/wender-parts-marka-logosu.png?revision=1622195847" alt="Brand Logo">
+                </a>
+
+
+            <div class="showcase-image">
+                <a [routerLink]="['/shop/product/info/', product?.id]" target="_blank" [title]="product.title" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+                    <img *ngIf="product?.images !== undefined"
+                    [src]="this.baseService.getImageFull(product?.images[currentImageIndex]?.src, this.product?.id)"
+                    [fallbackUrl]="this.env.placeholderSrc"
+                    [alt]="product?.title" />
+
+                    <img *ngIf="product?.images == undefined"
+                    [src]="this.baseService.getImageFull(product?.src, this.product?.id)"
+                    [fallbackUrl]="this.env.placeholderSrc"
+                    [alt]="product?.title" />
+                </a>
+            </div>
+        </div>
+            <!--
+            <div class="product-icons-wrapper">
+                <div class="to-favourite" (click)="addOrRemoveFavourite()"></div>
+            </div>
+            <a [routerLink]="['/shop/product/info/', product?.id]" target="_blank" class="simple-slider-list__image" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+                
+                <img *ngIf="product?.images !== undefined"
+                     [productImage]="this.baseService.getImageFull(product?.images[currentImageIndex]?.src, this.product?.id)"
+                     [fallbackUrl]="this.env.placeholderSrc"
+                     [alt]="product?.title" />
+
+                <img *ngIf="product?.images == undefined"
+                [productImage]="this.baseService.getImageFull(product?.src, this.product?.id)"
+                [fallbackUrl]="this.env.placeholderSrc"
+                [alt]="product?.title" />
+
+
+                <div *ngIf="hover && product?.images?.length > 1" [style.animation-duration]="getAnimationDuration()" class="progress-bar"></div>
+            </a>-->
+            <div class="info-product-wrapper">
+                <div class="d-flex justify-content-between">
+                    <div class="product-item__ranking-list" [ngSwitch]="product.premiumPackage">
+                        <img *ngSwitchCase="PremiumPackage.Gold" [src]="settings.badgeGoldSrc" />
+                        <div *ngSwitchCase="PremiumPackage.Gold" class="ranking-list__text badge-gold">{{ "#1 Best Seller" | translate }}</div>
+                        <img *ngSwitchCase="PremiumPackage.Silver" [src]="settings.badgeSilverSrc" />
+                        <div *ngSwitchCase="PremiumPackage.Silver" class="ranking-list__text badge-silver">{{ "#2 Best Seller" | translate }}</div>
+                        <img *ngSwitchCase="PremiumPackage.Bronze" [src]="settings.badgeBronzeSrc" />
+                        <div *ngSwitchCase="PremiumPackage.Bronze" class="ranking-list__text badge-bronze">{{ "#3 Best Seller" | translate }}</div>
+                    </div>
+                </div>
+                <a [routerLink]="['/shop/product/info/', product.id]" 
+                  target="_blank"
+                  class="tip simple-slider-list__name"
+                  [title]="product.title">
+                    {{ product.title }}
+                </a>
+
+                <div class="simple-slider-list__description" (click)="handleSubCategoryRouting(true)">{{ product?.subCategoryTitle | translate }}</div>
+                <div class="simple-slider-list__bottom">
+                    <div class="simple-slider-list__reviews">
+                        <app-review-stars [productRating]="product.rating" [maxStars]="5" [ratingVotes]="product?.ratingVotes"></app-review-stars>
+                    </div>
+                    <div class="simple-slider-list__price_container" *ngIf="product.discountRate > 0">
+                        <span class="simple-slider-list__price product-item__price_red">
+                            <span class="price_item">{{ baseService.calcCurrency(product.price - product.discountRate) | asCurrency : baseService.activeCurrency }}</span>
+                        </span>
+                        <span class="simple-slider-list__price_old">
+                            <span class="price_item">{{ baseService.calcCurrency(product.price) | asCurrency : baseService.activeCurrency }}</span>
+                        </span>
+                    </div>
+                    <div class="simple-slider-list__price_container" *ngIf="product.discountRate <= 0">
+                        <span class="simple-slider-list__price">
+                            <span class="price_item">{{ baseService.calcCurrency(product.price) | asCurrency : baseService.activeCurrency }}</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <app-on-hover-variant-button [product]="product"></app-on-hover-variant-button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,276 @@
+<div class="conatiner container-xxxl product-page">
+  <div class="new-product-item">
+    <app-market-status [MarketStatus]="product.marketStatus" *ngIf="isMobile"></app-market-status>
+
+    <div class="product-item">
+      <div class="product-item__description with-label">
+        <app-market-status [MarketStatus]="product.marketStatus" *ngIf="!isMobile"></app-market-status>
+       
+        <div *ngIf="product.brandTitle">
+          <a class="brand">
+            <span *ngIf="product.brandTitle" [appTooltip]="'Brand' | translate"> {{ product.brandTitle }} 
+              <span *ngIf="product.seriesTitle" [appTooltip]="'Series' | translate"> / {{ product.seriesTitle }}</span>
+              <span *ngIf="product.subBrandTitle" [appTooltip]="'SubBrand' | translate"> / {{ product.subBrandTitle }}</span>
+             
+
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                fill="#458eff"
+                class="bi bi-patch-check-fill ml3"
+                viewBox="0 0 16 16">
+                <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
+              </svg>
+            </span>
+          </a>
+          <!--<a class="series">{{ product.title }}</a>-->
+        </div>
+
+        <div *ngIf="!product.brandTitle">
+          <a class="brand">
+            <span *ngIf="product.categoryTitle" [appTooltip]="'Category' | translate"> {{ product.categoryTitle | translate }} 
+              <span *ngIf="product.subCategoryTitle" [appTooltip]="'SubCategory' | translate"> / {{ product.subCategoryTitle | translate }}</span>
+            </span>
+          </a>
+        </div>
+<!--
+        <div>
+          <a href="javascript:void(0)" (click)="handleCategoriesRouting()" class="brand">
+            <span>{{ product.categoryTitle  | translate }}</span>
+          </a>
+
+          <a href="javascript:void(0)" (click)="handleCategoriesRouting(true)" class="series">
+            {{ product.subCategoryTitle | translate }}
+          </a>
+        </div>-->
+
+        <h1 itemprop="name">
+          <span class="product-item__name" [appTooltip]="'Name' | translate">{{ product.title }}</span>
+          <span class="product-item__category"></span>
+        </h1>
+        
+        <div class="product-item__social">
+          <div class="product-item__reviews">
+            <div class="star-list">
+              <bar-rating [appTooltip]="'Rating' | translate"
+                [(rate)]="this.product.rating"
+                [max]="5"
+                [readOnly]="true"
+                [showText]="false"
+              >
+                <ng-template ratingActive>
+                  <i class="las la-star fill"></i>
+                </ng-template>
+                <ng-template ratingInactive>
+                  <i class="lar la-star"></i>
+                </ng-template>
+              </bar-rating>
+            </div>
+            <div>
+              <a class="responses-amount">
+                <span
+                  >{{ this.product.ratingVotes }}
+                  {{
+                    (this.product.ratingVotes > 1 ? "Opinions" : "Opinion")
+                      | translate
+                  }}</span
+                >
+              </a>
+            </div>
+          </div>
+        </div>
+          <div class="product-item__message" *ngIf="product.bundle != undefined">
+            <div class="product-item__attention-label">{{'Sale' | translate}}</div>
+              <span class="product-item__attention">
+               <span class="action-title" *ngIf="promoText$ | async as promoText">
+               {{ promoText }}
+              </span>
+              </span>
+            <div class="loyaltyTextLabel" style="display: none;">
+            <span class="product-item__attention-label">Допълнителни отстъпки</span>
+            <div class="product-item__attention">
+              <span class="loyaltyText"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="product-item__image" [class.pt-5]="!isMobile">
+        <app-slider-gallery-product
+          [imageObjects]="thumbImages"
+          [activeImage]="activeImage"
+          [product]="product"
+          [categoryTitle]="product?.categoryTitle"
+          id="simple-slider-product-details">
+        </app-slider-gallery-product>
+      
+      </div>
+      <div class="product-item__buy">
+        <div class="product-item__row d-flex justify-content-between">
+
+          <span class="price_item" [class.text-danger]="product?.discountRate" [appTooltip]="'Price With Discount' | translate" style="word-spacing: 8px">
+            {{
+              baseService.calcCurrency(product?.price - product?.discountRate)
+                | asCurrency : baseService.activeCurrency
+            }}
+            <del *ngIf="product?.discountRate" [appTooltip]="'Price Without Discount' | translate">{{
+              baseService.calcCurrency(product?.price, env.taxOnProduct)
+                | asCurrency : baseService.activeCurrency
+            }}</del>
+          </span>
+
+        <div class="icon-transition to-trademark-icon" *ngIf="product?.trademark !== Trademark.NONE"
+          [style.backgroundImage]="'url(/assets/images/trademarks/' + getEnumKeyByValue(product?.trademark) + '.webp)'">
+        </div>
+        </div>
+
+        <div class="product-item__volume-select">
+
+          <app-select-variants *ngIf="variants"
+            [viewLayout]="isMobile ? 'row' : 'column'"
+            [productId]="product?.id"
+            [variants]="variants"
+            [thumbImages]="thumbImages"
+            (setActiveImage)="setActiveImage($event)"
+            (chart)="openChartModal($event)"></app-select-variants>
+
+        </div>
+        <div class="product-item__info">
+          <app-quantity-breaks 
+          [baseProduct]="product" 
+          (bundleChanged)="onBundleChange($event)">
+        </app-quantity-breaks>
+        </div>
+        
+        <div class="alert-box" *ngIf="this.outputMessage?.length > 0">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 25 23"
+          >
+            <path
+              fill="currentColor"
+              fill-rule="evenodd"
+              d="M9.5 2A3.2 3.2 0 0 1 15 2l9 15.8a3.2 3.2 0 0 1-2.8 4.8H3.3c-2.4 0-4-2.6-2.8-4.8L9.5 2Zm4.4 15.8a1.6 1.6 0 1 1-3.2 0 1.6 1.6 0 0 1 3.2 0ZM12.3 5a1.6 1.6 0 0 0-1.6 1.6v4.8a1.6 1.6 0 0 0 3.2 0V6.6A1.6 1.6 0 0 0 12.3 5Z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+          <div class="alertText-container">
+            <p>{{ this.outputMessage | translate }}</p>
+          </div>
+        </div>
+        
+        <div class="product-item__button">
+          <!-- Buy Button -->
+          <button
+            type="button"
+            class="btn btn-large btn-dark full-width"
+            [title]="'Before purchasing select variant' | translate"
+            [class.disabled]="counter > product?.quantity || counter <= 0"
+            [class.disabled]="
+              detailsSettings.disableButtonsIfVariantIsNotSelected &&
+              variants &&
+              this.selectedVariants.length <= 0"
+            [class.right-border]="isInCart == purchaseStatus.Finish"
+            (click)="isInCart === purchaseStatus.None
+                ? AddToCart(true, product, false)
+                : FinishPurchase(true)"
+            [ngSwitch]="isInCart"
+          >
+            <span *ngSwitchCase="purchaseStatus.None">
+              {{"Purchase" | translate}}
+            </span>
+
+            <span *ngSwitchCase="purchaseStatus.Processing">
+              <span class="spinner-border spinner-border-sm"></span>
+           {{ "Processing" | translate }}
+            </span>
+
+            <div class="d-flex justify-content-center h-100 text-center align-center" *ngSwitchCase="purchaseStatus.Finish">
+              <span class="qty-ready" (click)="FinishPurchase(false)">
+                {{ "Finish the purchase" | translate }}
+              </span>
+
+              <!-- Quantity Selector -->
+              <div class="qty-box" *ngIf="!selectedBundleItem">
+                <div class="input-group">
+                  <span class="input-group-prepend">
+                    <button
+                      type="button"
+                      class="btn quantity-left-minus"
+                      data-type="minus"
+                      (click)="decrementCounter()"
+                      [class.disabled]="counter <= 1"
+                    >
+                      <i class="las la-minus"></i>
+                    </button>
+                  </span>
+                  <span class="input" role="textbox" contenteditable>{{
+                    counter
+                  }}</span>
+                  <span class="input-group-prepend">
+                    <button
+                      type="button"
+                      class="btn quantity-right-plus"
+                      data-type="plus"
+                      (click)="incrementCounter()"
+                      [class.disabled]="counter >= product?.quantity">
+                      <i class="las la-plus"></i>
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!--
+      <span *ngSwitchCase="0">{{ "Purchase" | translate }}</span>
+      <span *ngSwitchCase="1">
+       <i class="las la-check"></i>
+       {{ "Finish the purchase" | translate }}</span
+      >
+      <span *ngSwitchCase="2">
+       <span class="spinner-border spinner-border-sm"></span>
+       {{ "Processing" | translate }}</span
+      >-->
+          </button>
+        </div>
+
+        <div class="product-item__code-wrap">
+          <div class="product-item__status">
+            <span class="local" *ngIf="product.quantity > 3">
+              {{ "Available" | translate }} !
+            </span>
+            <span class="local" style="color: #c87b19" *ngIf="product.quantity > 0 && product.quantity <= 3">
+              {{ "Limited Stock" | translate }}
+            </span>
+            <span class="local text-danger" *ngIf="product.quantity <= 0">
+              {{"Sold Out" | translate  }}
+            </span>
+          </div>
+
+          <div class="product-item__code">
+            {{ "product code" | translate }}: <span>45500{{ product.id }}</span>
+          </div>
+        </div>
+
+        <div class="product-item__info">
+          <label class="delivery">
+            <span
+              class="common-delivery-info"
+              *ngIf="
+                !product.isFreeShipping &&
+                checkoutSettings.freeShippingAfter > 0
+              "
+              >{{ "Free delivery over" | translate }}
+              {{
+                baseService.calcCurrency(checkoutSettings.freeShippingAfter)
+                  | asCurrency : baseService.activeCurrency
+              }}</span
+            >
+
+          </label>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

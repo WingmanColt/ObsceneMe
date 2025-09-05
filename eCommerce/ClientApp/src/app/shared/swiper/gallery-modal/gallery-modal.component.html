@@ -1,0 +1,7 @@
+<ng-template #galleryModal let-modal="modal" class="SimpleGalleryModal">
+ 
+  <app-gallery-style-thumbsmain 
+    [imageObjects]="this.imageObjects" [activeIndex]="activeIndex" (closeModal)="close()">
+  </app-gallery-style-thumbsmain>
+
+</ng-template>

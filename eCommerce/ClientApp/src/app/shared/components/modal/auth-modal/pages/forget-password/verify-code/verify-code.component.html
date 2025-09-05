@@ -1,0 +1,28 @@
+ <form [formGroup]="verificationForm">
+            <div class="login-card-row">
+                <div class="login-card-fieldRow">
+                    <label>{{ "Verification code" | translate }} *</label>
+                </div>
+            </div>
+            <div class="login-card-row">
+                <div class="verification-container">
+                    <div class="numbers-container">
+                        <input *ngFor="let control of controls(); let i = index" type="text"
+                            autocomplete="one-time-code" [attr.aria-label]="'Digit ' + (i + 1)" inputmode="numeric"
+                            [formControl]="verificationForm.get(control)" maxlength="1" [name]="'codeInput' + i"
+                            (input)="onInput($event, i)">
+                    </div>
+                </div>
+            </div>
+ </form>
+
+        <div class="login-card-footer" *ngIf="(timerService.timerValue$ | async) <= 0">
+            <div class="footer-container"><span>{{'Didn`t receive a code?' | translate}}</span>
+                <a (click)="resendCode()" *ngIf="!this.isResendClicked">{{ "Resend" | translate }}</a>
+                <a *ngIf="this.isResendClicked"> <span class="spinner-border spinner-border-sm"></span></a>
+            </div>
+        </div>
+
+        <div class="login-card-fieldRow" *ngIf="(timerService.timerValue$ | async) > 0">
+            <p>{{'Resend' | translate}} ({{ timerService.timerValue$ | async }})</p>
+        </div>

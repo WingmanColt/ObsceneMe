@@ -1,0 +1,73 @@
+<!-- Left Column (Category List) -->
+<div [ngClass]="isCollapsed ? 'col-1' : (isMobile ? 'col-5' : 'col-4')">
+  <span class="category-toggle" (click)="toggleCollapse()" *ngIf="isMobile && isCollapsed">
+    <i class="icon las la-eye pr-2"></i>
+  </span>
+  
+  <div class="link-section" style="padding: unset;"
+    [ngStyle]="isMobile ? { 'visibility': isCollapsed ? 'hidden' : 'visible', 'opacity': isCollapsed ? 0 : 1 } : {}">
+
+    <span class="column-title" (click)="toggleCollapse()" *ngIf="isMobile">
+      <span *ngIf="!isCollapsed">{{ 'All Categories' | translate }} </span>
+      <i *ngIf="!isCollapsed" class="icon las la-eye-slash" style="margin-right: 1em;"></i>
+    </span>
+
+    <span class="column-title" *ngIf="!isMobile">
+      <span>{{ 'All Categories' | translate }} </span>
+    </span>
+
+    <div class="menu-title"
+      *ngFor="let entity of categoryItems; trackBy: trackById"
+      [ngClass]="{ 'selected': currentCategory?.id === entity.id }"
+      (mouseenter)="selectCategory(entity)">
+      <a [ngClass]="settings.megaMenuStyle" (click)="clickOnCategory(entity)">
+        <h5 [ngClass]="settings.megaMenuStyle">
+          {{ entity.title | translate }}
+        </h5>
+      </a>
+      <span class="sub-arrow"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Right Column (Subcategories List) -->
+<div [ngClass]="isCollapsed ? 'col-11' : (isMobile ? 'col-7' : 'col-8')">
+  <div class="circle-categories-container" [ngClass]="{ 'hidden': isCollapsed }">
+    <ng-container>
+      <div class="link-container">
+        <a class="link-text">
+          <div class="icon-text-container" [class.text-center]="isMobile" [routerLink]="['/pages/categories']" [queryParams]="{ category: currentCategory?.shortName }">
+            {{ currentCategory?.title | translate }} &nbsp;
+          </div>
+        </a>
+      </div>
+
+      <!-- Subcategories Grid -->
+      <div class="grid-container">
+        <div *ngFor="let sub of currentCategory?.subCategories; trackBy: trackById" class="grid-item">
+          <a (click)="clickOnSubCategory(currentCategory, sub)">
+            <div class="image-wrapper">
+              <img 
+                   [lazyLoad]="settings.categoryImageUrl + currentCategory?.shortName + '/' + sub.icon + settings.categoryImageUrlExtension"
+                   class="lazy-loading"
+                   alt="{{ sub.title }}" />
+            </div>
+            <div class="text-container">
+              <div class="item-title" [title]="sub.title">
+                {{ sub.title | translate }}
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- No Subcategories Skeleton Loader -->
+    <ng-template #noSubCategories>
+      <ngx-skeleton-loader appearance="line" animation="progress-dark" count="1" [theme]="{ width: '20%' }"></ngx-skeleton-loader>
+      <br />
+      <ngx-skeleton-loader count="5" appearance="circle" animation="progress-dark"></ngx-skeleton-loader>
+      <ngx-skeleton-loader count="5" appearance="circle" animation="progress-dark"></ngx-skeleton-loader>
+    </ng-template>
+  </div>
+</div>

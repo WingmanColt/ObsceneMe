@@ -1,0 +1,18 @@
+{
+ "/assets": {
+   "target": "https://localhost:45312",
+   "secure": false, 
+   "changeOrigin": true,
+   "pathRewrite": {
+     "^/assets": "/assets"
+   }
+ },
+
+  "/api": {
+    "target": "https://localhost:45312",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+
+}

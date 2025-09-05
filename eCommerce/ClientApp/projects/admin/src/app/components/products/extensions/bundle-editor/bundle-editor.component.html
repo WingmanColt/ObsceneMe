@@ -1,0 +1,186 @@
+<div class="card mb-4">
+  <div class="card-header">
+    <strong>Create Bundle</strong>
+  </div>
+  <div class="card-body">
+
+    <!-- Show loading until ready -->
+    <ng-container *ngIf="!loading; else loadingTpl">
+
+      <!-- IsActive Checkbox -->
+      <div class="mb-3 form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="isActiveCheck"
+          [checked]="isBundleActive"
+          (change)="onIsActiveChange($event)"
+        />
+        <label class="form-check-label" for="isActiveCheck">Is Active</label>
+      </div>
+
+      <!-- Bundle Form -->
+      <form *ngIf="isBundleActive" [formGroup]="form">
+        <!-- Name -->
+        <div class="mb-3">
+          <label class="form-label">Bundle Name</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            placeholder="Enter bundle name"
+          />
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea
+            class="form-control"
+            formControlName="description"
+            placeholder="Enter description"
+          ></textarea>
+        </div>
+
+        <!-- Status -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Status</label>
+            <select class="form-select" formControlName="status">
+              <option *ngFor="let s of statusList" [value]="s.val">{{ s.key }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Type -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="type">Bundle Type</label>
+            <select class="form-control" formControlName="type">
+              <option *ngFor="let type of bundleTypeList" [value]="type.val">
+                {{ type.key }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Quantity Selector -->
+        <div class="mb-4">
+          <label class="form-label">How many bundle items?</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="bundleQuantity"
+            min="1"
+          />
+        </div>
+
+        <hr />
+
+        <!-- Bundle Items -->
+        <h5>Bundle Items</h5>
+        <div formArrayName="bundleItems">
+          <div
+            *ngFor="let item of bundleItems.controls; let i = index"
+            [formGroupName]="i"
+            class="border rounded p-3 mb-3"
+          >
+            <div class="row g-2">
+
+              <!-- Product Select -->
+              <div class="col-md-12">
+                <label class="form-label">Select Product</label>
+                <select
+                  class="form-select"
+                  formControlName="productId"
+                  (change)="onProductSelected($event.target.value, i)"
+                >
+                  <option [value]="null">Select Product</option>
+                  <option *ngFor="let p of productOptions" [value]="p.id">
+                    {{ p.title }}
+                  </option>
+                </select>
+
+              </div>
+
+              <!-- Title -->
+              <div class="col-md-12">
+                <label class="form-label">Title</label>
+                <input type="text" class="form-control" formControlName="title" />
+              </div>
+
+              <!-- Price -->
+              <div class="col-md-4">
+                <label class="form-label">Price</label>
+                <input type="number" class="form-control" formControlName="price" />
+              </div>
+
+              <!-- Quantity -->
+              <div class="col-md-4 mt-2">
+                <label class="form-label">Quantity</label>
+                <input type="number" class="form-control" formControlName="quantity" />
+              </div>
+
+              <!-- Discount -->
+              <div class="col-md-4">
+                <label class="form-label">Discount Rate </label>
+                <input type="number" class="form-control" formControlName="discountRate" />
+              </div>
+
+              <!-- Image Input + Preview -->
+              <div class="col-md-12 mt-2">
+                <label class="form-label">Image URL</label>
+                <div class="d-flex align-items-start gap-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="imageSrc"
+                    style="flex: 1"
+                  />
+                  <img
+                    [src]="item.get('imageSrc')?.value"
+                    alt="Preview"
+                    class="img-thumbnail"
+                    style="width: 50px; height: 80px"
+                    *ngIf="item.get('imageSrc')?.value"
+                  />
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Remove -->
+            <div class="text-end mt-2">
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="removeBundleItem(i)"
+              >
+                Remove Item
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="mt-3">
+          <button
+            class="btn btn-primary"
+            (click)="submitBundle()"
+            [disabled]="!isBundleActive"
+          >
+            Save Bundle
+          </button>
+        </div>
+      </form>
+    </ng-container>
+
+    <ng-template #loadingTpl>
+      <div class="text-center py-4">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

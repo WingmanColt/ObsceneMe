@@ -1,0 +1,173 @@
+<!-- Container-fluid Starts-->
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="card">
+              <div class="card-header">
+                  <h5>SubCategory List</h5>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Search by title..."
+                        [(ngModel)]="searchText"
+                        (ngModelChange)="onSearchTextChange()"
+                      />
+                    </div>
+        
+                    <div class="dropdown-button pull-right mr-2">
+                      <app-dropdown
+                        [items]="dropdownActions"   
+                        buttonLabel="Actions"      
+                        [multiSelect]="false"        
+                        (selectionChanged)="onActionSelected($event)">
+                      </app-dropdown>
+                    </div>
+                    
+                  </div>
+                  <!-- SubCategorys Table -->
+                  <div id="batchDelete" class="category-table custom-datatable">
+                      <div class="table-responsive">
+                          <table class="table table-striped">
+                              <thead>
+                                  <tr>
+                                      <th scope="col">#</th>
+                                      <th scope="col">Title</th>
+                                      <th scope="col">Icon Name</th>
+                                      <th scope="col">Category</th>
+                                      <th scope="col">Short Name</th>
+                                      <th scope="col">Products</th>
+                                      <th scope="col">Actions</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <ng-container *ngIf="paginatedSubCategories.length > 0">
+                                      <tr *ngFor="let entity of paginatedSubCategories; let i = index">
+                                          <th scope="row">{{ entity?.id || 'N/A' }}</th>
+                                          <td>{{ entity?.title || 'No title available' }}</td>
+                                          <td>
+                                            <img *ngIf="entity.icon?.length" 
+                                                 [src]="entity?.icon" 
+                                                 class="imgTable" 
+                                                 style="width: 20px" 
+                                                 alt="{{ entity?.icon|| 'SubCategory Image' }}">
+                                        </td>
+                                          <td>{{ entity?.categoryShortName || 'No cshortname available' }}</td>
+                                          <td>{{ entity?.shortName || 'No shortname available' }}</td>
+
+                                          <td>{{ entity?.totalProductsCount || 0 }}</td>
+                                          <td>
+                                              <a href="javascript:void(0)" (click)="open(entity)" aria-label="Edit subcategory {{ entity?.title }}">
+                                                  <i class="fa fa-edit f-12"></i>
+                                              </a>&nbsp;
+                                              <a href="javascript:void(0)" (click)="delete(entity?.id)" aria-label="Delete subcategory {{ entity?.title }}">
+                                                  <i class="fa fa-trash-o"></i>
+                                              </a>
+                                          </td>
+                                      </tr>
+                                  </ng-container>
+                              </tbody>
+                          </table>
+
+                          <!-- Pagination Controls -->
+                          <div class="d-flex justify-content-center p-2">
+                              <nav aria-label="Page navigation">
+                                  <ul class="pagination justify-content-center">
+                                      <!-- First Page Button -->
+                                      <li class="page-item" [class.disabled]="pageNumber === 1">
+                                          <a class="page-link" href="javascript:void(0)" (click)="goToFirstPage()">First</a>
+                                      </li>
+                                      
+                                      <!-- Previous Page Button -->
+                                      <li class="page-item" [class.disabled]="pageNumber === 1">
+                                          <a class="page-link" href="javascript:void(0)" (click)="changePage(pageNumber - 1)">Previous</a>
+                                      </li>
+
+                                      <!-- Page Numbers (Showing max 5 pages) -->
+                                      <li class="page-item" *ngFor="let page of getPages()" [class.active]="page === pageNumber">
+                                          <a class="page-link" href="javascript:void(0)" (click)="changePage(page)">{{ page }}</a>
+                                      </li>
+
+                                      <!-- Next Page Button -->
+                                      <li class="page-item" [class.disabled]="pageNumber === getTotalPages()">
+                                          <a class="page-link" href="javascript:void(0)" (click)="changePage(pageNumber + 1)">Next</a>
+                                      </li>
+
+                                      <!-- Last Page Button -->
+                                      <li class="page-item" [class.disabled]="pageNumber === getTotalPages()">
+                                          <a class="page-link" href="javascript:void(0)" (click)="goToLastPage()">Last</a>
+                                      </li>
+                                  </ul>
+                              </nav>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+                            <!-- Modal Template for Add/Edit SubCategory -->
+                            <ng-template #popupModal let-modal>
+                                <div class="modal-header">
+                                    <h5 class="modal-title f-w-600">{{ isUpdateMode ? 'Update' : 'Add' }} SubCategory</h5>
+                                    <button type="button" class="btn btn-unset" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form [formGroup]="modalForm" class="needs-validation">
+                                        <div class="form">
+                                          <input type="hidden" formControlName="id">
+                                          
+                                          <!-- Title Field -->
+                                          <div class="form-group">
+                                            <label for="title" class="mb-1">Name :</label>
+                                            <input class="form-control" id="title" type="text" formControlName="title" placeholder="Name">
+                                          </div>
+                                          
+                                          <!-- ShortName Field -->
+                                          <div class="form-group mb-1">
+                                            <label for="shortName" class="mb-1">ShortName :</label>
+                                            <input class="form-control" id="shortName" type="text" formControlName="shortName" placeholder="Short Name">
+                                          </div>
+                                      
+                                          <div class="form-group">
+                                            <label for="categorySelect" class="mb-1">Category :</label>
+                                            <select
+                                              id="categorySelect"
+                                              class="form-control"
+                                              formControlName="categoryShortName"
+                                              [compareWith]="compareCategories"
+                                            >                                    
+                                              <option *ngFor="let category of allCategories" [ngValue]="category.shortName">
+                                                {{ category.title }}
+                                              </option>
+                                            </select>
+                                          </div>
+                                      
+                                      
+                                          <!-- Icon Field -->
+                                          <div class="form-group mb-1">
+                                            <label for="icon" class="mb-1">Icon Name (optional) :</label>
+                                            <input class="form-control" id="icon" type="text" formControlName="icon" placeholder="Image URL">
+                                          </div>
+                                      
+                                          <!-- File Upload Field -->
+                                          <div class="form-group mb-0">
+                                            <label for="fileUpload" class="mb-1">Upload New Image (optional) :</label>
+                                            <input class="form-control" id="fileUpload" type="file" (change)="onFileSelected($event)">
+                                          </div>
+                                        </div>
+                                      </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" (click)="saveModal()">{{ isUpdateMode ? 'Update' : 'Save' }}</button>
+                                    <button class="btn btn-primary" type="button" data-dismiss="modal" (click)="modal.dismiss('Cross click')">Close</button>
+                                </div>
+                            </ng-template>
+</div>
+<!-- Container-fluid Ends-->

@@ -1,0 +1,30 @@
+<app-breadcrumb [breadcrumbs]="currBreadCrumb"></app-breadcrumb>
+<ng-container
+  [ngSwitch]="
+    this.deviceDetector.isDevice('Mobile')
+      ? settings.templateMobile
+      : settings.template
+  "
+>
+  <!--<app-checkout-style-one *ngSwitchCase="'style-one'"
+        [products$]="products$"
+        [btnSubmitLoader]="btnSubmitLoader"
+        [checkoutForm]="checkoutForm"
+        [avaliableCountries]="avaliableCountries"
+        (submitForm)="onSubmit($event)"></app-checkout-style-one>-->
+  <app-checkout-style-two
+    *ngSwitchCase="'style-two'"
+    [products]="products"
+    [orderReceivePlace]="orderReceivePlace"
+    [btnSubmitLoader]="btnSubmitLoader"
+    [checkoutForm]="checkoutForm"
+    [avaliableCountries]="avaliableCountries"
+    [appliedPromo]="appliedPromo"
+    [appliedPromoState]="appliedPromoState"
+    [outputMessage]="outputMessage"
+    (submitForm)="onSubmit($event)"
+    (ApplyPromo)="applyPromoCode($event)"
+    (selectedPickUpAtHome)="setPickUpAtHomeValue($event)"
+    (submitPreForm)="onPreSubmit($event)"
+  ></app-checkout-style-two>
+</ng-container>

@@ -1,0 +1,182 @@
+<div class="container-fluid">
+    <div class="row register-affiliate signup-content">
+      <!-- Image on the left side, visible on medium and larger screens, hidden on smaller screens -->
+      <div class="col-md-5 signup-img d-md-block">
+        <img [src]="'./assets/images/obscene.me/affiliate/signup.webp'"
+          class="img-fluid" fill priority />
+        <div class="signup-img-content">
+          <p>Join our affiliate program!</p>
+        </div>
+      </div>
+  
+      <!-- Form on the right side, visible on all screen sizes -->
+      <div class="col-md-7 signup-form">
+        <h2 class="form-title">Affiliate Program</h2>
+        <div class="commission_detail">
+          <div class="commission_detail_content container-fluid" id="text_benefit">
+            <h3 class="title-benefits" id="benefit_title"> Benefits </h3>
+            <table style="width:100%" class="info-text benefit-table">
+              <colgroup>
+                <col width="50">
+                <col width="160">
+              </colgroup>
+              <tbody>
+                <tr>
+                  <td><strong id="cookie_label"> Commission type </strong></td>
+                  <td>
+                    <p><i class="las la-check tick-mark"></i><span id="cookie_value"> Percent Of Sale </span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong id="commission_type_label"> Commission amount </strong></td>
+                  <td>
+                    <p><i class="las la-check tick-mark"></i><span id="commission_type_value"> Percent Of Sale </span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong id="commission_amount_label"> Additional terms </strong></td>
+                  <td>
+                    <p><i class="las la-check tick-mark"></i><span id="commission_amount_value"> 10.00 </span></p>
+                  </td>
+                </tr>
+                <tr class="additional_term_tr">
+                  <td><strong id="additional_term_label"> VIP Access </strong></td>
+                  <td>
+                    <div class="additional-term-container" style="display: -webkit-box;">
+                      <i class="las la-check tick-mark"></i>
+                      <div id="additional_term_value" style="width: calc(100% - 23px); padding-left: 4px;">
+                        You will get 10% sales credit on total referral sales when a customer makes a purchase through your affiliate link or use your coupon code.
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+  
+     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="theme-form">
+        <div class="row d-flex justify-content-center" *ngIf="!currentUser?.isAuthenticated">
+
+          <div class="col-md-10 mt-4">
+                <div class="input-wrap">
+                    <div class="float-input-group">
+                        <input type="email" class="form-control" name="email" [formControl]="registerForm.controls['email']"
+                            placeholder="" autocomplete="off" [class.invalid]="registerForm.controls.email.touched && registerForm.controls.email.errors">
+                        <span class="bar"></span>
+                        <label for="email">{{'Email' | translate}}</label>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-md-10 mt-4">
+                  <div class="input-wrap">
+                      <div class="float-input-group">
+
+                <input type="text" class="form-control" name="firstname" [formControl]="registerForm.controls['firstname']"
+                  placeholder="" autocomplete="off" [class.invalid]="registerForm.controls.firstname.touched && registerForm.controls.firstname.errors">
+                  <span class="bar"></span>
+                  <label for="firstname">{{'First Name' | translate}}</label>
+              </div>
+            </div>
+          </div>
+    
+              <div class="col-md-10 mt-4">
+                  <div class="input-wrap">
+                      <div class="float-input-group">
+                          <input type="text" class="form-control" name="lastname" [formControl]="registerForm.controls['lastname']"
+                              placeholder="" autocomplete="off" [class.invalid]="registerForm.controls.lastname.touched && registerForm.controls.lastname.errors">
+                          <span class="bar"></span>
+                          <label for="lastname">{{'Last Name' | translate}}</label>
+                      </div>
+                  </div>
+              </div>
+
+
+              <div class="col-md-10 mt-4">
+                <div class="input-wrap">
+                    <div class="float-input-group">
+                        <input type="text" class="form-control" name="phoneNumber" [formControl]="registerForm.controls['phoneNumber']"
+                            placeholder="" autocomplete="off" [class.invalid]="registerForm.controls.phoneNumber.touched && registerForm.controls.phoneNumber.errors">
+                        <span class="bar"></span>
+                        <label for="phoneNumber">{{'Phone' | translate}}</label>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-md-10 mt-4">
+                  <div class="input-wrap">
+                      <div class="float-input-group">
+                          <input type="password" class="form-control" name="password" [formControl]="registerForm.controls['password']"
+                              placeholder="" autocomplete="off" [class.invalid]="registerForm.controls.password.touched && registerForm.controls.password.errors">
+                          <span class="bar"></span>
+
+                          <label for="password">{{'Password' | translate}}</label>
+                      </div>
+                  </div>
+              </div>
+    
+              <div class="col-md-10 mt-4">
+                  <div class="input-wrap">
+                      <div class="float-input-group">
+    
+                <input type="password" class="form-control" name="confirmPassword"
+                  [formControl]="registerForm.controls['confirmPassword']" placeholder="" autocomplete="off"
+                  [class.invalid]="registerForm.controls.confirmPassword.touched && registerForm.controls.confirmPassword.errors"
+                  [class.invalid]="registerForm.value.password !== registerForm.value.confirmPassword">
+                  <span class="bar"></span>
+
+                  <label for="confirmPassword">{{'Confirm Password' | translate}}</label>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+        <div class="row d-flex justify-content-center" >
+          <div class="col-md-10 mt-2 mb-2">
+            <button type="submit" class="submit" 
+            [disabled]="btnSubmitLoader == 6 || btnSubmitLoader == 3"
+            [class.disabled-success]="btnSubmitLoader == 6 || btnSubmitLoader == 3"
+            [ngSwitch]="this.btnSubmitLoader">
+            <span *ngSwitchCase="0">
+                {{ "JOIN" | translate }}
+            </span>
+
+            <span *ngSwitchCase="1">
+                <span class="spinner-border spinner-border-sm"></span>
+            </span>
+
+            <span *ngSwitchCase="2">
+                <span class="spinner-border spinner-border-sm"></span>
+            </span>
+
+            <span *ngSwitchCase="3">
+                <i class="las la-check"></i> 
+                {{ "You are already an affiliate." | translate }}
+            </span>
+
+            <span *ngSwitchCase="4">
+                <i class="las la-user-times"></i>
+                {{ "JOIN" | translate }}
+            </span>
+
+            <span *ngSwitchCase="5">
+              <i class="las la-user-times"></i>
+              {{ "Verify Email Address" | translate }}
+          </span>
+
+          <span *ngSwitchCase="6">
+            <i class="las la-user-check"></i>
+            {{ "You are already an affiliate." | translate }}
+          </span>
+
+          </button>
+          </div>
+        </div>
+
+      </form>
+      </div>
+      
+    </div>
+  </div>
+  

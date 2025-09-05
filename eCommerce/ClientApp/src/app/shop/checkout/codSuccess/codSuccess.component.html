@@ -1,0 +1,112 @@
+<!-- breadcrumb End -->
+<app-breadcrumb [breadcrumbs]="currBreadCrumb"></app-breadcrumb>
+
+<!-- section start -->
+<section class="p-0" *ngIf="!orderDetails">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="error-section">
+          <h1>404</h1>
+          <h2>{{ "Page not found" | translate }}</h2>
+          <a [routerLink]="'/'" class="btn btn-solid">{{
+            "Back to home" | translate
+          }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Section ends -->
+
+<section class="p-5rem section-b-space light-layout" *ngIf="!finishedLoading">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="success-text">
+          <div class="infinite-scrolling mt-3 mb-3 d-inline-block">
+            <h2>{{ "Order Processing" | translate }}</h2>
+            <div class="center-body">
+              <div class="circle-loader"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section
+  class="p-5rem section-b-space light-layout"
+  *ngIf="isPayed && finishedLoading"
+>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <div class="success-text text-center">
+          <i class="las la-check-circle" aria-hidden="true"></i>
+          <h2>{{ "Thank you" | translate }}</h2>
+          <p>{{ "Order Code" | translate }}: {{ code }}</p>
+          <p>
+            {{
+              "Order has been received. We will contact you soon for order approval!"
+                | translate
+            }}
+          </p>
+        </div>
+        <div
+          class="p-5 d-flex justify-content-evenly"
+          [class.justify-content-center]="this.env.setting.showInvoice"
+        >
+          <div class="col-md-3 col-6">
+            <a [routerLink]="['/shop']" class="btn btn-outline-dark btn-block">
+              {{ "Back" | translate }}</a
+            >
+          </div>
+          <div
+            *ngIf="this.env.setting.showInvoice"
+            class="col-md-3 col-6 d-flex justify-content-center"
+          >
+            <a (click)="this.getInvoice()" class="btn btn-dark btn-block">
+              {{ "Invoice" | translate }}</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- thank-you section start -->
+<section
+  class="p-5rem section-b-space light-layout"
+  *ngIf="!isPayed && finishedLoading"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="error-text">
+          <i class="las la-times" aria-hidden="true"></i>
+          <h2>{{ "Order has been rejected or duplicated." | translate }}</h2>
+          <p>
+            {{
+              "Please check your email for confirmations or try again later."
+                | translate
+            }}
+          </p>
+        </div>
+        <div class="p-5 d-flex row justify-content-evenly">
+          <div class="col-10">
+            <a
+              [routerLink]="['/']"
+              class="btn-large btn-outline-dark btn-full-width"
+            >
+              {{ "Back" | translate }}</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Section ends -->

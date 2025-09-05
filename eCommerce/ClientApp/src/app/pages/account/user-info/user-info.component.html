@@ -1,0 +1,81 @@
+<section class="contact-page section-b-space">
+    <div class="private-offices container">
+      <div class="private-office">
+              <!-- Tabs Navigation -->
+       <ul class="private-office__tabs" *ngIf="!isMobile">
+          <li *ngFor="let tab of filteredTabs"
+              class="private-office__tabs__item"
+              [class.active]="activeTab === tab.value"
+              (click)="changeTab(tab.value)">
+            {{ tab.label | translate }}
+          </li>
+          
+          <li class="private-office__tabs__item partner" *ngIf="!currentUser.user.isAffiliate">
+            <a [routerLink]="['/pages/register-affiliate-account']">
+              <i class="las la-handshake"></i> {{ 'Become a Partner' | translate }}
+            </a>
+          </li>
+
+          <li class="private-office__tabs__item exit">
+            <a (click)="logout()">
+              <i class="las la-sign-out-alt"></i> {{ 'Log out' | translate }}
+            </a>
+          </li>
+        </ul>
+        
+        <div class="private-office__content">
+
+          <!-- Dashboard -->
+          <app-private-office-dashboard *ngIf="activeTab === 'dashboard' && currentUser.user.isAffiliate" [class.active]="activeTab === 'dashboard'">
+          </app-private-office-dashboard>
+
+          <!-- Settings -->
+          <app-private-office-settings class="private-office__content-item" *ngIf="activeTab === 'contact-info'" [class.active]="activeTab === 'contact-info'">
+          </app-private-office-settings>
+
+          <!-- Order History -->
+          <app-private-office-orders class="private-office__content-item" *ngIf="activeTab === 'orders-history'" [class.active]="activeTab === 'orders-history'" >
+          </app-private-office-orders>
+  
+          <!-- Wishlist -->
+          <app-private-office-wishlist class="private-office__content-item" *ngIf="activeTab === 'wish-list'" [class.active]="activeTab === 'wish-list'" >
+          </app-private-office-wishlist>
+
+          <app-private-office-payments class="private-office__content-item" *ngIf="activeTab === 'payments' && currentUser.user.isAffiliate" [class.active]="activeTab === 'payments'">
+          </app-private-office-payments>
+
+          <app-private-office-guide class="private-office__content-item" *ngIf="activeTab === 'guide' && currentUser.user.isAffiliate" [class.active]="activeTab === 'guide'">
+          </app-private-office-guide>
+
+        </div>
+                <!-- Tabs Navigation -->
+       <ul class="private-office__tabs" *ngIf="isMobile">
+          <li *ngFor="let tab of filteredTabs"
+              class="private-office__tabs__mobile__item"
+              [class.private-office__tabs__item]="!isMobile"
+              [class.active]="activeTab === tab.value"
+              (click)="changeTab(tab.value)">
+            {{ tab.label | translate }}
+          </li>
+          
+          <li class="private-office__tabs__item partner" *ngIf="!currentUser.user.isAffiliate">
+            <a [routerLink]="['/pages/register-affiliate-account']">
+              <i class="las la-handshake"></i> {{ 'Become a Partner' | translate }}
+            </a>
+          </li>
+
+          <li class="private-office__tabs__item exit">
+            <a (click)="logout()">
+              <i class="las la-sign-out-alt"></i> {{ 'Log out' | translate }}
+            </a>
+          </li>
+        </ul>
+        
+        <!-- Logout for Mobile -->
+        <a class="private-office__mobile-logout" (click)="logout()">
+          {{ 'Log out' | translate }}
+        </a>
+      </div>
+    </div>
+  </section>
+  

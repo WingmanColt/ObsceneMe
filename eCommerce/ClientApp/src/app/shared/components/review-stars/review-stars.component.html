@@ -1,0 +1,11 @@
+<div class="simple-slider-list__reviews">
+ <div class="star-list">
+   <div 
+     class="star-list__item" 
+     *ngFor="let star of stars; let i = index" 
+     [ngClass]="getStarClass(i)">
+     ★
+   </div>
+ </div>
+ <a class="simple-slider-list__reviews-count">{{ ratingVotes }}</a>
+</div>

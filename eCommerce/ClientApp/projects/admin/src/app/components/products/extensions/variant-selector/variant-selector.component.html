@@ -1,0 +1,51 @@
+<div class="form-group row">
+ <div class="col-xl-3 col-sm-4"> <label class="mb-0">{{'Variants' | translate}} :</label> </div>
+ <div class="col-xl-8 col-sm-7">
+         <div class="qty-box1">
+                 <div class="input-group">
+                         <i class="fa fa-minus btnGtr1"
+                                 (click)="decrement()"
+                                 [class.disabled]></i>
+
+                         <input class="touchspin1 text-center"
+                                 [value]="variantCounter"
+                                 type="text" />
+                                 
+                         <i class="fa fa-plus btnLess1" (click)="increment()"></i>
+                 </div>
+         </div>
+ </div>
+</div>
+
+<div class="row" *ngIf="variantInputsArray && variantInputsArray.length > 0">
+ <div class="col-xl-8 xl-50 col-sm-8 col-6" *ngFor="let item of variantInputsArray; let i = index">
+         <br />
+
+         <form [formGroup]="productForm">
+                <select class="form-control digits" formControlName="variant" (change)="handleSelectChange(i, $event.target.value)">
+                  <option *ngFor="let variant of Variants" [value]="variant.id" [selected]="variant.isSelected" >{{ variant.title | translate }}</option>
+                </select>
+        </form>
+              
+
+         <div *ngIf="this.variantSets[i] && this.variantSets[i].length > 0">
+                 <label *ngFor="let variantItem of this.variantSets[i][0].variantItems; trackBy: trackByFn" style="padding-left: 15px">
+                         <input type="checkbox"
+                                 [value]="variantItem"
+                                 (change)="handleCheckboxChange(i, variantItem, $event.target.checked)"
+                                 [checked]="variantItem.isSelected" /> {{ variantItem.value | translate }}
+        
+                        <select class="form-control mt-2" (change)="handleImageSelectChange(variantItem, $event.target.value)">
+                                <option value="" disabled> {{'Select Image for' | translate}} {{variantItem.value | translate}}</option>
+                                <option *ngFor="let image of imageHolder; let i = index; trackBy: trackById" [value]="image.id" [selected]="image.isSelected">
+                                        <img height="50" width="50"
+                                        [src]="image.src"
+                                        alt="Uploaded Image"
+                                      />
+                                      {{'Image' | translate}}: {{i}}
+                                </option>
+                         </select>
+                        </label>
+        </div>
+ </div>
+</div>

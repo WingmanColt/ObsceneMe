@@ -1,0 +1,7 @@
+<app-simple-slider2 *ngIf="sliderConfig.slides?.length"
+[config]="sliderConfig"
+[slideTemplate]="SimpleSlideTemplate"></app-simple-slider2>
+
+<ng-template #SimpleSlideTemplate let-slide="slide" let-index="index">
+<app-review-card-clean style="width: inherit; height: inherit;" [productReviewCard]="slide"></app-review-card-clean>
+</ng-template>

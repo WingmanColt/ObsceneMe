@@ -1,0 +1,71 @@
+/* Dropdown Content Container */
+.dropdown-content {
+ display: none;
+ position: absolute;
+ background-color: #f9f9f9;
+ min-width: 250px;
+ border: 1px solid #ddd;
+ z-index: 1;
+ margin-top: 4px;
+ max-height: 300px;
+ /* Set a maximum height for the dropdown */
+ overflow-y: auto;
+ /* Add vertical scrollbar when content overflows */
+}
+
+/* Show the dropdown content when the button is clicked */
+.show {
+ display: block;
+}
+
+/* Checkbox and Label Styling */
+.checkbox-label {
+ display: flex;
+ align-items: center;
+ padding: 10px;
+ cursor: pointer;
+}
+
+/* Add margin to the right of the title */
+.checkbox-label .title {
+ margin-right: 12px;
+ font-size: .9em;
+}
+
+/* Highlight label when hovering */
+.checkbox-label:hover {
+ background-color: #ddd;
+}
+
+/* Style the selected items */
+input[type="checkbox"]:checked+.checkbox-label {
+ background-color: #3498db;
+ color: #fff;
+ font-size: .9em;
+}
+
+/* Reduce font size for checkbox labels */
+.checkbox-label {
+ font-size: 10px;
+}
+
+/* Arrow icon for the button */
+.dropdown-button::after {
+ content: "\25BC";
+ margin-left: 5px;
+}
+
+.custom-button {
+ width: 100%;
+ min-height: 40px;
+ text-align: start;
+ background-color: transparent;
+ border: 1px solid #dee2e6;
+ color: black;
+
+
+ border-radius: 0.25rem;
+ padding: 0.48rem 0.75rem;
+ font-weight: 400;
+ line-height: 1.5;
+}

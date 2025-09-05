@@ -1,0 +1,58 @@
+<div class="custom-dropdown">
+  <div class="selected-item" (click)="toggleDropdown()">
+    <div class="selected-content">
+      <!-- Display selected item icon and label -->
+      <ng-container *ngIf="selectedItems.length > 0; else defaultOption">
+        <img *ngIf="selectedItems[0]?.image?.length > 0 && !selectedItems[0].icon" 
+             [src]="selectedIconUrl" class="selected-icon" />
+        <i *ngIf="selectedItems[0]?.image?.length > 0 && selectedItems[0].icon" 
+           [class]="selectedItems[0].image"></i>
+        <span class="selected-label">{{ getSelectedLabels() }}</span>
+      </ng-container>
+      <!-- Default placeholder when no item is selected -->
+      <ng-template #defaultOption>
+        <span class="default-label">{{ 'Select Option' | translate }}</span>
+      </ng-template>
+    </div>
+    <span class="dropdown-arrow" [class.active]="showDropdown" *ngIf="!openDirectionBottom" ></span>
+    <span class="dropdown-arrow" [class.active]="!showDropdown" *ngIf="openDirectionBottom" ></span>
+
+  </div>
+
+  <div class="dropdown-options" 
+       [class.active]="showDropdown" 
+       [ngStyle]="{'top': openDirectionBottom ? '100%' : 'auto', 'bottom': openDirectionBottom ? 'auto' : '100%'}">
+    
+    <!-- First dropdown array -->
+    <div class="dropdown-option" *ngFor="let ent of dropdownArray" 
+         [ngClass]="{'active': ent.isSelected}" 
+         (click)="selectItem(ent, true)">
+      <div class="option-content">
+        <img *ngIf="ent.image?.length > 0 && !ent.icon" 
+             [src]="getIconUrl(ent.image)" class="option-icon" />
+        <i *ngIf="ent.image?.length > 0 && ent.icon" [class]="ent.image"></i>
+        <i *ngIf="!ent.image?.length && !ent.icon && ent.isSelected" class="las la-check selected-check"></i>
+        <span class="option-label">{{ ent.label | translate }}</span>
+      </div>
+      <span *ngIf="ent.badge?.length > 0" class="badge">{{ ent.badge | translate }}</span>
+    </div>
+
+    <!-- Divider between the two arrays -->
+    <hr *ngIf="dropdownArrayTwo?.length > 0" class="dropdown-divider" />
+
+    <!-- Second dropdown array -->
+    <div class="dropdown-option" *ngFor="let ent of dropdownArrayTwo" 
+         [ngClass]="{'active': ent.isSelected}" 
+         (click)="selectItem(ent, false)">
+      <div class="option-content">
+        <img *ngIf="ent.image?.length > 0 && !ent.icon" 
+             [src]="getIconUrl(ent.image)" class="option-icon" />
+        <i *ngIf="ent.image?.length > 0 && ent.icon" [class]="ent.image"></i>
+        <i *ngIf="!ent.image?.length && !ent.icon && ent.isSelected" class="las la-check selected-check"></i>
+        <span class="option-label">{{ ent.label | translate }}</span>
+      </div>
+      <span *ngIf="ent.badge?.length > 0" class="badge">{{ ent.badge | translate }}</span>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<nav *ngIf="totalItems > pageSize">
+    <ul class="pagination">
+        <li class="page-item"
+            [class.disabled]="currentPage === 1"
+            (click)="changePage(1)">
+            <a class="page-link">First</a>
+        </li>
+        <li class="page-item"
+            *ngFor="let page of pages"
+            [class.active]="currentPage === page"
+            (click)="changePage(page)">
+            <a class="page-link">{{ page }}</a>
+        </li>
+        <li class="page-item"
+            [class.disabled]="currentPage === pages.length"
+            (click)="changePage(pages.length)">
+            <a class="page-link">Last</a>
+        </li>
+    </ul>
+</nav>

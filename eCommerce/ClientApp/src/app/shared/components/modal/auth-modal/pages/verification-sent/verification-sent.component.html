@@ -1,0 +1,107 @@
+<div class="login-card-logoBox">
+  <img [lazyLoad]="getLogoUrl(1)" class="cl-logoImage rounded" [alt]="settings.webName">
+    
+    <a [routerLink]="['/']" >
+        {{ settings.webName }}
+    </a>
+</div>
+  
+  <!-- Output Message Alert -->
+  <div *ngIf="outputMessage?.length > 0" class="login-card-alert">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 23">
+      <path fill="currentColor" fill-rule="evenodd"
+        d="M9.5 2A3.2 3.2 0 0 1 15 2l9 15.8a3.2 3.2 0 0 1-2.8 4.8H3.3c-2.4 0-4-2.6-2.8-4.8L9.5 2Zm4.4 15.8a1.6 1.6 0 1 1-3.2 0 1.6 1.6 0 0 1 3.2 0ZM12.3 5a1.6 1.6 0 0 0-1.6 1.6v4.8a1.6 1.6 0 0 0 3.2 0V6.6A1.6 1.6 0 0 0 12.3 5Z"
+        clip-rule="evenodd"></path>
+    </svg>
+    <div class="alertText-container">
+      <p>{{ outputMessage | translate }}</p>
+    </div>
+  </div>
+  
+  <div class="login-card-header">
+    <h1>{{ "Verify your email" | translate }}</h1>
+    <p>{{ "to continue to" | translate }} {{ settings.webName }}</p>
+  </div>
+  
+  <br>
+  
+  <!-- Verification Code Instructions -->
+  <div class="login-card-fieldRow">
+    <small>{{ 'Enter the verification code sent to your email address' | translate }}</small>
+  </div>
+  
+  <!-- User Identity and Avatar -->
+  <div class="identityPreview">
+    <div class="product-review-user-avatar">
+      <div class="thumb" style="width: 24px; height: 24px;" [ngStyle]="{ 'background-color': avatarColors }">
+        <div class="thumb-text" style="font-size: .5em;">
+          {{ userData.email?.substring(0, 1).toUpperCase() }}
+        </div>
+      </div>
+    </div>
+    <p *ngIf="!isEditing">{{ userData?.email }}</p>
+    <input *ngIf="isEditing" [(ngModel)]="userData.email" />
+  
+    <a aria-label="Edit">
+      <i class="las la-edit" *ngIf="!isEditing" (click)="toggleEditMode()"></i>
+      <i class="las la-check-square" *ngIf="isEditing" (click)="submitEditedEmail()"></i>
+    </a>
+  </div>
+  
+  <div class="login-card-body">
+    <div class="login-card-row">
+      <div class="login-card-field">
+        <div class="login-card-fieldRow">
+          <form [formGroup]="verificationForm">
+            <div class="login-card-fieldRow">
+              <small>{{ 'Verification code' | translate }}</small>
+            </div>
+  
+            <div class="login-card-row">
+              <div class="verification-container">
+                <div class="numbers-container">
+                    <input *ngFor="let control of controls(); let i = index; trackBy: trackByIndex" 
+                    type="text" autocomplete="one-time-code"
+                    [attr.aria-label]="'Digit ' + (i + 1)" inputmode="numeric"
+                    [formControl]="verificationForm.get(control)" maxlength="1"
+                    [name]="'codeInput' + i" (input)="onInput($event, i)" 
+                    (paste)="onPaste($event)"  (keydown)="onKeydown($event)">
+                </div>
+              </div>
+            </div>
+  
+
+            <!-- Resend and Timer -->
+            <div class="login-card-footer">
+                <div class="footer-container" *ngIf="(timerService.timerValue$ | async) <= 0">
+                <span>{{ 'Didn’t receive a code?' | translate }}</span>
+                <a (click)="resendCode()" *ngIf="!isResendClicked && resendAttempts < 3">{{ 'Resend' | translate }}</a>
+                <a *ngIf="isResendClicked"><span class="spinner-border spinner-border-sm"></span></a>
+                </div>
+                <div class="footer-container" *ngIf="(timerService.timerValue$ | async) > 0">
+                <span>{{ 'Resend' | translate }}</span>
+                <a> ({{ timerService.timerValue$ | async }})</a>
+                </div>
+            </div>
+  
+  
+            <!-- Confirm User Button -->
+            <div class="login-card-fieldRow">
+            <button type="button" (click)="confirmUser()"
+                        [class.disabled]="!verificationForm?.valid || resendAttempts >= 3 || !canConfirmUser">
+                <span *ngIf="btnSubmitLoader === 0">{{ 'Confirm' | translate }}</span>
+                <span *ngIf="btnSubmitLoader === 1">
+                    <span class="spinner-border spinner-border-sm"></span>
+                </span>
+                <span *ngIf="btnSubmitLoader === 2">
+                    <i class="las la-check"></i> {{ 'Successfully Verified' | translate }}
+                </span>
+            </button>
+        
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  

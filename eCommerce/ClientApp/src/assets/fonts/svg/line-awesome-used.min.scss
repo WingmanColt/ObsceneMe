@@ -1,0 +1,171 @@
+.la,
+.lab,
+.lad,
+.lal,
+.lar,
+.las {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-display: swap;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    font-weight: 400;
+
+    content: '';
+    display: inline-block;
+    font-size: 24px; /* Set the base font size */
+
+    background-size: cover;
+    color:white;
+}
+
+  
+.la-2x {
+    font-size: 2em
+}
+
+
+.la-user:before {
+    content: '';
+    display: inline-block;
+    width: 1em; /* Set width and height relative to font size */
+    height: 1em;
+    background-image: url('user-solid.svg');
+    background-size: cover;
+    color: red;
+}
+
+.la-search:before {
+  content: url('search-solid.svg');
+}
+
+.la-shopping-bag:before {
+  content: url('shopping-bag-solid.svg');
+}
+
+.la-youtube:before {
+  content: url('youtube.svg');
+}
+
+.la-language:before {
+  content: url('language-solid.svg');
+}
+
+.la-wallet:before {
+  content: url('wallet-solid.svg');
+}
+
+.la-map-marker-alt:before {
+  content: url('map-marker-alt-solid.svg');
+}
+
+.la-phone:before {
+  content: url('phone-solid.svg');
+}
+
+.la-envelope:before {
+  content: url('envelope-solid.svg');
+}
+
+.la-user-cog:before {
+  content: url('user-cog-solid.svg');
+}
+
+.la-angle-double-up:before {
+  content: url('angle-double-up-solid.svg');
+}
+
+.la-moon:before {
+  content: url('moon-solid.svg');
+}
+
+.la-times:before {
+  content: url('times-solid.svg');
+}
+
+.la-times-circle:before {
+  content: url('times-circle-solid.svg');
+}
+
+.la-fire-alt:before {
+  content: url('fire-alt-solid.svg');
+}
+
+.la-caret-down:before {
+  content: url('caret-down-solid.svg');
+}
+
+.la-angle-left:before {
+  content: url('angle-left-solid.svg');
+}
+
+.la-angle-right:before {
+  content: url('angle-right-solid.svg');
+}
+
+.la-thumbs-up:before {
+  content: url('thumbs-up-solid.svg');
+}
+
+.la-user-check:before {
+  content: url('user-check-solid.svg');
+}
+
+.la-star:before {
+  content: url('star-solid.svg');
+}
+
+.la-shopping-cart:before {
+  content: url('shopping-cart-solid.svg');
+}
+
+.la-lock:before {
+  content: url('lock-solid.svg');
+}
+
+.la-check:before {
+  content: url('check-solid.svg');
+}
+
+.la-plus:before {
+  content: url('plus-solid.svg');
+}
+
+.la-minus:before {
+  content: url('minus-solid.svg');
+}
+
+.la-exclamation-circle:before {
+  content: url('exclamation-circle-solid.svg');
+}
+
+.la-check-circle:before {
+  content: url('check-circle-solid.svg');
+}
+
+.la-mobile:before {
+  content: url('mobile-alt-solid.svg');
+}
+
+.la-book:before {
+  content: url('book-solid.svg');
+}
+
+.la-dumbbell:before {
+  content: url('dumbbell-solid.svg');
+}
+
+.la-chess:before {
+  content: url('chess-solid.svg');
+}
+
+.la-suitcase:before {
+  content: url('suitcase-solid.svg');
+}
+
+.la-paint-brush:before {
+  content: url('paint-brush-solid.svg');
+}

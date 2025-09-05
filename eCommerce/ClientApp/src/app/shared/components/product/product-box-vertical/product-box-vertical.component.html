@@ -1,0 +1,35 @@
+<div *ngIf="product">
+  <div class="product-vertical">
+    <div class="img-wrapper">
+
+                      <!-- Display product images if available -->
+                <img *ngIf="product?.images == undefined"
+                     [productImage]="this.baseService.getImageFull(product?.image, this.product?.id)"
+                     [fallbackUrl]="defaultImage"
+                     [alt]="product?.title" />
+
+                <!-- Display single product image if images are not defined -->
+                <img *ngIf="product?.images !== undefined"
+                [productImage]="this.baseService.getImageFull(product?.images[0]?.src, this.product?.id)"
+                [fallbackUrl]="defaultImage"
+                [alt]="product?.title" />
+
+    </div>
+    <div class="item-content">
+      <div class="item-left">
+        <div class="item-title">
+          <h4 class="title">{{ product?.title.length > 37 ? (product?.title | slice : 0 : 37) + "..." : (product?.title
+            | titlecase) }}</h4>
+        </div>
+        <div class="item-price"> {{ baseService.calcCurrency(product.price - product.discountRate) | asCurrency :
+          baseService.activeCurrency }}<span> </span>
+        </div>
+      </div>
+      <div class="item-right">
+        <a [routerLink]="['/shop/product/', product.id]"
+          target="_blank"
+          class="btn-large btn-dark btn-xs"> {{ "Check" | translate }}</a>
+      </div>
+    </div>
+  </div>
+</div>

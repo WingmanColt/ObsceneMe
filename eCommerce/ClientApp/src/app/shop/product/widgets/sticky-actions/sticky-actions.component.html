@@ -1,0 +1,44 @@
+<div class="container pb-3 pt-3 fixed-container">
+ <div class="row">
+  <div class="col">
+   <div class="qty-box qty-xs borderless">
+    <div class="input-group">
+     <span class="input-group-prepend">
+      <button type="button" class="btn quantity-left-minus" data-type="minus" (click)="decrementCounter()" [class.disabled]="counter <= product?.quantity">
+       <i class="las la-minus"></i>
+      </button>
+     </span>
+     <span class="input" role="textbox" contenteditable>{{ counter }}</span>
+     <span class="input-group-prepend">
+      <button type="button" class="btn quantity-right-plus" data-type="plus" (click)="incrementCounter()" [class.disabled]="counter > product?.quantity">
+       <i class="las la-plus"></i>
+      </button>
+     </span>
+    </div>
+   </div>
+  </div>
+
+  <div class="col">
+   <a
+    class="btn-large btn-dark btn-xs-leftSideRounded"
+    [title]="'Before purchasing select variant' | translate"
+    [class.disabled]="counter > product?.quantity"
+    [class.disabled]="detailsSettings.disableButtonsIfVariantIsNotSelected && variants && this.selectedVariants.length <= 0"
+    (click)="this.isInCart == 0 ? AddToCart(product, false) : this.FinishPurchase()"
+    [ngSwitch]="this.isInCart">
+    <span *ngSwitchCase="0">
+     <i class="las la-cart-plus"></i>
+     {{ "Buy Now" | translate }}
+    </span>
+    <span *ngSwitchCase="1">
+     <i class="las la-check"></i>
+     {{ "Finish" | translate }}</span
+    >
+    <span *ngSwitchCase="2">
+     <span class="spinner-border spinner-border-sm"></span>
+     {{ "Processing" | translate }}</span
+    >
+   </a>
+  </div>
+ </div>
+</div>

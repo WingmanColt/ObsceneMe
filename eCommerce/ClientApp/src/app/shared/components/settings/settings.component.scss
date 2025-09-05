@@ -1,0 +1,16 @@
+
+
+.selectWithIcon .d-flex.bd-highlight {
+  display: flex;
+  align-items: center; /* vertically centers icon and select */
+  gap: 0.5rem;        /* optional spacing between icon and select */
+}
+
+
+.customSelectInput {
+  height: 2.5rem;      /* adjust height as needed */
+  line-height: 2.5rem; /* vertically centers the text */
+  padding: 0 0.5rem;   /* horizontal padding */
+  display: flex;
+  align-items: center;
+}

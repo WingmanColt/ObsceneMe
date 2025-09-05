@@ -1,0 +1,150 @@
+<div [class]="cols">
+  <div class="left-col" [ngSwitch]="isMobile ? detailsSettings.swiperSectionMobile : detailsSettings.swiperSection">
+    <app-thumbnail-swiper *ngSwitchCase="'thumbnail-swiper'" [thumbImages]="thumbImages" [activeImage]="activeImage"
+      [swiperBack]="swiperBack" [swiperLike]="swiperLike" [alt]="product?.title"></app-thumbnail-swiper>
+    <app-like-swiper *ngSwitchCase="'app-like-swiper'" [thumbImages]="thumbImages" [activeImage]="activeImage"
+      [swiperBack]="swiperBack" [swiperLike]="swiperLike" [alt]="product?.title"></app-like-swiper>
+  </div>
+</div>
+
+<div [class]="cols">
+  <div class="product-right Three">
+    <div class="container pb-2">
+      <!-- <div class="row">
+    <div class="col-12">
+     <small class="brandTitle">{{ product?.brand?.title }}</small>
+    </div>
+   </div>-->
+      <div class="row p-2">
+        <div class="col-10 pt-3" style="text-align: start">
+          <!--<div class="rating-container" *ngIf="detailsSettings.reviewsActive">
+      <i class="lar la-star star"></i>
+      <i class="las la-star star-fill" [ngStyle]="{ width: product.rating.toFixed(2) + '%' }"></i>
+      <span class="rating-text">{{ product.rating.toFixed(2) }} ({{ product?.reviews?.length }} {{ "Reviews" | translate }})</span>
+     </div>-->
+
+          <small class="brandTitle" *ngIf="product.brand">{{ "by" | translate }} {{ product?.brand?.title }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#458eff" class="bi bi-patch-check-fill"
+              viewBox="0 0 16 16">
+              <path
+                d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z" />
+            </svg>
+          </small>
+
+          <small class="brandTitle" *ngIf="product.brand?.title?.length <= 0">
+            {{ "by" | translate }} {{ env.webName }} Official
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#458eff" class="bi bi-patch-check-fill"
+              viewBox="0 0 16 16">
+              <path
+                d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z" />
+            </svg>
+          </small>
+
+          <h2>{{ product?.title | titlecase }}</h2>
+          <!--
+     <small class="brandTitle" *ngIf="product.brand?.title?.length > 0"
+      >{{ "by" | translate }} {{ product?.brand?.title }}
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#458eff" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
+       <path
+        d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z" />
+      </svg>
+     </small>
+
+     <small class="brandTitle" *ngIf="product.brand?.title?.length <= 0">
+      {{ "by" | translate }} {{ env.webName }} Official
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#458eff" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
+       <path
+        d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z" />
+      </svg>
+     </small>-->
+        </div>
+        <div class="col-2 align-center">
+          <app-social *ngIf="!isQuickView && detailsSettings.shareOnSocialActive" [onlyIcon]="true"></app-social>
+        </div>
+        <!--
+    <div class="col-4">
+     <h3>
+      {{ updateCurrency(product?.price - product?.discountRate) | asCurrency : this.activeCurrency }}
+      <del *ngIf="product?.discountRate">{{ updateCurrency(product?.price) | asCurrency : this.activeCurrency }}</del>
+     </h3>
+    </div>-->
+      </div>
+
+      <div class="border-product p-4" *ngIf="detailsSettings.detailsInfoShow">
+        {{ this.product.details | translate }}
+      </div>
+      <hr />
+
+      <app-select-variants [viewLayout]="this.isMobile ? 'row' : 'column'" [variants]="this.variants"
+        (selectedItems)="selectedItems($event)" (chartModal)="openChartModal($event)"
+        *ngIf="variants"></app-select-variants>
+
+      <div class="border-product p-4">
+        <h5 class="product-title">
+          {{ "Quantity" | translate }}
+        </h5>
+        <div class="qty-box qty-md pt-3">
+          <div class="input-group">
+            <span class="input-group-prepend">
+              <button type="button" class="btn quantity-left-minus" data-type="minus" (click)="decrementCounter()"
+                [class.disabled]="counter <= product?.quantity">
+                <i class="las la-minus"></i>
+              </button>
+            </span>
+            <span class="input" role="textbox" contenteditable>{{ counter }}</span>
+            <span class="input-group-prepend">
+              <button type="button" class="btn quantity-right-plus" data-type="plus" (click)="incrementCounter()"
+                [class.disabled]="counter > product?.quantity">
+                <i class="las la-plus"></i>
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-product p-4" *ngIf="detailsSettings.fastOrderActive">
+        <h5 class="product-title">
+          {{ "Fast Order" | translate }}
+          <span data-bs-toggle="tooltip" data-bs-placement="right"
+            [title]="'Enter your phone number, order and we`ll call you back with details.' | translate"
+            class="las la-question-circle"> </span>
+        </h5>
+        <small>{{ "We will call you." | translate }}</small>
+        <br />
+        <app-fast-order [col]="'col-10 center'" [product]="product"
+          [isVariantSelected]="this.variants && this.selectedVariants.length <= 0"></app-fast-order>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container pb-2 pt-2 fixed-container">
+  <div class="row">
+    <div class="col">
+      <span class="price-label">{{ "Price" | translate }}</span>
+      <!-- Added this line -->
+      <strong class="text-silver">
+        {{ baseService.calcCurrency(product?.price - product?.discountRate) | asCurrency : baseService.activeCurrency }}
+        <!--<del *ngIf="product?.discountRate">{{ updateCurrency(product?.price) | asCurrency : this.activeCurrency }}</del>-->
+      </strong>
+    </div>
+
+    <div class="col">
+      <a class="btn-large btn-solid btn-gradient btn-buy" [title]="'Before purchasing select variant' | translate"
+        [class.disabled]="counter > product?.quantity"
+        [class.disabled]="detailsSettings.disableButtonsIfVariantIsNotSelected && variants && this.selectedVariants.length <= 0"
+        (click)="this.isInCart == 0 ? AddToCart(product, false) : this.FinishPurchase()" [ngSwitch]="this.isInCart">
+        <span *ngSwitchCase="0">
+          <i class="las la-cart-plus"></i>
+          {{ "Buy Now" | translate }}
+        </span>
+        <span *ngSwitchCase="1">
+          <i class="las la-check"></i>
+          {{ "Finish" | translate }}</span>
+        <span *ngSwitchCase="2">
+          <span class="spinner-border spinner-border-sm"></span>
+          {{ "Processing" | translate }}</span>
+      </a>
+    </div>
+  </div>
+</div>

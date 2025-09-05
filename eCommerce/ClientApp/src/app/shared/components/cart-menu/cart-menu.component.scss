@@ -1,0 +1,60 @@
+ul.sidebar-menu {
+  li {
+    .qty-box {
+      .input-group {
+        justify-content: unset;
+        width: unset;
+
+        .input.number-box{
+          align-items: center;
+          display: flex;
+          text-align: center;
+        }
+        span button {
+          background: transparent !important;
+          border: unset !important;
+
+          &.disabled {
+            opacity: 0.2 !important;
+          }
+
+          i {
+            color: black;
+            font-size: 1em;
+          }
+        }
+
+        .form-control {
+          border-right: unset;
+          border-left: unset;
+
+          width: 54px;
+          height: 30px;
+        }
+      }
+    }
+
+    .input,
+    .textarea {
+      border: unset;
+      font-family: inherit;
+      font-size: inherit;
+      padding: 1px 8px;
+    }
+
+    .about {
+      color: #a6a2a2;
+      font-size: 0.6em;
+      letter-spacing: 1px;
+    }
+  }
+}
+.btn-unset.delete-button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.delete-button {
+  .spinner-border {
+    color: white;
+  }
+}

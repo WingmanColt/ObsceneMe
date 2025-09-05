@@ -1,0 +1,63 @@
+<div *ngIf="enable">
+    <!-- theme setting 
+    <a href="javascript:void(0)">
+        <div class="setting-sidebar" id="setting-icon" (click)="layoutSidebarToggle()">
+            <div>
+                <i class="fa fa-cog" aria-hidden="true"></i>
+            </div>
+        </div>
+    </a>
+    <div id="setting_box" class="setting-box" [class.opensetting]="layoutsidebar">
+        <a href="javascript:void(0)" class="overlay" (click)="layoutSidebarToggle()"></a>
+        <div class="setting_box_body">
+            <div>
+                <div class="sidebar-back text-start" (click)="layoutSidebarToggle()">
+                    <i class="fa fa-angle-left pe-2" aria-hidden="true"></i> Back
+                </div>
+            </div>
+            <div class="setting-body">
+
+                <div class="setting-title" (click)="opensettingcontent('color option')">
+                    <h4>
+                        color picker
+                        <span class="according-menu"></span>
+                    </h4>
+                </div>
+                <div class="setting-contant" [class.opensubmenu]="isActive('color option')">
+                    <ul class="color-box">
+                        <li>
+                            <input id="colorPicker1" type="color" value="#ff4c3b" name="Background" (change)="customizeThemeColor($event)">
+                            <span>theme deafult color</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="setting-title" (click)="opensettingcontent('rtl')">
+                    <h4>
+                        RTL
+                        <span class="according-menu"></span>
+                    </h4>
+                </div>
+                <div class="setting-contant" [class.opensubmenu]="isActive('rtl')">
+                    <ul class="setting_buttons">
+                        <li id="ltr_btn">
+                            <a href="javascript:void(0)" (click)="customizeLayoutType('ltr')" class="btn setting_btn">LTR</a>
+                        </li>
+                        <li id="rtl_btn">
+                            <a href="javascript:void(0)" (click)="customizeLayoutType('rtl')" class="btn setting_btn">RTL</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>-->
+    <!-- theme setting -->
+    <div class="sidebar-btn dark-light-btn">
+        <div class="dark-light">
+            <div class="theme-layout-version" (click)="customizeLayoutDark()">
+                <i class="lar la-moon"></i>
+            </div>
+        </div>
+    </div>
+
+</div>

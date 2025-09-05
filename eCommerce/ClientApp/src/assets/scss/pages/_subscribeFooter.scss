@@ -1,0 +1,269 @@
+.footer-subscribe:after,
+.social__item:after {
+ content: "";
+ display: inline-block;
+ vertical-align: middle;
+ height: 100%;
+}
+.footer-subscribe {
+ text-align: center;
+ margin: 0 0 84px;
+ padding: 78px 16px 41px;
+
+ &.tab-bg {
+  &:after {
+   background-color: rgb(79, 78, 77);
+  }
+ }
+}
+
+@media (max-width: 1000px) {
+ .footer-subscribe {
+  height: auto;
+  margin: 0 0 29px;
+  padding: 29px 16px 32px;
+ }
+ .footer-subscribe:after {
+  content: none;
+ }
+}
+
+.footer-subscribe-wrapper {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+}
+
+.footer-subscribe-header {
+ text-transform: uppercase;
+ font-size: 26px;
+ line-height: 32px;
+ font-weight: 700;
+ padding: 0 10px;
+}
+
+@media (max-width: 1000px) {
+ .footer-subscribe-header {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+ }
+}
+
+.footer-input-row {
+ width: 416px;
+ margin: 40px 0 0 0;
+ position: relative;
+}
+
+.footer-input-row .footer-input-group,
+.float-input-group {
+ position: relative;
+}
+
+.footer-input-row .footer-input-group input,
+.float-input-group input {
+ background: 0 0;
+ color: #212121;
+ font-size: 14px;
+ padding: 10px 110px 10px 0;
+ display: block;
+ width: 100%;
+ border: none;
+ border-radius: 0;
+ border-bottom: 1px solid #212121;
+}
+
+.footer-input-row .footer-input-group input:focus .float-input-group input:focus {
+ outline: 0;
+ box-shadow: none;
+}
+
+.footer-input-row .footer-input-group input:focus ~ label,
+.footer-input-row .footer-input-group input:not(:placeholder-shown) ~ label,
+.float-input-group input:focus ~ label,
+.float-input-group input:not(:placeholder-shown) ~ label {
+ top: -14px;
+ font-size: 12px;
+ color: #b4b4b4;
+}
+
+.footer-input-row .footer-input-group input:focus ~ .bar:before,
+.float-input-group input:focus ~ .bar:before {
+ width: 100%;
+}
+
+.footer-input-row .footer-input-group input::placeholder,
+.footer-input-row .footer-input-group input:-ms-input-placeholder,
+.footer-input-row .footer-input-group input::-ms-input-placeholder,
+.float-input-group input::placeholder,
+.float-input-group input:-ms-input-placeholder,
+.float-input-group input::-ms-input-placeholder {
+ color: #fafafa;
+ opacity: 1;
+}
+
+.footer-input-row .footer-input-group input:-webkit-autofill,
+.footer-input-row .footer-input-group input:-webkit-autofill:active,
+.footer-input-row .footer-input-group input:-webkit-autofill:focus,
+.footer-input-row .footer-input-group input:-webkit-autofill:hover,
+.float-input-groupinput:-webkit-autofill,
+.float-input-group input:-webkit-autofill:active,
+.float-input-group input:-webkit-autofill:focus,
+.float-input-group input:-webkit-autofill:hover {
+ -webkit-box-shadow: 0 0 0 30px #fafafa inset !important;
+ box-shadow: 0 0 0 30px #fafafa inset !important;
+ background-color: #fafafa !important;
+ background-clip: content-box !important;
+}
+
+.footer-input-row .footer-input-group input:-webkit-autofill:active ~ label,
+.footer-input-row .footer-input-group input:-webkit-autofill:focus ~ label,
+.footer-input-row .footer-input-group input:-webkit-autofill:hover ~ label,
+.footer-input-row .footer-input-group input:-webkit-autofill ~ label,
+.float-input-group input:-webkit-autofill:active ~ label,
+.float-input-group input:-webkit-autofill:focus ~ label,
+.float-input-group input:-webkit-autofill:hover ~ label,
+.float-input-group input:-webkit-autofill ~ label {
+ top: -14px;
+ font-size: 12px;
+ color: #b4b4b4;
+}
+
+.footer-input-row .footer-input-group label,
+.float-input-group label {
+ color: #a6a2a2;
+ font-size: 14px;
+ font-weight: 400;
+ position: absolute;
+ pointer-events: none;
+ left: 0;
+ top: 6px;
+ transition: 0.3s ease all;
+}
+
+.footer-input-row .footer-input-group .bar,
+.float-input-group .bar {
+ position: relative;
+ display: block;
+ width: 100%;
+}
+
+.footer-input-row .footer-input-group .bar:before,
+.float-input-group .bar:before {
+ content: "";
+ height: 1px;
+ width: 0;
+ bottom: 0;
+ position: absolute;
+ background: #5b24c9;
+ transition: 0.3s ease all;
+ left: 0;
+}
+
+.footer-input-row .footer-input-group.invalid input,
+.float-input-group input.invalid,
+.float-input-group textarea.invalid,
+.invalid {
+ border-bottom-color: #f62427 !important;
+}
+
+.footer-input-row .footer-input-group.valid input,
+.float-input-group input.valid,
+.float-input-group textarea.valid,
+.valid {
+ border-bottom-color: #40f624 !important;
+}
+.footer-input-row .footer-input-group.disabled input,
+.float-input-group input.disabled,
+.float-input-group textarea.disabled,
+.disabled {
+cursor: none;
+pointer-events: none;
+
+}
+@media (max-width: 1000px) {
+ .footer-input-row {
+  width: 100%;
+  max-width: 400px;
+  display: block;
+ }
+ .footer-input-row .input-wrap {
+  width: 61%;
+ }
+ .footer-input-row .input,
+ .float-input-group .input {
+  font-size: 24px;
+  padding: 0 27px;
+ }
+}
+
+@media (max-width: 735px) {
+ .footer-input-row .input-wrap {
+  width: 55.46875vw;
+ }
+ .footer-input-row .input,
+ .float-input-group .input {
+  font-size: 3.75vw;
+  padding: 0 4.21875vw;
+ }
+}
+
+.footer-submit {
+ text-transform: uppercase;
+ font-size: 0.9em;
+ font-weight: 550;
+ height: 40px;
+ position: absolute;
+ top: 0;
+ right: 0;
+ transition: transform 0.1s linear;
+
+ &:hover {
+  transform: scale(1.1);
+ }
+}
+.float-input-group {
+ width: 100%;
+ input[type="text"],
+ input[type="email"],
+ input[type="password"],
+ input[type="tel"],
+ input[type="number"],
+ input[type="url"] {
+  padding: 0;
+  border: 0;
+  background-color: unset !important;
+  border-radius: 0;
+ // border-bottom: 1px solid #222222;
+ border-bottom: 1px solid #ebebeb;
+
+ &:focus{
+    box-shadow: unset;
+ }
+ }
+ textarea.form-control {
+  min-height: 7rem;
+ }
+}
+.footer-input-row .footer-input-group input,
+.float-input-group input {
+ color: #212121;
+ font-size: 14px;
+ padding: 10px 110px 10px 0;
+ display: block;
+ width: 100%;
+ line-height: 45px;
+ border: none;
+ border-bottom-width: medium;
+ border-bottom-style: none;
+ border-bottom-color: currentcolor;
+ border-radius: 0;
+ border-bottom: 1px solid $default-font;
+}
+
+.dark .footer-input-row .footer-input-group input,
+.dark .float-input-group input {
+ border-bottom: 1px solid $default-silver-font;
+ color:$default-silver-font;
+}

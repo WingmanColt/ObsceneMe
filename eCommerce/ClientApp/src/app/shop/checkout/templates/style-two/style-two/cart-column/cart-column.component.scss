@@ -1,0 +1,34 @@
+.qty-box {
+  display: inline-block;
+  justify-self: start;
+  .input-group {
+    width: unset;
+
+    .input.number-box {
+      align-items: center;
+      display: flex;
+    }
+    
+    span button {
+      background: transparent !important;
+      border: unset !important;
+
+      &.disabled {
+        opacity: 0.2 !important;
+      }
+
+      i {
+        color: black;
+        font-size: 1em;
+      }
+    }
+
+    .form-control {
+      border-right: unset;
+      border-left: unset;
+
+      width: 54px;
+      height: 30px;
+    }
+  }
+}

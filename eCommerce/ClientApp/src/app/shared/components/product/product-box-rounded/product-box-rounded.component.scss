@@ -1,0 +1,47 @@
+.product-box-rounded {
+.rounded-t-2xl
+{
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+.shadow
+{
+  --tw-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+  --tw-shadow-colored: 0px 0px 16px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);
+}
+.rounded-2xl
+{
+  border-radius: 1rem;
+}
+.-mt-20
+{
+  margin-top: -5rem;
+}
+.mx-5
+{
+  margin-left: 1.25rem;
+  margin-right: 1.25rem;
+}
+.p-6
+{
+  padding: 1.5rem;
+}
+
+.text-lg
+{
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+.text-3xl
+{
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+}

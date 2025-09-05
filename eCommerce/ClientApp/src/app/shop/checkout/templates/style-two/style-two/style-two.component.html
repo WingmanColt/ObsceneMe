@@ -1,0 +1,605 @@
+<div class="container-fluid">
+  <!-- layout -->
+  <div class="product-page page-checkout">
+    <div class="checkout">
+      <div class="user-column">
+        <div class="title">
+          <h1 class="page-header">{{ "Order Completion" | translate }}</h1>
+          <div class="checkout-header__item checkout__tabs-item">
+            Аз съм редовен клиент
+          </div>
+        </div>
+        <div class="checkout-header">
+          <div
+            class="checkout-header__item"
+            [class.active]="!isFinalTab"
+            (click)="deactivateFinalTab()"
+          >
+            {{ "Personal Details" | translate }}
+          </div>
+          <div
+            class="checkout-header__item checkout__tabs-item"
+            [class.active]="isFinalTab"
+            (click)="
+              !checkoutForm?.controls.fullName.errors &&
+              !checkoutForm?.controls.postalCode.errors &&
+              !checkoutForm?.controls.email.errors &&
+              !checkoutForm?.controls.phoneNumber.errors
+                ? activateFinalTab(undefined, true)
+                : activateFinalTab(undefined, false)
+            "
+          >
+            {{ "Order Details" | translate }}
+          </div>
+        </div>
+        <div class="checkout__content">
+          <div class="checkout__content-item active">
+            <form
+              [formGroup]="checkoutForm"
+              (ngSubmit)="onSubmit(this.checkoutForm?.value)"
+              class="checkout__steps-tabs"
+            >
+              <input type="hidden" name="fields[check]" value="1" />
+              <!--<input id="checkout__steps-tab1" type="radio" name="checkout__steps_tab" class="checkout__steps-tab_switch tab1" checked="" (change)="activateFinalTab()" />
+       <label for="checkout__steps-tab1" class="checkout__steps-tab_label label1"><span>1</span>{{'Personal Details' | translate}}</label>
+
+       <input id="checkout__steps-tab2" type="radio" name="checkout__steps_tab" class="checkout__steps-tab_switch tab2" (change)="activateFinalTab()" />
+       <label for="checkout__steps-tab2" class="checkout__steps-tab_label label2" [class.disabled]="checkoutForm?.controls.fullName.errors || checkoutForm?.controls.postalCode.errors || checkoutForm?.controls.email.errors || checkoutForm?.controls.phoneNumber.errors"><span>2</span>{{'Order Details' | translate}}</label>
+       -->
+              <div
+                class="checkout__steps-tab checkout__steps-tab1"
+                [ngStyle]="!isFinalTab ? { display: 'block' } : null"
+              >
+                <div class="checkout__column">
+                  <div class="checkout__row checkout__row_auth">
+                    <div class="input-wrap profile-form-group">
+                      <div class="float-input-group">
+                        <input
+                          type="text"
+                          name="firstname"
+                          [formControl]="checkoutForm?.controls['fullName']"
+                          placeholder=" "
+                          autocomplete="off"
+                          [class.invalid]="
+                            checkoutForm?.controls.fullName.touched &&
+                            checkoutForm?.controls.fullName.errors
+                          "
+                        />
+                        <span class="bar"></span>
+                        <label for="firstname">{{ "Full Name" | translate }} *</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="checkout__row checkout__row_auth">
+                    <div class="input-wrap profile-form-group">
+                      <div class="float-input-group">
+                        <input
+                          type="text"
+                          name="postalCode"
+                          [formControl]="checkoutForm?.controls['postalCode']"
+                          placeholder=" "
+                          autocomplete="off"
+                          [class.invalid]="
+                            checkoutForm?.controls.postalCode.touched &&
+                            checkoutForm?.controls.postalCode.errors
+                          "
+                        />
+                        <span class="bar"></span>
+                        <label for="postalCode"
+                          >{{ "Postal Code" | translate }} *</label
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="checkout__row">
+                    <i class="las la-exclamation-circle"></i>
+                    {{ "Please use only Latin letters when entering information in the fields." | translate }}
+                  </div>
+                </div>
+                <div class="checkout__column">
+                  <div class="checkout__row checkout__row_auth">
+                    <div class="input-wrap profile-form-group">
+                      <div class="float-input-group">
+                        <input
+                          type="text"
+                          name="phoneNumber"
+                          [formControl]="checkoutForm?.controls['phoneNumber']"
+                          placeholder=" "
+                          autocomplete="off"
+                          [class.invalid]="
+                            checkoutForm?.controls.phoneNumber.touched &&
+                            checkoutForm?.controls.phoneNumber.errors
+                          "
+                        />
+                        <span class="bar"></span>
+                        <label for="phoneNumber"
+                          >{{ "Phone" | translate }} *</label
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="checkout__row checkout__row_auth">
+                    <div class="input-wrap profile-form-group">
+                      <div class="float-input-group">
+                        <input
+                          type="text"
+                          name="email"
+                          [formControl]="checkoutForm?.controls['email']"
+                          placeholder=" "
+                          autocomplete="off"
+                          [class.invalid]="
+                            checkoutForm?.controls.email.touched &&
+                            checkoutForm?.controls.email.errors
+                          "
+                        />
+                        <span class="bar"></span>
+                        <label for="email"
+                          >{{ "Email Address" | translate }} *</label
+                        >
+                      </div>
+                    </div>
+                    <!--<div class="input-warning hidden">Клиент с такъв email вече е регистриран. Можете да влезете в акаунта си в отметката «редовен клиент», за да се запази Вашата поръчка в личния си профил или да продължите без промени.</div>-->
+                  </div>
+                  <div class="checkout__row next-row">
+                    <button
+                      (click)="activateFinalTab(this.checkoutForm?.value, true)"
+                      class="button-submit"
+                      [class.disabled]="
+                        checkoutForm?.controls.fullName.errors ||
+                        checkoutForm?.controls.postalCode.errors ||
+                        checkoutForm?.controls.email.errors ||
+                        checkoutForm?.controls.phoneNumber.errors
+                      "
+                    >
+                      <i
+                        *ngIf="
+                          checkoutForm?.controls.fullName.errors ||
+                          checkoutForm?.controls.postalCode.errors ||
+                          checkoutForm?.controls.email.errors ||
+                          checkoutForm?.controls.phoneNumber.errors
+                        "
+                        class="las la-lock"
+                      ></i
+                      >&nbsp; {{ "Continue" | translate }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="checkout__steps-tab checkout__steps-tab2"
+                [ngStyle]="isFinalTab ? { display: 'block' } : null"
+                [ngbCollapse]="
+                  isFinalTab &&
+                  !checkoutForm?.controls.fullName.errors &&
+                  !checkoutForm?.controls.postalCode.errors &&
+                  !checkoutForm?.controls.email.errors &&
+                  !checkoutForm?.controls.phoneNumber.errors
+                "
+              >
+                <div class="checkout__column">
+                  <div
+                    id="shipping_country"
+                    class="checkout__row shipping__row"
+                  >
+                    <label for="country" class="label shipping__row-label"
+                      >{{ "Country" | translate }} *</label
+                    >
+                    <div class="input-wrap profile-form-group">
+                      <app-custom-dropdown
+                        [dropdownArray]="avaliableCountries"
+                        [iconUrl]="'./assets/icons/'"
+                        [iconExt]="'.svg'"
+                        (selectedValues)="setCountryValue($event)"
+                        [defaultValue]="selectedCountry"
+                      ></app-custom-dropdown>
+                    </div>
+                  </div>
+                  <div id="shipping_methods">
+                    <div class="checkout__row shipping__row">
+                        <label for="order-delivery" class="label shipping__row-label">{{ "Shipping" | translate }}</label>
+                        <div class="input-wrap">
+                            <div class="payment-section container" *ngIf="settings.shipping == 'expandable'">
+                                <div class="border rounded mb-2" *ngFor="
+                                              let option of shippingMethods;
+                                              let i = index
+                                            " [ngClass]="{ active: i === selectedShippingIndex }">
+                                    <!-- This line is updated -->
+                                    <div class="d-flex justify-content-between align-items-center p-2">
+                                        <input type="radio" [formControl]="
+                                                  checkoutForm?.controls['shippingType']
+                                                " name="shippingOption" [(ngModel)]="selectedShippingIndex" [value]="i" (change)="toggleCollapseShipping(i)" />
+                                        <label class="flex-grow-1 ms-3">{{ option.label | translate }}</label>
+                                        <ul role="list">
+                                            <li class="payment-icon" [ngClass]="option.icon" aria-current="false">
+                                                <span class="visually-hidden">
+                                                    {{ option.label | translate }}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                        <span *ngIf="option.freeShipping" class="badge badge-dark">{{ "Free Shipping" | translate }}</span>
+                                    </div>
+                                    <div [ngbCollapse]="!option.isExpanded">
+                                        <div class="p-2">
+                                            <p class="bold text-default">
+                                                <i class="las la-exclamation-circle"></i> {{ option.content | translate }}
+                                            </p>
+                                            <div class="row">
+                                                <div class="custom-control custom-checkbox collection-filter-checkbox col-6" *ngFor="let ent of orderReceivePlace">
+                                                    <input type="checkbox" [value]="ent" [checked]="checked(ent)" [id]="ent" (change)="appliedFilter($event)" class="custom-control-input" [formControl]="
+                                                        checkoutForm?.controls['pickupAtHome']
+                                                      " />
+                                                    <label class="custom-control-label" for="{{ ent }}">{{ ent | translate }}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <app-custom-dropdown *ngIf="settings.shipping == 'select'" [iconUrl]="'./assets/icons/'" [iconExt]="'.svg'" [dropdownArray]="shippingMethods" [defaultValue]="selectedShipping" (selectedValues)="setShippingValue($event)"></app-custom-dropdown>
+                        </div>
+                    </div>
+                </div>
+                  <div *ngIf="this.selectedShippingModel">
+                    <div class="checkout__row checkout__row_auth">
+                      <div class="input-wrap profile-form-group">
+                        <div
+                          class="custom-control custom-checkbox"
+                          *ngFor="let ent of orderReceivePlace"
+                        >
+                          <input
+                            type="checkbox"
+                            [value]="ent"
+                            [checked]="checked(ent)"
+                            [id]="ent"
+                            (change)="appliedFilter($event)"
+                            class="custom-control-input"
+                            [formControl]="
+                              checkoutForm?.controls['pickupAtHome']
+                            "
+                          />
+                          <label class="custom-control-label" for="{{ ent }}">{{
+                            ent | translate
+                          }}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="checkout__row checkout__row_auth">
+                      <div class="input-wrap profile-form-group">
+                        <div class="float-input-group">
+                          <input
+                            type="text"
+                            name="city"
+                            [formControl]="checkoutForm?.controls['city']"
+                            placeholder=" "
+                            autocomplete="off"
+                            [class.invalid]="
+                              checkoutForm?.controls.city.touched &&
+                              checkoutForm?.controls.city.errors
+                            "
+                          />
+                          <span class="bar"></span>
+                          <label for="city"
+                            >{{ "Town/City" | translate }} *</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="checkout__row checkout__row_auth columns32">
+                      <div class="checkout__column">
+                        <div class="input-wrap profile-form-group">
+                          <div class="float-input-group">
+                            <input
+                              type="text"
+                              name="state"
+                              [formControl]="checkoutForm?.controls['state']"
+                              placeholder=" "
+                              autocomplete="off"
+                              [class.invalid]="
+                                checkoutForm?.controls.state.touched &&
+                                checkoutForm?.controls.state.errors
+                              "
+                            />
+                            <span class="bar"></span>
+                            <label for="state"
+                              >{{ "State" | translate }} *
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="checkout__column">
+                        <div class="input-wrap profile-form-group">
+                          <div class="float-input-group">
+                            <input
+                              type="text"
+                              name="address"
+                              [formControl]="checkoutForm?.controls['address']"
+                              placeholder=" "
+                              autocomplete="off"
+                              [class.invalid]="
+                                checkoutForm?.controls.address.touched &&
+                                checkoutForm?.controls.address.errors
+                              "
+                            />
+                            <span class="bar"></span>
+                            <label for="address"
+                              >{{ "Address" | translate }} *</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="checkout__column">
+                  <div id="payment_list">
+                    <div class="checkout__row shipping__row">
+                      <label
+                        for="order-payment"
+                        class="label shipping__row-label"
+                        >{{ "Payment Method" | translate }}</label
+                      >
+                      <div class="input-wrap">
+                        <app-custom-dropdown
+                          [iconUrl]="'./assets/icons/'"
+                          [iconExt]="'.svg'"
+                          [dropdownArray]="paymentMethods"
+                          [defaultValue]="selectedPayment"
+                          (selectedValues)="setPaymentValue($event)"
+                        ></app-custom-dropdown>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="checkout__row p-2"
+                    [ngStyle]="
+                      isExpandedComments
+                        ? { border: '1px solid black', 'border-radius': '4px' }
+                        : null
+                    "
+                  >
+                    <p
+                      class="label checkout__row-collapsing-label"
+                      (click)="toggleCollapseComment()"
+                    >
+                      {{ isExpandedComments ? "-" : "+" }}
+                      {{
+                        "Add a comment to the
+                      order" | translate
+                      }}
+                    </p>
+                    <div
+                      class="input-wrap checkout__comment"
+                      [ngbCollapse]="!isExpandedComments"
+                    >
+                      <small
+                        ><i class="las la-question-circle"></i>
+                        {{
+                          "If there is anything we need to know before
+                        shipping, please note here." | translate
+                        }}</small
+                      >
+                      <div class="float-input-group mt-4">
+                        <input
+                          type="text"
+                          name="note"
+                          [formControl]="checkoutForm?.controls['note']"
+                          [placeholder]=""
+                          autocomplete="off"
+                        />
+                        <label for="note" class="label">{{
+                          "Write a Comment" | translate
+                        }}</label>
+                        <span class="bar"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <br />
+                  <div
+                    class="checkout__row p-2"
+                    [ngStyle]="
+                      isExpandedCoupon
+                        ? { border: '1px solid black', 'border-radius': '4px' }
+                        : null
+                    "
+                  >
+                    <p
+                      class="label checkout__row-collapsing-label"
+                      (click)="toggleCollapseCoupon()"
+                    >
+                      {{ isExpandedCoupon ? "-" : "+" }}
+                      {{
+                        "I have a promo code or
+                      voucher" | translate
+                      }}
+                    </p>
+                    <div [ngbCollapse]="!isExpandedCoupon">
+                      <div class="checkout__row-certificate-hint">
+                        <i class="las la-exclamation-circle"></i>
+                        {{
+                          "Enter the voucher code or promo code in the field
+                        to receive a discount or gift. You can enter multiple codes separated by commas. After entering
+                        the code, press the Apply Promo Code button."
+                            | translate
+                        }}
+                      </div>
+                      <div class="float-input-group mb-4">
+                        <input
+                          type="text"
+                          name="coupon"
+                          [formControl]="checkoutForm?.controls['coupon']"
+                          [(ngModel)]="couponValue"
+                          [placeholder]=""
+                          autocomplete="off"
+                          [class.valid]="appliedPromoState == 1"
+                          [class.invalid]="
+                            appliedPromoState == 2 ||
+                            checkoutForm?.controls.coupon.errors
+                          "
+                        />
+                        <label for="coupon" class="label">{{
+                          "Promotional code" | translate
+                        }}</label>
+                        <span class="bar"></span>
+                        <small *ngIf="appliedPromoState == 2"
+                          ><i class="las la-exclamation-circle"></i>
+                          {{
+                            "No such code
+                          exists or has already been applied." | translate
+                          }}</small
+                        >
+                      </div>
+                      <div class="tags-input-container">
+                        <strong
+                          >{{ "Promo codes applied" | translate }}:
+                        </strong>
+                        <span
+                          class="optional-tags"
+                          *ngFor="let ent of this.appliedCoupons"
+                        >
+                          {{ ent.code }}
+                        </span>
+                      </div>
+                      <button
+                        class="button-submit mt-2"
+                        type="button"
+                        (click)="setPromoCode()"
+                      >
+                        <span
+                          *ngIf="
+                            appliedPromoState == undefined ||
+                            appliedPromoState == 0
+                          "
+                          >{{ "Apply Promo Code" | translate }}</span
+                        >
+                        <span *ngIf="appliedPromoState == 1"
+                          ><i class="las la-thumbs-up"></i>
+                          {{ "Applied" | translate }}</span
+                        >
+                        <span *ngIf="appliedPromoState == 2"
+                          ><i class="las la-times"></i>
+                          {{ "Failure" | translate }}</span
+                        >
+                      </button>
+                    </div>
+                  </div>
+                  <br />
+                  <div class="checkout__row checkout__row_checkbox">
+                    <div class="custom-control custom-checkbox">
+                      <input
+                        class="custom-control-input"
+                        type="checkbox"
+                        name="agb"
+                        value="accept"
+                        [formControl]="checkoutForm?.controls['confirmPrivacy']"
+                        required
+                      />
+                      <label
+                        for="agb"
+                        class="custom-control-label"
+                        style="flex: min-content; line-height: 1.3"
+                      >
+                        <span>{{
+                          "Yes, I accept the return and warranty terms and privacy policy."
+                            | translate
+                        }}</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="checkout__row checkout__row_checkbox">
+                    <div class="read-more">
+                      <a
+                        [routerLink]="['/pages/returns-warranty']"
+                        target="_blank"
+                        >{{ "Returns & Warranty" | translate }}</a
+                      >
+                      <a [routerLink]="['/pages/privacy']" target="_blank">{{
+                        "Privacy Policy" | translate
+                      }}</a>
+                    </div>
+                  </div>
+                  <div class="checkout__row checkout__row_submit desktop-only">
+                    <div
+                      class="alert-box"
+                      *ngIf="this.outputMessage?.length > 0"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 25 23"
+                      >
+                        <path
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                          d="M9.5 2A3.2 3.2 0 0 1 15 2l9 15.8a3.2 3.2 0 0 1-2.8 4.8H3.3c-2.4 0-4-2.6-2.8-4.8L9.5 2Zm4.4 15.8a1.6 1.6 0 1 1-3.2 0 1.6 1.6 0 0 1 3.2 0ZM12.3 5a1.6 1.6 0 0 0-1.6 1.6v4.8a1.6 1.6 0 0 0 3.2 0V6.6A1.6 1.6 0 0 0 12.3 5Z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                      <div class="alertText-container">
+                        <p>
+                          {{ this.outputMessage | translate }}
+                          <a
+                            [routerLink]="[
+                              '/pages/account/user-info/orders-history'
+                            ]"
+                          >
+                            {{ "Edit order" }}</a
+                          >
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="submit"
+                      class="button-submit"
+                      [class.disabled]="!checkoutForm?.valid"
+                      *ngIf="this.products?.length"
+                    >
+                      <span *ngIf="!this.btnSubmitLoader">
+                        <i *ngIf="!checkoutForm?.valid" class="las la-lock"></i>
+                        <i
+                          *ngIf="checkoutForm?.valid"
+                          class="las la-credit-card"
+                        ></i>
+                        {{ "Place Order" | translate }}
+                      </span>
+                      <span *ngIf="this.btnSubmitLoader">
+                        <span class="spinner-border spinner-border-sm"></span>
+                        {{ "Processing" | translate }}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <button
+                type="submit"
+                class="button-submit mobile-only"
+                [class.disabled]="!checkoutForm?.valid"
+                *ngIf="this.products?.length && isFinalTab"
+              >
+                <span *ngIf="!this.btnSubmitLoader">
+                  <i class="las la-credit-card"> </i>
+                  {{ "Place Order" | translate }}
+            </span>
+                <span *ngIf="this.btnSubmitLoader">
+                  <span class="spinner-border spinner-border-sm"> </span>
+                  {{ "Processing" | translate }}
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!--Cart Column on right side-->
+      <app-cart-column
+        class="cart-column"
+        [products]="products"
+        [appliedCoupons]="appliedCoupons"
+        [selectedShippingModel]="selectedShippingModel"
+        [totalDiscount]="totalDiscount">
+      </app-cart-column>
+    </div>
+  </div>
+</div>

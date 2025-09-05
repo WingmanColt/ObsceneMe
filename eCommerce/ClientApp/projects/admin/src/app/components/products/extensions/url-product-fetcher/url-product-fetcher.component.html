@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="row align-items-center">
+    <!-- Dropdown for Site Selection -->
+    <div class="col-auto">
+      <select id="siteSelect" class="form-select" [(ngModel)]="selectedSite" (change)="updateSite()">
+        <option value="aliexpress">AliExpress</option>
+        <option value="temu">Temu</option>
+        <!-- Add more options as needed -->
+      </select>
+    </div>
+
+    <!-- URL Input Field -->
+    <div class="col-auto">
+      <input class="form-control" type="text" [(ngModel)]="url" placeholder="Enter URL" />
+    </div>
+
+    <!-- Fetch Button -->
+    <div class="col-auto">
+      <button class="btn btn-primary" (click)="fetchData()" [disabled]="!url || isLoading">
+        <span class="spinner-border spinner-border-sm" *ngIf="isLoading"></span>
+        Fetch Product
+      </button>
+    </div>
+  </div>
+
+  <!-- Error Message Display -->
+  <div *ngIf="errorMessage" class="mt-3 alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="isLoading" class="mt-3">
+    <span class="spinner-border spinner-border-lg"></span> Loading...
+  </div>
+</div>
+
+
+

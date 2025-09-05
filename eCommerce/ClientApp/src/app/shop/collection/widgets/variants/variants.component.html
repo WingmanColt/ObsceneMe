@@ -1,0 +1,21 @@
+<div *ngIf="variants$ | async as Array">
+  <div *ngFor="let variant of Array; let i = index">
+    <div class="collection-collapse-block" [class.open]="true" #collapseBlock>
+      <h3 class="collapse-block-title" (click)="collapseBlock.classList.toggle('open')">{{ variant.title | translate }}</h3>
+        <div class="collection-collapse-block-content">
+          <div class="collection-brand-filter" [class.color-filter]="variant.title == 'Color'">
+            <div class="custom-control custom-checkbox collection-filter-checkbox" *ngFor="let variantItem of variant.variantItems; let j = index">
+             <div *ngIf="variantItem.value">
+              <input type="checkbox" [checked]="variantItem.isSelected" [value]="variantItem"
+              (change)="onCheckboxChange($event, variant, variantItem)"
+                class="custom-control-input" [id]="j" />
+              <span *ngIf="variant.title == 'Color'" [class]="color" [ngStyle]="{'background-color': variantItem.value}"></span>
+              <img *ngIf="variant.title == 'Taste'" width="20" height="20" [lazyLoad]="variantItem.image" class="lazy-loading"/>
+              <label class="custom-control-label" [id]="j" >{{ variantItem.value | translate }}</label>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

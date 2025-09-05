@@ -1,0 +1,55 @@
+<app-breadcrumb [breadcrumbs]="currBreadCrumb"></app-breadcrumb>
+
+<!-- section start-->
+<section class="p-0" *ngIf="enabled">
+ <div class="container">
+  <div class="row">
+   <div class="col">
+    <div class="error-section">
+     <h2>{{ settings.title | translate }}</h2>
+
+     <!--<div class="p-5 d-flex row justify-content-evenly">
+      <div class="col-md-3" [class.mb-2]="detect.isDevice('Mobile')">
+       <a href="javascipt:void(0)" class="btn-large btn-dark btn-card" [class.w-auto]="!detect.isDevice('Mobile')"> {{ env.socialSettings.email }}</a>
+      </div>
+
+      <div class="col-md-3">
+       <a href="javascipt:void(0)" class="btn-large btn-dark btn-card" [class.w-auto]="!detect.isDevice('Mobile')"> {{ env.socialSettings.emailSupport }}</a>
+      </div>
+     </div>-->
+
+     <strong>{{ settings.about | translate }}</strong>
+     <p>{{ settings.descOne | translate }}</p>
+     <p>{{ settings.descTwo | translate }}</p>
+     <p>{{ settings.descThree | translate }}</p>
+     <p>
+      {{ settings.descFour | translate }}
+      <strong>{{ env.socialSettings.emailSupport }}</strong>
+      {{ settings.descFourEnd | translate }}
+     </p>
+     <p>{{ settings.descFive | translate }}</p>
+     <a [routerLink]="['/returnsForm']" class="btn-large btn-outline-dark btn-card w-auto"> {{ "Find Your Order" | translate }}</a>
+     <hr />
+
+     <h2>{{ settings.titleSectionTwoBig | translate }}</h2>
+     <strong>{{ settings.questionOneTitle | translate }}</strong>
+     <p>{{ settings.answerOne | translate }}</p>
+
+     <strong>{{ settings.questionTwoTitle | translate }}</strong>
+     <p>{{ settings.answerTwo | translate }}</p>
+
+     <strong>{{ settings.questionThreeTitle | translate }}</strong>
+     <p>{{ settings.answerThree | translate }}</p>
+     <p>{{ settings.answerThree2 | translate }}</p>
+
+     <strong>{{ settings.questionFourTitle | translate }}</strong>
+     <p>{{ settings.answerFour | translate }}</p>
+
+     <strong>{{ settings.questionFiveTitle | translate }}</strong>
+     <p>{{ settings.answerFive | translate }}</p>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+<!--Section ends-->

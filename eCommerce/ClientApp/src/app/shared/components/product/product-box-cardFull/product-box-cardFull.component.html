@@ -1,0 +1,140 @@
+<div *ngIf="product">
+  <div class="product-card-gallery">
+    <div class="slider-wrapper">
+      <div class="product-info d-flex">
+        <span class="product-name">{{ product?.title | titlecase }}</span>
+        <div class="product-description">
+          <bar-rating [(rate)]="product.rating"
+            [max]="5"
+            [readOnly]="true"
+            [showText]="false">
+            <ng-template ratingActive>
+              <i class="las la-star"
+                style="margin: 2px; color: #edb867"></i>
+            </ng-template>
+            <ng-template ratingInactive>
+              <i class="lar la-star"
+                style="margin: 2px; color: #d2d2d2"></i>
+            </ng-template>
+          </bar-rating>
+        </div>
+        <span class="product-price"> {{ baseService.calcCurrency(product?.price - product?.discountRate) | asCurrency :
+          baseService.activeCurrency }}</span>
+      </div>
+      <div class="product-image-wrapper">
+        <img [ngSrc]="product.images[0]?.src"
+          class="product-image"
+          [alt]="product?.title"
+          priority
+          width="100"
+          height="100" />
+      </div>
+      <div class="product-image-wrapper-hover"></div>
+      <!-- Swiper -->
+      <div class="swiper-container gallery-thumbs">
+        <swiper [config]="swiperThumbConfig"
+          (swiper)="onSwiperThumbs($event)"
+          class="swiper-wrapper">
+          <ng-template swiperSlide
+            class="swiper-slide d-flex"
+            *ngFor="let image of product?.images; index as i">
+            <img [ngSrc]="image.src"
+              [alt]="product?.title"
+              width="50"
+              height="50"
+              class="product-image"
+              (click)="SlideTo(i)"
+              (mouseover)="SlideTo(i)"
+              priority />
+          </ng-template>
+        </swiper>
+      </div>
+      <div class="gb-wrapper">
+        <div class="swiper-container gallery-bottom">
+          <div class="swiper-button-prev"></div>
+          <swiper [config]="swiperBigConfig"
+            (swiper)="onSwiperBig($event)"
+            class="swiper-wrapper">
+            <ng-template swiperSlide
+              class="swiper-slide d-flex"
+              *ngFor="let image of product?.images">
+              <img [ngSrc]="image.src"
+                [alt]="product?.title"
+                priority
+                fill />
+            </ng-template>
+          </swiper>
+          <div class="swiper-button-next"></div>
+        </div>
+      </div>
+      <!-- end Swiper -->
+      <div class="btns-wrapper">
+        <a [routerLink]="['/shop/product/', product?.id]"
+          target="_blank"
+          class="btns info-button">
+          <i class="btn-icon las la-info-circle"></i>
+          <span>{{ "View" | translate }}</span>
+        </a>
+        <a href="javascript:void(0)"
+          class="btns buy-button desktop-only"
+          (click)="QuickView.openModal()"
+          title="Quick View">
+          <i class="btn-icon las la-shopping-cart"></i>
+          <span>{{ "Buy Now" | translate }}</span>
+        </a>
+      </div>
+    </div>
+    <!-- end slider-wrapper -->
+  </div>
+  <!--
+  <div class="card-basic mx-auto">
+
+    <div class="image-container" [routerLink]="['/shop/product/info/', product?.id]">
+
+
+      <div class="price-ui-badge__sticker" *ngIf="MarketStatusEnum(MarketStatus.Sale)">
+        <span class="price-ui-badge__sticker--sale">Sale</span>
+      </div>
+
+      <div class="price-ui-badge__sticker" *ngIf="MarketStatusEnum(MarketStatus.New)">
+        <span class="price-ui-badge__sticker--new">New</span>
+      </div>
+
+      <div class="price-ui-badge__sticker" *ngIf="MarketStatusEnum(MarketStatus.PreOrder)">
+        <span class="price-ui-badge__sticker--pre-order">Pre Order</span>
+      </div>
+
+      <div class="price-ui-badge__sticker" *ngIf="MarketStatusEnum(MarketStatus.Sold)">
+        <span class="price-ui-badge__sticker--sold-out">Sold Out</span>
+      </div>
+
+      <div class="front">
+        <img [defaultImage]="ImageSrc ? ImageSrc : 'assets/images/product/placeholder.jpg'"
+          [lazyLoad]="ImageSrc ? ImageSrc : product.images[0]?.src" class="lazy-loading"
+          alt="{{ product?.images[0]?.alt }}">
+      </div>
+      <div class="back">
+        <img [defaultImage]="ImageSrc ? ImageSrc : 'assets/images/product/placeholder.jpg'"
+          [lazyLoad]="ImageSrc ? ImageSrc : product.images[1]?.src" class="lazy-loading"
+          alt="{{ product?.images[1]?.alt }}">
+      </div>
+
+    </div>
+    <div class="card__overlay">
+      <div class="overlay__text">
+
+        <a href="javascript:void(0)" class="mobile-quick-view global-button desktop-only"
+          (click)="QuickView.openModal()" title="Quick View">
+          Quick View
+        </a>
+        <a [routerLink]="['/shop/product/info/', product?.id]" class="global-button mobile-only" title="Quick View">
+          Details
+        </a>
+      </div>
+    </div>
+  </div>
+-->
+  <app-quick-view #quickView
+    [product]="product"
+    [currency]="currency"></app-quick-view>
+</div>

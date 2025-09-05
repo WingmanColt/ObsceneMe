@@ -1,0 +1,18 @@
+// Fix for carousel
+.tab-content {
+  >.tab-pane {
+    //display: none;
+
+    visibility: hidden;
+    height: 0px;
+    overflow: hidden;
+  }
+
+  >.active {
+    visibility: visible;
+    height: auto;
+    overflow: visible;
+    //display: block;
+  }
+
+IN nodes/bootstrap/nav.scss

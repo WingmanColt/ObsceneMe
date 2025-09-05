@@ -1,0 +1,174 @@
+<div class="row">
+ <div [class]="cols">
+  <div class="left-col" [ngSwitch]="isMobile ? detailsSettings.swiperSectionMobile : detailsSettings.swiperSection">
+   <app-thumbnail-swiper *ngSwitchCase="'thumbnail-swiper'" [thumbImages]="thumbImages" [activeImage]="activeImage" [swiperBack]="swiperBack" [swiperLike]="swiperLike" [alt]="product?.title"></app-thumbnail-swiper>
+   <app-like-swiper *ngSwitchCase="'app-like-swiper'" [thumbImages]="thumbImages" [activeImage]="activeImage" [swiperBack]="swiperBack" [swiperLike]="swiperLike" [alt]="product?.title"></app-like-swiper>
+  </div>
+ </div>
+
+ <div [class]="cols">
+  <div class="product-right">
+   <!-- <div class="row">
+    <div class="col">
+     <p>
+      {{ product?.details }}
+     </p>
+    </div>
+   </div>
+   <div class="row" *ngIf="!this.isQuickView && detailsSettings.reviewsActive">
+    <div class="col-3">
+     <bar-rating [(rate)]="this.product.rating" [max]="5" [readOnly]="true" [showText]="false">
+      <ng-template ratingActive>
+       <i class="las la-star" style="margin: 2px; color: #000000"></i>
+      </ng-template>
+      <ng-template ratingInactive>
+       <i class="lar la-star" style="margin: 2px; color: #d2d2d2"></i>
+      </ng-template>
+     </bar-rating>
+     <h4>
+      <span> ( {{ product?.reviews?.length }} ) </span>
+     </h4>
+    </div>
+   </div>
+-->
+   <div class="rating-container" *ngIf="!this.isQuickView && detailsSettings.reviewsActive">
+    <div class="stars">
+     <bar-rating [(rate)]="this.product.rating" [max]="5" [readOnly]="true" [showText]="false">
+      <ng-template ratingActive>
+       <i class="las la-star" style="margin: 2px; color: #000000"></i>
+      </ng-template>
+      <ng-template ratingInactive>
+       <i class="lar la-star" style="margin: 2px; color: #d2d2d2"></i>
+      </ng-template>
+     </bar-rating>
+    </div>
+
+    <div class="reviews">
+     <h4>
+      <span> ( {{ product?.reviews?.length }} ) </span>
+     </h4>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-6">
+     <div class="qty-box borderless">
+      <div class="input-group large">
+       <small class="centered-title">{{ "Quantity" | translate }}</small>
+
+       <span class="input-group-prepend">
+        <button type="button" class="btn quantity-left-minus" data-type="minus" (click)="decrementCounter()" [class.disabled]="counter <= product?.quantity">
+         <i class="las la-minus"></i>
+        </button>
+       </span>
+       <input type="text" name="quantity" class="form-control input-number" [value]="counter" disabled />
+       <span class="input-group-prepend">
+        <button type="button" class="btn quantity-right-plus" data-type="plus" (click)="incrementCounter()" [class.disabled]="counter > product?.quantity">
+         <i class="las la-plus"></i>
+        </button>
+       </span>
+      </div>
+     </div>
+    </div>
+    <div class="col-6">
+     <h3 style="word-spacing: 8px">
+      <del *ngIf="product?.discountRate">{{ baseService.calcCurrency(product?.price) | asCurrency : baseService.activeCurrency }}</del>
+      {{ baseService.calcCurrency(product?.price - product?.discountRate) | asCurrency : baseService.activeCurrency }}
+     </h3>
+    </div>
+   </div>
+
+   <hr />
+
+   <app-select-variants [variants]="this.variants" (selectedItems)="selectedItems($event)" (chartModal)="openChartModal($event)" *ngIf="variants"></app-select-variants>
+
+   <hr />
+   <div class="row">
+    <!--Quick View Add to cart btn-->
+    <div class="col purchase-buttons" *ngIf="this.isQuickView">
+     <a
+      href="javascrip:void(0)"
+      class="btn-large btn-outline-dark btn-xs"
+      [title]="'Before purchasing select variant' | translate"
+      [class.disabled]="counter > product?.quantity"
+      [class.disabled]="detailsSettings.disableButtonsIfVariantIsNotSelected && variants && this.selectedVariants.length <= 0"
+      (click)="this.isInCart == 0 ? AddToCart(product, false) : FinishPurchase()"
+      [ngSwitch]="this.isInCart">
+      <span *ngSwitchCase="0">
+       <i class="las la-heart"></i>
+       {{ "Add to cart" | translate }}</span
+      >
+      <span *ngSwitchCase="1">
+       <i class="las la-check"></i>
+       {{ "Finish the purchase" | translate }}</span
+      >
+      <span *ngSwitchCase="2">
+       <span class="spinner-border spinner-border-sm"></span>
+       {{ "Processing" | translate }}</span
+      >
+     </a>
+
+     <a href="javascrip:void(0)" class="btn-large btn-dark btn-xs" [class.disabled]="counter > product?.quantity" [class.disabled]="this.selectedVariants.length <= 0" (click)="AddToCart(product, true)"
+      ><i class="las la-cart-plus"></i> {{ "Buy it Now" | translate }} ></a
+     >
+    </div>
+
+    <!-------------------------------------------------------------------->
+
+    <!--Normal Add to cart btn-->
+    <div class="col purchase-buttons" *ngIf="!this.isQuickView">
+     <a
+      href="javascrip:void(0)"
+      class="btn-large btn-outline-dark"
+      [title]="'Before purchasing select variant' | translate"
+      [class.disabled]="counter > product?.quantity"
+      [class.disabled]="detailsSettings.disableButtonsIfVariantIsNotSelected && variants && this.selectedVariants.length <= 0"
+      (click)="this.isInCart == 0 ? AddToCart(product, false) : FinishPurchase()"
+      [ngSwitch]="this.isInCart">
+      <span *ngSwitchCase="0">
+       <i class="las la-heart"></i>
+       {{ "Add to cart" | translate }}
+      </span>
+      <span *ngSwitchCase="1">
+       <i class="las la-check"></i>
+       {{ "Finish the purchase" | translate }}</span
+      >
+      <span *ngSwitchCase="2">
+       <span class="spinner-border spinner-border-sm"></span>
+       {{ "Processing" | translate }}</span
+      >
+     </a>
+    </div>
+
+    <!--Normal Buy it now btn-->
+    <div class="col purchase-buttons" *ngIf="!this.isQuickView">
+     <a
+      href="javascrip:void(0)"
+      class="btn-large btn-dark"
+      [title]="'Before purchasing select variant' | translate"
+      [class.disabled]="counter > product?.quantity"
+      [class.disabled]="detailsSettings.disableButtonsIfVariantIsNotSelected && variants && this.selectedVariants.length <= 0"
+      (click)="AddToCart(product, true)"
+      ><i class="las la-cart-plus"></i> {{ "Buy it Now" | translate }}
+     </a>
+    </div>
+   </div>
+
+   <div class="border-product" *ngIf="detailsSettings.fastOrderActive">
+    <h5 class="product-title">
+     {{ "Fast Order" | translate }}
+     <span data-bs-toggle="tooltip" data-bs-placement="right" [title]="'No registration !' | translate" class="las la-question-circle"> </span>
+    </h5>
+    <small>{{ "Enter your phone number, order and we`ll call you back with details." | translate }}</small>
+    <br />
+    <app-fast-order [product]="product" [isVariantSelected]="this.variants && this.selectedVariants.length <= 0"></app-fast-order>
+   </div>
+
+   <div class="border-product" *ngIf="!isQuickView && detailsSettings.shareOnSocialActive">
+    <h5 class="product-title">{{ "Share it" | translate }}</h5>
+    <div class="product-icon">
+     <app-social></app-social>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>

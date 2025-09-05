@@ -1,0 +1,80 @@
+<!-- breadcrumb End -->
+<app-breadcrumb [breadcrumbs]="currBreadCrumb"></app-breadcrumb>
+
+<!-- section start -->
+<section class="p-0" *ngIf="!orderDetails">
+ <div class="container">
+  <div class="row">
+   <div class="col-12">
+    <div class="error-section">
+     <h1>404</h1>
+     <h2>{{ "Page not found" | translate }}</h2>
+    </div>
+   </div>
+  </div>
+  <div class="p-5 d-flex row justify-content-evenly">
+   <div class="col-3">
+    <a [routerLink]="['/']" class="btn-large btn-outline-dark btn-full-width"> {{ "Back" | translate }}</a>
+   </div>
+  </div>
+ </div>
+</section>
+<!-- Section ends -->
+
+<section class="section-b-space light-layout" *ngIf="!finishedLoading">
+ <div class="container">
+  <div class="row">
+   <div class="col-12">
+    <div class="success-text">
+     <div class="infinite-scrolling mt-3 mb-3 d-inline-block">
+        <h2>{{ "Order Processing" | translate }}</h2>
+          <div class="center-body">
+            <div class="circle-loader"></div>
+          </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- thank-you section start -->
+<section class="section-b-space light-layout" *ngIf="isPayed && finishedLoading">
+ <div class="container">
+  <div class="row">
+   <div class="col-12">
+    <div class="success-text">
+     <i class="las la-check-circle" aria-hidden="true"></i>
+     <h2>{{ "Thank you" | translate }}</h2>
+     <p>{{ "Payment is has been received. Order Placed Successfully!" | translate }}</p>
+    </div>
+   </div>
+  </div>
+  <div class="p-5 d-flex row justify-content-evenly">
+   <div class="col-3">
+    <a [routerLink]="['/']" class="btn-large btn-outline-dark btn-full-width"> {{ "Back" | translate }}</a>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- thank-you section start -->
+<section class="section-b-space light-layout" *ngIf="!isPayed && finishedLoading">
+ <div class="container">
+  <div class="row">
+   <div class="col-12">
+    <div class="error-text">
+     <i class="las la-times" aria-hidden="true"></i>
+     <h2>{{ "Your payment was canceled" | translate }}</h2>
+     <p>{{ "Payment has been terminated, please try another way." | translate }}</p>
+    </div>
+   </div>
+  </div>
+  <div class="p-5 d-flex row justify-content-evenly">
+   <div class="col-3">
+    <a [routerLink]="['/']" class="btn-large btn-outline-dark btn-full-width"> {{ "Back" | translate }}</a>
+   </div>
+  </div>
+ </div>
+</section>
+<!-- Section ends -->

@@ -1,0 +1,228 @@
+<div class="aboutSection" *ngIf="product">
+  <div class="container-xxl bg-white pt-3 pb-3" style="max-width: 1600px;">
+    <div class="row">
+      <div class="col-12 mx-auto">
+        <!--Tab style-->
+        <section *ngIf="aboutSectionType == 'Tab'" class="pt-3 tab-product m-0">
+          <div class="row">
+            <div class="col-12">
+              <ul ngbNav
+                #nav="ngbNav"
+                [(activeId)]="active"
+                class="nav-tabs">
+                <li [ngbNavItem]="1"
+                  *ngIf="detailsSettings.descriptionActive">
+                  <a ngbNavLink
+                    class="nav-custom-font">{{ "About" | translate }}</a>
+                  <ng-template ngbNavContent>
+                    <div [innerHTML]="getTextSanitized(this.product.description)"></div>
+                  </ng-template>
+                </li>
+
+                <li [ngbNavItem]="2"
+                *ngIf="detailsSettings.chcharacteristicActive && this.product?.characteristic">
+                <a ngbNavLink
+                  class="nav-custom-font">{{ "Characteristic" | translate }}</a>
+                <ng-template ngbNavContent>
+                  <div [innerHTML]="getTextSanitized(this.product.characteristic)"></div>
+                </ng-template>
+              </li>
+
+              <li [ngbNavItem]="3"
+              *ngIf="detailsSettings.usageActive && this.product?.usage">
+              <a ngbNavLink
+                class="nav-custom-font">{{ "Method Of Use" | translate }}</a>
+              <ng-template ngbNavContent>
+                <div [innerHTML]="getTextSanitized(this.product.usage)"></div>
+              </ng-template>
+            </li>
+
+              <li [ngbNavItem]="4"
+              *ngIf="detailsSettings.compositionActive && this.product?.composition">
+              <a ngbNavLink
+                class="nav-custom-font">{{ "Composition" | translate }}</a>
+              <ng-template ngbNavContent>
+                <div [innerHTML]="getTextSanitized(this.product.composition)"></div>
+              </ng-template>
+            </li>
+
+
+                <li [ngbNavItem]="5" *ngIf="detailsSettings.videoActive">
+                  <a ngbNavLink
+                    class="nav-custom-font">{{ "Video" | translate }}</a>
+                  <ng-template ngbNavContent>
+                    <div class="mt-3 text-center">
+                      <iframe width="400"
+                        height="315"
+                        [src]="this._sanitizer.bypassSecurityTrustResourceUrl(product?.videoUrl)"
+                        allow="autoplay; encrypted-media"
+                        allowfullscreen></iframe>
+                    </div>
+                  </ng-template>
+                </li>
+
+                <li [ngbNavItem]="6"
+                  *ngIf="detailsSettings.reviewsActive">
+                  <a ngbNavLink
+                    class="nav-custom-font">{{ "Reviews" | translate }}</a>
+                  <ng-template ngbNavContent>
+                    <app-reviews-template [product]="product"
+                      [isMobile]="isMobile"></app-reviews-template>
+                  </ng-template>
+                </li>
+              </ul>
+              <div [ngbNavOutlet]="nav"
+                class="mt-2"></div>
+            </div>
+          </div>
+        </section>
+
+        <!--Accordion style-->
+        <section *ngIf="aboutSectionType == 'Accordion'" class="accordion accordion-flush">
+          <div class="accordion-item"
+            *ngIf="detailsSettings.descriptionActive">
+            <h2 class="accordion-header"
+              id="flush-headingOne">
+              <button class="accordion-button" [class.show]="isAccordionSelected('flush-collapseOne')" (click)="toggleAccordion('flush-collapseOne')" type="button">{{ "About" | translate }}</button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse" [class.show]="isAccordionSelected('flush-collapseOne')">
+              <div class="accordion-body">
+                <div [innerHTML]="getTextSanitized(this.product.description)"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item"
+          *ngIf="detailsSettings.characteristicActive && this.product?.characteristic">
+          <h2 class="accordion-header">
+            <button class="accordion-button" (click)="toggleAccordion('flush-collapseTwo')" type="button">{{ "Characteristic" | translate }}</button>
+          </h2>
+          <div id="flush-collapseTwo" class="accordion-collapse collapse" [class.show]="isAccordionSelected('flush-collapseTwo')">
+            <div class="accordion-body">
+              <div [innerHTML]="getTextSanitized(this.product?.characteristic)"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item"
+        *ngIf="detailsSettings.usageActive && this.product?.usage">
+        <h2 class="accordion-header">
+          <button class="accordion-button" (click)="toggleAccordion('flush-collapseThree')" type="button">{{ "Method Of Use" | translate }}</button>
+        </h2>
+        <div id="flush-collapseThree" class="accordion-collapse collapse" [class.show]="isAccordionSelected('flush-collapseThree')">
+          <div class="accordion-body">
+            <div [innerHTML]="getTextSanitized(this.product?.usage)"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item"
+      *ngIf="detailsSettings.compositionActive && this.product?.composition">
+      <h2 class="accordion-header">
+        <button class="accordion-button" (click)="toggleAccordion('flush-collapseFour')" type="button">{{ "Composition" | translate }}</button>
+      </h2>
+      <div id="flush-collapseFour" class="accordion-collapse collapse" [class.show]="isAccordionSelected('flush-collapseFour')">
+        <div class="accordion-body">
+          <div [innerHTML]="getTextSanitized(this.product?.composition)"></div>
+        </div>
+      </div>
+    </div>
+
+          <div class="accordion-item"
+            *ngIf="detailsSettings.videoActive">
+            <h2 class="accordion-header">
+              <button class="accordion-button" (click)="toggleAccordion('flush-collapseFive')" type="button">{{ "Video" | translate }}</button>
+            </h2>
+            <div id="flush-collapseFive" class="accordion-collapse collapse" [class.show]="isAccordionSelected('flush-collapseFive')">
+              <div class="accordion-body">
+                <div class="mt-3 text-center">
+                  <iframe width="400"
+                    height="315"
+                    [src]="this._sanitizer.bypassSecurityTrustResourceUrl(product?.videoUrl)"
+                    allow="autoplay; encrypted-media"
+                    allowfullscreen></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item"
+            *ngIf="detailsSettings.reviewsActive">
+            <h2 class="accordion-header">
+              <button class="accordion-button" [class.show]="isAccordionSelected('flush-collapseSix')" (click)="toggleAccordion('flush-collapseSix')" type="button"> {{ "Reviews" | translate }} <div class="accordion-rate">
+                  <bar-rating [(rate)]="this.product.rating"
+                    [max]="5"
+                    [readOnly]="true"
+                    [showText]="false">
+                    <ng-template ratingActive>
+                      <i class="las la-star fill"></i>
+                    </ng-template>
+                    <ng-template ratingInactive>
+                      <i class="lar la-star"></i>
+                    </ng-template>
+                  </bar-rating>
+                  <span>({{ this.product?.reviews?.length }})</span>
+                </div>
+              </button>
+            </h2>
+            <div id="flush-collapseSix" class="accordion-collapse collapse" [class.show]="isAccordionSelected('flush-collapseSix')">
+              <div class="accordion-body">
+                <app-reviews-template [product]="product"
+                  [isMobile]="isMobile"></app-reviews-template>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <div *ngIf="aboutSectionType == 'Tab Style-2'" class="product-item-tabs active-tabs">
+      <ul class="product-item-tabs__nav tabs-nav">
+        <li *ngFor="let tab of tabs"
+          (click)="selectTab(tab)"
+          [class.active-tab]="activeTab === tab">{{ tab.title | translate }}</li>
+      </ul>
+
+
+    <ul class="product-item-tabs__content tabs-content scrolling">
+      <ng-container [ngSwitch]="activeTab.activeTabIndex">
+        <ng-container *ngSwitchCase="1">
+          <li class="product-info__description" *ngIf="this.product.description">
+            <div [innerHTML]="getTextSanitized(this.product.description)"></div>
+          </li>
+        </ng-container>
+        <ng-container *ngSwitchCase="2">
+          <li class="product-info__description" *ngIf="this.product?.characteristic">
+            <div [innerHTML]="getTextSanitized(this.product?.characteristic)"></div>
+          </li>
+        </ng-container>
+        <ng-container *ngSwitchCase="3">
+          <li class="product-info__description" *ngIf="this.product?.usage">
+            <div [innerHTML]="getTextSanitized(this.product?.usage)"></div>
+          </li>
+        </ng-container>
+        <ng-container *ngSwitchCase="4">
+          <li class="product-info__description" *ngIf="this.product?.composition">
+            <div [innerHTML]="getTextSanitized(this.product?.composition)"></div>
+          </li>
+        </ng-container>
+        <ng-container *ngSwitchCase="5">
+          <li *ngIf="this.product?.videoUrl != null">
+            <div class="mt-3 text-center">
+              <iframe width="400" height="315" [src]="this._sanitizer.bypassSecurityTrustResourceUrl(product?.videoUrl)" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+          </li>
+        </ng-container>
+      </ng-container>
+    </ul>
+   </div>
+  </div>
+</div>
+
+<hr>
+
+<app-reviews-template *ngIf="aboutSectionType == 'Tab Style-2'" [product]="product"  [isMobile]="isMobile"></app-reviews-template>
+<app-storyteller [product]="product"></app-storyteller>
+
+

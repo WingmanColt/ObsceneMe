@@ -1,0 +1,47 @@
+@import 'swiper/scss/zoom';
+@import 'swiper/scss/effect-coverflow';
+
+
+.review-cards {
+    .swiper-container {
+        width: 100%;
+    }
+
+    .swiper-slide {
+        background-position: center;
+        background-size: cover;
+        width: 200px !important;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+
+    .picture {
+        width: 200px;
+        height: 200px;
+        overflow: hidden;
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+
+    .detail {
+        padding: 25px 20px;
+        font-weight: 600;
+        text-align: center;
+
+        span {
+            margin: 0;
+            font-size: 1.5rem;
+            color: $black;
+        }
+
+        bar-rating {
+            display: inline-flex;
+        }
+    }
+}

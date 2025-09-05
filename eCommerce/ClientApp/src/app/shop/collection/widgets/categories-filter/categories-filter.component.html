@@ -1,0 +1,58 @@
+<ng-container *ngIf="categories?.length > 0">
+  <div class="collection-collapse-block border-0" [class.open]="collapse">
+    <h3 class="collapse-block-title" (click)="collapse = !collapse">
+      {{ "Category" | translate }}
+    </h3>
+    <div class="collection-collapse-block-content">
+      <div class="collection-brand-filter use-scrolling categories-filter">
+        <div
+          class="category-item"
+          *ngFor="let category of categories; trackBy: trackById; let i = index"
+          [class.selected]="currentCategory?.id === category.id"
+        >
+          <div (click)="selectCategory(category)">
+              <div class="d-flex vcenter">
+                <div class="thumb-holder">
+                  
+                  <ng-container>
+                    <i class="thumb las" [class]="category.icon" *ngIf="category.icon.startsWith('la')"></i>
+                     <img *ngIf="!category.icon?.startsWith('la')"
+                     [lazyLoad]="this.enviroment.setting.categoryImageUrl + category.icon + this.enviroment.setting.categoryImageUrlExtension"
+                     class="lazy-loading"
+                      />
+                   </ng-container>
+                
+
+                </div>
+                <div class="category-holder">
+                  <div class="font-semi-bold category-name">
+                    {{ category.title | translate }}
+                  </div>
+                  <!--
+                  <span class="block category-count"
+                    >({{ category.totalProductsCount }})</span
+                  >-->
+                </div>
+              </div>
+          </div>
+          <!-- Subcategories List -->
+          <div *ngIf="currentCategory?.id === category?.id && this.collectionSettings.showSubCategories" class="subcategory-list">
+            <ng-container *ngIf="currentCategory?.subCategories?.length > 0">
+
+            <div
+              *ngFor="let sub of category.subCategories"
+              class="subcategory-item"
+              [class.selected]="currentSubCategory?.id === sub.id"
+              (click)="selectSubCategory(sub)"
+            >
+              <span>{{ sub.title | translate }}</span> ({{ sub.productsCount }})
+            </div>
+          </ng-container>
+
+          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,565 @@
+// Mobile & Desktop only
+.mobile-only[class],
+.desktop-only[class],
+.tablet-only[class],
+.desktop-tablet-only[class],
+.mobile-tablet-only[class] {
+    display: none !important;
+}
+
+.mobile-only-visiblity[class],
+.mobile-tablet-only-visiblity[class],
+.tablet-only-visiblity[class],
+.desktop-tablet-only-visiblity[class],
+.desktop-only-visiblity[class] {
+    visibility: hidden !important;
+}
+
+@media only screen and (min-width: 320px) {
+
+    .desktop-only[class],
+    .desktop-tablet-only[class],
+    .tablet-only[class] {
+        display: none !important;
+    }
+
+    .mobile-only[class],
+    .mobile-tablet-only[class] {
+        display: block !important;
+    }
+
+    .desktop-tablet-only-visiblity[class],
+    .desktop-only-visiblity[class],
+    .tablet-only-visiblity[class] {
+        visibility: hidden !important;
+    }
+
+    .mobile-only-visiblity[class],
+    .mobile-tablet-only-visiblity[class] {
+        visibility: visible !important;
+    }
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2) and (min-width: 320px),
+only screen and (min--moz-device-pixel-ratio: 2) and (min-width: 320px),
+only screen and (-o-min-device-pixel-ratio: 2/1) and (min-width: 320px),
+only screen and (min-device-pixel-ratio: 2) and (min-width: 320px),
+only screen and (min-resolution: 192dpi) and (min-width: 320px),
+only screen and (min-resolution: 2dppx) and (min-width: 320px) {
+
+    .desktop-only[class],
+    .desktop-tablet-only[class],
+    .tablet-only[class] {
+        display: none !important;
+    }
+
+    .mobile-only[class],
+    .mobile-tablet-only[class] {
+        display: block !important;
+    }
+
+    .desktop-tablet-only-visiblity[class],
+    .desktop-only-visiblity[class],
+    .tablet-only-visiblity[class] {
+        visibility: hidden !important;
+    }
+
+    .mobile-only-visiblity[class],
+    .mobile-tablet-only-visiblity[class] {
+        visibility: visible !important;
+    }
+}
+
+@media only screen and (min-width: 700px) {
+
+    .mobile-only[class],
+    .desktop-only[class] {
+        display: none !important;
+    }
+
+    .tablet-only[class],
+    .desktop-tablet-only[class],
+    .mobile-tablet-only[class] {
+        display: block !important;
+    }
+
+    .mobile-only-visiblity[class],
+    .desktop-only-visiblity[class] {
+        visibility: hidden !important;
+    }
+
+    .desktop-tablet-only-visiblity[class],
+    .tablet-only-visiblity[class],
+    .mobile-tablet-only-visiblity[class] {
+        visibility: visible !important;
+    }
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2) and (min-width: 700px),
+only screen and (min--moz-device-pixel-ratio: 2) and (min-width: 700px),
+only screen and (-o-min-device-pixel-ratio: 2/1) and (min-width: 700px),
+only screen and (min-device-pixel-ratio: 2) and (min-width: 700px),
+only screen and (min-resolution: 192dpi) and (min-width: 700px),
+only screen and (min-resolution: 2dppx) and (min-width: 700px) {
+
+    .mobile-only[class],
+    .desktop-only[class] {
+        display: none !important;
+    }
+
+    .desktop-tablet-only[class],
+    .tablet-only[class],
+    .mobile-tablet-only[class] {
+        display: block !important;
+    }
+
+    .mobile-only-visiblity[class],
+    .desktop-only-visiblity[class] {
+        visibility: hidden !important;
+    }
+
+    .desktop-tablet-only-visiblity[class],
+    .tablet-only-visiblity[class],
+    .mobile-tablet-only-visiblity[class] {
+        visibility: visible !important;
+    }
+}
+
+@media only screen and (min-width: 1300px) {
+
+    .mobile-only[class],
+    .tablet-only[class],
+    .mobile-tablet-only[class] {
+        display: none !important;
+    }
+
+    .desktop-only[class],
+    .desktop-tablet-only[class] {
+        display: block !important;
+    }
+
+    .mobile-only-visiblity[class],
+    .tablet-only-visiblity[class],
+    .mobile-tablet-only-visiblity[class] {
+        visibility: hidden !important;
+    }
+
+    .desktop-tablet-only-visiblity[class],
+    .desktop-only-visiblity[class] {
+        visibility: visible !important;
+    }
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2) and (min-width: 1300px),
+only screen and (min--moz-device-pixel-ratio: 2) and (min-width: 1300px),
+only screen and (-o-min-device-pixel-ratio: 2/1) and (min-width: 1300px),
+only screen and (min-device-pixel-ratio: 2) and (min-width: 1300px),
+only screen and (min-resolution: 192dpi) and (min-width: 1300px),
+only screen and (min-resolution: 2dppx) and (min-width: 1300px) {
+
+    .mobile-only[class],
+    .tablet-only[class],
+    .mobile-tablet-only[class] {
+        display: none !important;
+    }
+
+    .desktop-tablet-only[class],
+    .desktop-only[class] {
+        display: block !important;
+    }
+
+    .mobile-only-visiblity[class],
+    .tablet-only-visiblity[class],
+    .mobile-tablet-only-visiblity[class] {
+        visibility: hidden !important;
+    }
+
+    .desktop-tablet-only-visiblity[class],
+    .desktop-only-visiblity[class] {
+        visibility: visible !important;
+    }
+}
+
+@keyframes smoothFadeToLeft {
+    from {
+        transform: translateX(-200px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0px);
+        opacity: 1;
+    }
+}
+
+@keyframes smoothFade2 {
+    from {
+        transform: translateX(200px);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(0px);
+        opacity: 0;
+    }
+}
+
+@keyframes smoothFade {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes smoothScroll {
+    0% {
+        transform: translateY(-40px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes smoothTop {
+    0% {
+        transform: translateY(150px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes smoothBottom {
+    0% {
+        transform: translateY(-150px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes smoothToLeft {
+    0% {
+        transform: translateX(100px);
+    }
+
+    100% {
+        transform: translateX(0px);
+    }
+}
+
+@keyframes smoothToRight {
+    0% {
+        transform: translateX(-200px);
+    }
+
+    100% {
+        transform: translateX(0px);
+    }
+}
+
+@keyframes smoothToLeft2 {
+    0% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes rotate360 {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fillBar {
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes createBox {
+    from {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes createUnbox {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+    }
+
+    70% {
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
+    }
+
+    100% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
+    }
+}
+
+
+
+@keyframes fade-bottom {
+    0% {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-left {
+    0% {
+        transform: translateX(-100px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-right {
+    0% {
+        transform: translateX(100px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.btn-unset {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.trending-slider__pagination {
+    text-align: center;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+
+    width: auto;
+    position: fixed;
+    z-index: 11;
+    display: flex;
+
+    &.pagination-overlay {
+        position: absolute;
+        padding: 2.5em;
+        width: -webkit-fit-content;
+        width: -moz-fit-content;
+        width: fit-content;
+        margin: 2.2em auto;
+        border-radius: 20px;
+        //background-color: rgba(28, 16, 7, 0.82);
+
+        &.relative-overlay {
+            position: relative;
+            display: flex;
+            // width: 20%;
+        }
+    }
+
+    .swiper-pagination-bullet {
+        display: inline-block;
+        margin: 0 5px;
+        border-radius: 10px;
+        border: 1px solid;
+        background: #222222;
+        opacity: 0.25;
+        padding: 0;
+        width: 24px;
+        height: 6px;
+        vertical-align: middle;
+        // animation: smoothToLeft 0.5s;
+        transition: opacity 0.2s, background-color 0.2s, width 0.2s;
+        transition-delay: 0.2s, 0.2s, 0s;
+
+        &.swiper-pagination-bullet-active {
+            // background: #000000;
+            //width: 100px;
+            transition-delay: 0.2s;
+            opacity: 1;
+        }
+
+        @media screen and (max-width: 576px) {
+            &.active {
+                width: 30px;
+            }
+        }
+    }
+}
+
+.container-xxxl {
+    width:calc(100% - 96px) !important;
+    max-width:1600px !important;
+    margin:0 auto
+  }
+  @media (min-width:1440px) {
+    .container-xxxl {
+      width:calc(100% - 192px) !important;
+    }
+  }
+  @media (max-width:1023px) {
+    .container-xxxl {
+      width:100% !important;
+    }
+  }
+
+.force-scroll {
+    overflow-y: auto !important;
+    overflow-x: hidden;
+}
+
+.no-wrap {
+    white-space: nowrap;
+    /* Prevent text from wrapping onto next line */
+    overflow: hidden;
+    /* Hide text that overflows the container */
+    text-overflow: ellipsis;
+    /* Optional: add an ellipsis '...' to indicate more text */
+}
+
+.no-wrap-scroll {
+    white-space: nowrap;
+    overflow-x: auto;
+    /* Add horizontal scroll if text overflows container */
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.btn-unset {
+    outline: 0;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    background: 0 0;
+    text-transform: none;
+    line-height: 1;
+}
+
+.ajax-loadable-slider {
+    position: relative;
+    visibility: hidden;
+    min-height: 150px;
+    transition: visibility 0.2s, opacity 0.2s;
+  }
+  
+  @media (max-width: 1023px) {
+    .ajax-loadable-slider {
+      min-height: 100px;
+    }
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .ajax-loadable-slider:after {
+    content: '';
+    z-index: 1;
+    position: absolute;
+    top: calc(50% - 16px);
+    left: calc(50% - 16px);
+    display: none;
+    width: 32px;
+    height: 32px;
+    background: url("../icons/component-loader.svg") no-repeat center center / 32px 32px;
+  }
+  
+  .ajax-loadable-slider.loading:after {
+    display: flex;
+    animation: spin 1s linear infinite;
+  }
+  
+  .ajax-loadable-slider.loaded {
+    visibility: visible;
+    min-height: auto;
+    transition: visibility 0.2s, opacity 0.2s;
+  }
+  
+  .ajax-loadable-slider.loading {
+    visibility: visible;
+    transition: visibility 0.2s, opacity 0.2s;
+  }
+  
+  .tip {
+    white-space: break-word; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Show ellipsis for truncated text */
+    display: inline-block; /* Ensure it behaves like a block element */
+    cursor: pointer; /* Show a pointer cursor to indicate interactivity */
+   }
+   .centered {
+    display: flex;
+    justify-content: center; /* Horizontal centering */
+    align-items: center;    /* Vertical centering */
+    height: 100%;           /* Full height of parent container */
+    text-align: center;     /* Center text inside the div */
+  }

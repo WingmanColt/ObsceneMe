@@ -1,0 +1,131 @@
+.register-affiliate {
+    &.signup-content {
+        min-height: 100vh;
+    }
+
+    .signup-img {
+        position: relative;
+        width: 35%;
+
+        p {
+            font-size: 1em;
+            color: #cfd4da;
+
+            cursor: pointer;
+            filter: brightness(.8);
+
+            &:hover {
+                filter: brightness(1);
+            }
+        }
+
+        img {
+            filter: brightness(.750);
+        }
+
+        .signup-img-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -moz-transform: translate(-50%, -50%);
+            -webkit-transform: translate(-50%, -50%);
+            -o-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+        }
+    }
+
+    .signup-form {
+        width: 65%;
+        margin-top: 1.5em;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 20px;
+
+        h2 {
+            font-family: "Maven Pro";
+            text-align: center;
+            font-size: 1.5em;
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        input {
+            background-color: transparent;
+        }
+
+    }
+
+    .signup-head {
+        margin-bottom: 50px;
+    }
+
+    .commission_detail {
+        padding: 0 115px 0 80px;
+
+        h3,
+        .h3 {
+            font-size: 1.5rem;
+            font-weight: 100;
+            color: #222222;
+            letter-spacing: 0.03em;
+        }
+
+    }
+
+    .commission_detail_content {
+        margin: 20px 0;
+        box-shadow: 0 0 2px #ccc;
+        padding: 10px;
+
+        p {
+            color: #222222;
+        }
+    }
+
+    .benefit-table tr td {
+        vertical-align: top;
+        padding: 0 0 2px;
+    }
+
+    #text_benefit .tick-mark {
+        background-color: rgb(0, 0, 0);
+        color: white;
+        font-size: .8em;
+        font-weight: 900;
+        width: 17px;
+        height: 17px;
+        text-align: center;
+        vertical-align: text-top;
+        line-height: 17px;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+
+    .submit {
+        width: 100%;
+        // width: 150px;
+        height: 50px;
+        display: inline-block;
+        font-weight: bold;
+        font-size: 1em;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        text-transform: uppercase;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -o-border-radius: 5px;
+        -ms-border-radius: 5px;
+
+
+        background-color: #000000;
+        color: #ffffff;
+
+        &:hover {
+            background: #329e5e;
+        }
+    }
+}

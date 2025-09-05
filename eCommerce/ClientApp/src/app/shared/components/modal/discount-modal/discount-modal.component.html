@@ -1,0 +1,25 @@
+<ng-template class="discount-modal" #discountModal let-modal>
+
+  <div class="modal-header">
+
+    <strong class="text-silver">{{'Welcome to' | translate}} {{env.webName}}!</strong>
+    <button type="button" class="close border-0" (click)="modal.dismiss('Cross click')">
+     <i class="las la-times"></i>
+    </button>
+   </div>
+
+      <div class="modal-body u-container-layout u-valign-top u-container-layout-1">
+        <h5 class="u-text-1 text-white">{{'Get discount off your first purchase today!' | translate}} ❤️</h5>
+        <h2 class="u-text-2 text-white">10%</h2>
+        
+        <h5 class="u-text-1 text-white">{{'use' | translate}}</h5>
+        <h2 class="u-text-3 text-white">{{'Discount Code' | translate}}</h2>
+        <h5 class="u-text-4 text-white">flex-2023</h5>
+      </div>
+
+      <div class="modal-footer" data-dismiss="modal" aria-label="Redeem" (click)="redeem()">
+        {{ "Redeem" | translate }}
+       </div>
+
+
+</ng-template>

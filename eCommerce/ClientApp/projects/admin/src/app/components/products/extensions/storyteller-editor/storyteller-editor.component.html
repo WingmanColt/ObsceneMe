@@ -1,0 +1,102 @@
+<div class="container-fluid mt-4">
+  <div class="row">
+    <!-- LEFT SIDE: Editor Panel -->
+    <div class="col-md-6 border-end pe-4">
+      <h2>🛠️ Story Editor</h2>
+
+      <!-- Mode Toggle -->
+      <div class="mb-3">
+        <label>Editor Mode:</label>
+        <select class="form-select" [(ngModel)]="storyMode" (change)="onStoryModeChange()">
+          <option value="block">Structured Blocks</option>
+          <option value="html">Custom HTML</option>
+        </select>
+      </div>
+
+      <!-- Global Settings -->
+      <div class="mb-4">
+        <label>Page Template:</label>
+        <select class="form-select" [(ngModel)]="story.template">
+          <option value="default">Default</option>
+          <option value="hero">Hero</option>
+          <option value="minimal">Minimal</option>
+        </select>
+
+        <label class="mt-2">Theme Style:</label>
+        <select class="form-select" [(ngModel)]="story.style">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </div>
+
+      <!-- BLOCK EDITOR MODE -->
+      <div *ngIf="storyMode === 'block'">
+        <div *ngFor="let block of storyBlocks; let i = index" class="border p-3 mb-3 rounded bg-light">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <strong>Block {{ i + 1 }} – {{ block.type }}</strong>
+            <button class="btn btn-sm btn-outline-danger" (click)="removeBlock(i)">Remove</button>
+          </div>
+
+          <label>Type:</label>
+          <select class="form-select mb-2" [(ngModel)]="block.type">
+            <option value="title">Title</option>
+            <option value="text">Text</option>
+            <option value="image-left">Image Left</option>
+            <option value="image-right">Image Right</option>
+            <option value="video">Video</option>
+            <option value="list">List</option>
+            <option value="notes">Notes</option>
+            <option value="custom">Custom HTML</option>
+          </select>
+
+          <div *ngIf="['title', 'text', 'image-left', 'image-right', 'notes'].includes(block.type)">
+            <label>Heading:</label>
+            <input type="text" class="form-control mb-2" [(ngModel)]="block.heading" />
+          </div>
+
+          <div *ngIf="['text', 'list', 'notes'].includes(block.type)">
+            <label>Content:</label>
+            <textarea class="form-control mb-2" rows="4" [(ngModel)]="block.contentString" (change)="updateBlockContent(block)" placeholder="One line per item or paragraph"></textarea>
+          </div>
+
+          <div *ngIf="block.type.includes('image')">
+            <label>Image URL:</label>
+            <input type="text" class="form-control mb-2" [(ngModel)]="block.image" />
+          </div>
+          
+          <!-- VIDEO BLOCK FIELDS -->
+          <div *ngIf="block.type === 'video'">
+            <label>Heading:</label>
+            <input type="text" class="form-control mb-2" [(ngModel)]="block.heading" />
+
+            <label>Video URL (YouTube/Vimeo embed):</label>
+            <input type="text" class="form-control mb-2" [(ngModel)]="block.videoUrl" />
+          </div>
+
+          <div *ngIf="block.type === 'custom'">
+            <label>Custom HTML:</label>
+            <textarea class="form-control mb-2" rows="6" [(ngModel)]="block.customHtml"></textarea>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary" (click)="addBlock()">➕ Add Block</button>
+          <button class="btn btn-success" (click)="save()" *ngIf="productId > 0">💾 Save</button>
+        </div>
+      </div>
+
+      <!-- HTML EDITOR MODE -->
+      <div *ngIf="storyMode === 'html'">
+        <label>Custom HTML:</label>
+        <textarea class="form-control mb-3" rows="20" [(ngModel)]="story.html" (input)="emitStoryUpdate()"></textarea>
+        <button class="btn btn-success" (click)="save()" *ngIf="productId > 0">💾 Save (Update the DB)</button>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE: Live Preview -->
+    <div class="col-md-6 ps-4">
+      <h2>📖 Live Preview</h2>
+      <div [innerHTML]="previewHtml" class="preview-area mt-3"></div>
+    </div>
+  </div>
+</div>

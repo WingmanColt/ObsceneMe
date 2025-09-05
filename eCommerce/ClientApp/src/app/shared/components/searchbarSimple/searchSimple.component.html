@@ -1,0 +1,4 @@
+<ng-container *ngIf="searchResult$ | async as result"></ng-container>
+<div class="input-group custom-search">
+ <input type="text" class="custom-search-input form-control" [placeholder]="'Search for a product, brand...' | translate" (input)="searchReq($event.target.value)"/>
+</div>

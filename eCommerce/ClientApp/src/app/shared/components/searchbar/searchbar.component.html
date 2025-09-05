@@ -1,0 +1,365 @@
+<div class="main-searchMenu" >
+  <div id="mainnav">
+    <div class="searchMenu" [class]="settings.searchBarStyle" [class.opennav]="isSearchOpen">
+
+
+      <!--Desktop-->
+      <div class="mega-menu-container" [class]="settings.searchBarStyle" *ngIf="!this.isMobile">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-11">
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  [placeholder]="'Search for a product, brand...' | translate"
+                  (input)="searchRequest($event.target.value)"
+                  [value]="this.req.searchString"
+                />
+                <div class="input-group-append btns-right">
+                  <button
+                    class="btn btn-unset btn-outline-secondary"
+                    [class.has-value]="hasValue"
+                    type="button"
+                    (click)="onSubmit(undefined, searchType.Product, undefined)"
+                  >
+                    <span
+                      *ngIf="isLoading"
+                      class="spinner-border spinner-border-sm"
+                    ></span>
+                    <i *ngIf="!isLoading" class="las la-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-1">
+              <button
+                class="btn btn-unset btn-outline-secondary"
+                type="button"
+                (click)="close()"
+              >
+                <i class="las la-times"></i>
+                {{ "Close" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="row">
+            <ng-container *ngIf="searchResults$ | async as result">
+
+              <!--Show Recent / Trending on Left-->
+              <div class="col-6" *ngIf="result.products == null && result.categories == null && result.pages == null">
+                <ng-container *ngIf="lastSearchedWords$ | async as recentWords; else showTrending">
+                  <div *ngIf="recentWords.length; else showTrending">
+                    <div class="recent-searches">
+                      <div class="general-title">
+                        {{ "Recent" | translate }}
+                      </div>
+                      <ul>
+                        <li *ngFor="let item of recentWords">
+                          <div class="container-recentItem" (click)="onSubmit(item.keyword, item.type, item.catId)">
+                            <div class="icon">
+                              <i class="las la-search"></i>
+                            </div>
+                            <div class="title">{{ item.keyword }}</div>
+                            <button
+                              class="btn btn-unset"
+                              type="button"
+                              (click)="
+                                removeWord(item); $event.stopPropagation()
+                              "
+                            >
+                              <i
+                                class="las la-times"
+                              ></i>
+                            </button>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-template #showTrending>
+                  <div class="recent-searches">
+                    <div class="general-title mt-5">
+                      #{{ "Trending" | translate }}
+                    </div>
+                    <ul>
+                      <li *ngFor="let word of settings.trendingWords">
+                        <a
+                          (click)="onSubmit(word, searchType.Product)"
+                          class="nav-link"
+                        >
+                          <i class="las la-fire-alt"></i> {{ word }}
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </ng-template>
+              </div>
+
+              <div class="col-6" *ngIf="result.products != null && (result.categories != null || result.pages != null)">
+               <!--Show Result of Pages-->
+                               <ng-container *ngIf="result.pages?.length">
+                                <div class="recent-searches">
+                                <div class="general-title">{{ "Pages" | translate }}</div>
+                                <ul>
+                                  <li *ngFor="let page of result.pages">
+                                    <div class="container-recentItem" (click)="onSubmit(page.urlAddress, searchType.Page)">
+                                      <div class="icon">
+                                        <i class="las la-search"></i>
+                                      </div>
+                                      <div class="title"> {{ page.title | translate }}</div>
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                              </ng-container>
+            
+                             <!--Show Result of Categories-->
+                              <ng-container *ngIf="result.categories?.length">
+                                <div class="recent-searches">
+                                <div class="general-title">
+                                  {{ "Categories" | translate }}
+                                </div>
+                                <ul>
+                                  <li *ngFor="let category of result.categories">
+                                    <div class="container-recentItem" (click)="onSubmit(undefined, searchType.Category, category.id)">
+                                      <div class="icon">
+                                        <i class="las la-search"></i>
+                                      </div>
+                                      <div class="title"> {{ category.title | translate }}</div>
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                              </ng-container>
+              </div>
+
+            <!--Show Result of products on Right-->
+              <div class="col-6">
+                <div class="search-result">
+                  <ng-container *ngIf="result.products != null">
+                    <div class="titles-container">
+                      <div class="general-title">
+                        {{ "Result" | translate }}
+                      </div>
+                      <div
+                        class="search-view-all"
+                        [routerLink]="['/shop']"
+                        [queryParams]="{ searchString: this.req.searchString }"
+                        *ngIf="result.products?.length >= 10"
+                      >
+                        {{ "View all" | translate }}
+                      </div>
+                    </div>
+                    <ul *ngIf="result.products?.length">
+                      <li
+                        class="clearfix"
+                        *ngFor="let product of result.products"
+                      >
+                        <app-product-box-vertical
+                          [product]="product"
+                        ></app-product-box-vertical>
+                      </li>
+                    </ul>
+                  </ng-container>
+
+                  <!--No products found on search-->
+                  <ng-container *ngIf="result.products != null && result.products?.length <= 0"> {{'We couldn`t find any results for your search.' | translate}} </ng-container>
+
+
+
+
+
+                  <!--Show Top Products As Advertisment At Bottom-->
+                  <div
+                    *ngIf="
+                      !result.products?.length &&
+                      !result.categories?.length &&
+                      !result.pages?.length &&
+                      settings.showAdProductsDesktop
+                    "
+                  >
+                    <div class="general-title">
+                      #{{ "Top Products" | translate }}
+                    </div>
+                    <ng-container
+                      *ngIf="this.relatedProducts$ | async as adProducts"
+                    >
+                      <ul>
+                        <li
+                          class="clearfix"
+                          *ngFor="let product of adProducts | slice : 0 : 3"
+                        >
+                          <app-product-box-vertical
+                            [product]="product"
+                          ></app-product-box-vertical>
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+
+      <!--Mobile-->
+      <section class="searchSection" *ngIf="this.isMobile">
+        <div class="col-12">
+          <div class="input-group input-container">
+            <i *ngIf="!isLoading"
+             class="las la-search input-icon"></i>
+
+            <input
+              type="text"
+              class="form-control"
+              [placeholder]="'Search for a product, brand...' | translate"
+              (input)="searchRequest($event.target.value)"
+              [value]="this.req.searchString"
+            />
+            <div class="input-group-append btns-right">
+              <button
+                class="btn btn-unset btn-outline-secondary"
+                type="button"
+                (click)="close()">
+                <span
+                *ngIf="isLoading"
+                class="spinner-border spinner-border-sm"
+              ></span>
+                <i *ngIf="!isLoading" class="las la-times"></i>
+              </button>
+
+            </div>
+          </div>
+          <ng-container *ngIf="searchResults$ | async as result">
+             
+          <!--Show Recent / Trending on Top Of Mobile-->
+          <ng-container *ngIf="result.products == null && result.categories == null && result.pages == null && lastSearchedWords$ | async as recentWords; else trendingSearches">
+            <div class="recent-searches" *ngIf="recentWords?.length > 0">
+              <div class="general-title">{{ "Recent" | translate }}</div>
+              <ul>
+                <li *ngFor="let item of recentWords">
+                  <div class="container-recentItem">
+                    <div class="icon"><i class="las la-search"></i></div>
+                    <div class="title"
+                      (click)="onSubmit(item.keyword, item.type, item.catId)">
+                      {{ item.keyword }}
+                    </div>
+
+                    <div class="times-icon">
+                      <button
+                        class="btn btn-unset"
+                        type="button"
+                        (click)="removeWord(item)"
+                      >
+                        <i class="las la-times text-right"></i>
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div *ngIf="!recentWords?.length">
+              <div class="recent-searches">
+                <div class="general-title mt-5">#{{ "Trending" | translate }}</div>
+                <ul>
+                  <li *ngFor="let word of settings.trendingWords">
+                    <a
+                      href="javascript:void(0)"
+                      (click)="onSubmit(word, searchType.Product)"
+                      class="nav-link"
+                    >
+                      <i class="las la-fire-alt"></i> {{ word }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </ng-container>
+          
+
+  
+            <div class="search-result">
+              <div *ngIf="!isLoading && req?.searchString?.length && !result.products?.length && !result.pages?.length && !result.categories?.length">
+                <div class="general-title">{{ "Result" | translate }}</div>
+                <div> {{'We couldn`t find any results for your search.' | translate}} </div>
+              </div>
+
+              <div *ngIf="result.pages?.length > 0">
+                <div class="general-title">{{ "Pages" | translate }}</div>
+                <ul>
+                  <li *ngFor="let page of result.pages">
+                    <div class="container-recentItem">
+                      <div class="title" style="line-height: 35px; font-size: .9em; font-weight: 700;"
+                        (click)="onSubmit(page.urlAddress, searchType.Page)">
+                        {{ page.title | translate }}
+                      </div>
+                    </div>
+
+                  </li>
+                </ul>
+              </div>
+
+              <div *ngIf="result.categories?.length > 0">
+                <div class="general-title">{{ "Categories" | translate }}</div>
+                <ul>
+                  <li *ngFor="let category of result.categories">
+                    <div class="container-recentItem">
+                      <div class="icon"><i class="las la-search"></i></div>
+                      <div class="title" style="line-height: 35px; font-size: .9em; font-weight: 700;"
+                        (click)="onSubmit(undefined, searchType.Category, category.id)">
+                        {{ category.title | translate }}
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <div *ngIf="result.products?.length > 0">
+                <div class="general-title">{{ "Result" | translate }}</div>
+                <ul>
+                  <li class="clearfix" *ngFor="let product of result.products">
+                    <app-product-box-vertical [product]="product"></app-product-box-vertical>
+                  </li>
+                </ul>
+                <div
+                class="search-view-all"
+                [routerLink]="['/shop']"
+                [queryParams]="{ searchString: this.req.searchString }"
+                *ngIf="result.products?.length > 1">
+                {{ "View all" | translate }}
+              </div>              
+            </div>
+
+              <div *ngIf="!req?.searchString?.length && !result.products?.length && !result.categories?.length && !result.pages?.length && settings.showAdProductsMobile">
+                <div class="general-title">
+                  #{{ "Top Products" | translate }}
+                </div>
+                <ul>
+                  <ng-container
+                    *ngIf="this.relatedProducts$ | async as adProducts"
+                  >
+                    <li
+                      class="clearfix"
+                      *ngFor="let product of adProducts | slice : 0 : 3"
+                    >
+                      <app-product-box-vertical
+                        [product]="product"
+                      ></app-product-box-vertical>
+                    </li>
+                  </ng-container>
+                </ul>
+              </div>
+
+            </div>
+          </ng-container>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

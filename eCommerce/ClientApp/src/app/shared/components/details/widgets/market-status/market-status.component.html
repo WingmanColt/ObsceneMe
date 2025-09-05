@@ -1,0 +1,17 @@
+<div [ngSwitch]="MarketStatus">
+  <div class="product-item__label hit" *ngSwitchCase="MarketStatusEnum.Sale">
+    {{ 'Deal' | translate }}
+  </div>
+  <div class="product-item__label hit" *ngSwitchCase="MarketStatusEnum.New">
+    {{ 'New' | translate }}
+  </div>
+  <div class="product-item__label hit" *ngSwitchCase="MarketStatusEnum.PreOrder">
+    {{ 'Pre Order' | translate }}
+  </div>
+  <div class="product-item__label hit" *ngSwitchCase="MarketStatusEnum.Sold">
+    {{ 'Sold Out' | translate }}
+  </div>
+  <div class="product-item__label hit" *ngSwitchCase="MarketStatusEnum.Low">
+    {{ 'Limited' | translate }}
+  </div>
+</div>

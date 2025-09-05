@@ -1,0 +1,67 @@
+<div *ngIf="product">
+      <div class="card-basic mx-auto">
+            <div class="image-container"
+                  [routerLink]="['/shop/product/', product?.id]">
+                  <app-badges [settings]="settings"
+                        [marketStatus]="this.product.marketStatus"></app-badges>
+                  <div class="front">
+                        <img *ngIf="product?.images == undefined"
+                              [ngSrc]="product?.src?.length > 0 ? product?.src : this.defaultImage"
+                              ngSrcset="100w, 200w, 300w"
+                              [alt]="product?.title"
+                              fill
+                              loading="lazy" />
+                        <img *ngIf="product?.images !== undefined"
+                              [ngSrc]="product?.images[0]?.src.length > 0 ? product?.images[0]?.src : this.defaultImage"
+                              ngSrcset="100w, 200w, 300w"
+                              [alt]="product?.title"
+                              fill
+                              loading="lazy" />
+                  </div>
+                  <div class="back"
+                        *ngIf="this.onHowerChangeImage">
+                        <img *ngIf="product?.images == undefined"
+                              [ngSrc]="product?.src?.length > 0 ? product?.src : this.defaultImage"
+                              ngSrcset="100w, 200w, 300w"
+                              [alt]="product?.title"
+                              fill
+                              loading="lazy" />
+                        <img *ngIf="product?.images !== undefined"
+                              [ngSrc]="product?.images[1]?.src.length > 0 ? product?.images[1]?.src : this.defaultImage"
+                              ngSrcset="100w, 200w, 300w"
+                              [alt]="product?.title"
+                              fill
+                              loading="lazy" />
+                  </div>
+            </div>
+            <div class="card__overlay">
+                  <div class="overlay__text">
+                        <a [routerLink]="['/shop/product/', product?.id]"
+                              target="_blank"
+                              class="global-button"
+                              title="Details"> {{ "Details" | translate }} </a>
+                        <a *ngIf="this.multiButtons"
+                              href="javascript:void(0)"
+                              class="mobile-quick-view global-button desktop-only"
+                              (click)="QuickView.openModal()"
+                              title="Quick View"> {{ "Quick View" | translate }} </a>
+                  </div>
+            </div>
+      </div>
+      <div class="card-basic-details"
+            [routerLink]="['/shop/product/', product?.id]"
+            target="_blank">
+            <span class="title"
+                  itemprop="name">{{ product?.title | titlecase }}</span>
+            <span class="price">
+                  <span class="current_price">
+                        <span class="money">{{ baseService.calcCurrency(product?.price - product?.discountRate) |
+                              asCurrency : baseService.activeCurrency }}</span>
+                  </span>
+                  <!--<span class="was_price" *ngIf="product?.discountRate">{{ product?.price * productService.Currency?.price
+        | currency:productService.Currency?.currency:'symbol' }}</span>-->
+            </span>
+      </div>
+      <app-quick-view #quickView
+            [product]="product"></app-quick-view>
+</div>

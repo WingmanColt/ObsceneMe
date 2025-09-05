@@ -1,0 +1,62 @@
+<div class="circle-categories-container">
+ 
+ <!-- <ng-container *ngIf="subCategories?.length > 0; else noSubCategories">
+
+  <div #categoriesPageSwiperContainer class="swiper-container swiper-categories-page grid-container">
+   <div class="swiper-wrapper">
+  
+    <div class="swiper-slide grid-item" *ngFor="let sub of subCategories; trackBy: trackById">
+     <a [routerLink]="['/shop']" [queryParams]="{ subCategoryId: sub.id }">
+
+      <div class="image-wrapper">
+
+        <img 
+             [lazyLoad]="settings.categoryImageUrl + sub.categoryShortName + '/' + sub.icon + settings.categoryImageUrlExtension"
+             class="lazy-loading"
+             alt="{{ sub.title }}" />
+      </div>
+
+      <div class="text-container">
+        <div class="item-title" [title]="sub.title">
+          {{ sub.title | translate }}
+        </div>
+      </div>
+    </a>
+    </div>
+   </div>
+  </div>
+
+
+ </ng-container>  -->
+
+
+ <ng-container *ngIf="subCategories?.length > 0; else noSubCategories">
+
+  <app-simple-slider2 *ngIf="sliderConfig.slides?.length"
+  [config]="sliderConfig"
+  [slideTemplate]="CircleCategoriesSlideTemplate"></app-simple-slider2>
+  
+  <ng-template #CircleCategoriesSlideTemplate let-slide="slide" let-index="index" class="grid-item">
+    <a [routerLink]="['/shop']" [queryParams]="{ subCategoryId: sub.id }">
+      <div class="image-wrapper">
+
+        <img 
+             [lazyLoad]="settings.categoryImageUrl + sub.categoryShortName + '/' + sub.icon + settings.categoryImageUrlExtension"
+             class="lazy-loading"
+             alt="{{ sub.title }}" />
+      </div>
+
+      <div class="text-container">
+        <div class="item-title" [title]="sub.title">
+          {{ sub.title | translate }}
+        </div>
+      </div>
+    </a>
+  </ng-template>
+ </ng-container>
+
+ <ng-template #noSubCategories>
+   <ngx-skeleton-loader count="10" appearance="circle" animation="progress-dark"></ngx-skeleton-loader>
+   <ngx-skeleton-loader count="10" appearance="circle" animation="progress-dark"></ngx-skeleton-loader>
+ </ng-template>
+</div>

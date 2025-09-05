@@ -1,0 +1,39 @@
+.container {
+ max-width: 800px; /* Limit the maximum width of the container */
+ margin: 0 auto;   /* Center the container horizontally */
+ padding: 20px;
+}
+
+.form-group {
+ margin-bottom: 1.5rem;
+}
+
+.list-group-item {
+ display: flex;
+ flex-direction: column;
+ align-items: flex-start;
+ padding: 10px;
+ border: 1px solid #ddd;
+ border-radius: 4px;
+}
+
+.settings-details {
+ margin-top: 10px;
+ padding: 10px;
+ border: 1px solid #ddd;
+ border-radius: 4px;
+ background-color: #f8f9fa;
+}
+
+.form-control, .form-check-input {
+ max-width: 100%; /* Ensure the input does not stretch beyond the container */
+ margin-bottom: 10px;
+}
+
+input[type="checkbox"] {
+ margin-top: 6px;
+}
+
+.btn-primary, .btn-secondary {
+ margin-top: 10px;
+}

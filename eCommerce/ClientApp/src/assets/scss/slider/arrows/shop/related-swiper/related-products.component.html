@@ -1,0 +1,67 @@
+<app-simple-slider2 *ngIf="isDataLoaded" 
+  #relatedProductsSlider 
+  [config]="sliderConfig" 
+  [slideTemplate]="RelatedProductsSlideTemplate">
+</app-simple-slider2>
+
+<ng-template #RelatedProductsSlideTemplate let-slide="slide" let-index="index">
+  <app-product-box-cardClean [product]="slide"> </app-product-box-cardClean>
+</ng-template>
+
+
+
+
+
+<!--<div class="swiper-container swiper-related">
+  <div class="page-header-container-with-swiper">
+    <div class="page-header">{{ "Related Products" | translate }}</div>
+    <div class="swiper-button-container">
+      <div class="swiper-button-left"></div>
+      <div class="swiper-button-right"></div>
+      <div class="home-swiper_pagination swiper-pagination"></div>
+    </div>
+  </div>
+
+  <div class="swiper-wrapper">
+    <div
+      *ngFor="
+        let product of this.products && this.products?.length > 0
+          ? (products | slice : 0 : 6)
+          : env.ngxLoaderArray
+      "
+      class="swiper-slide"
+    >
+      <app-product-base
+        *ngIf="this.products?.length"
+        [template]="settings.relatedProductsCardTemplate"
+        [product]="product"
+      ></app-product-base>
+
+      <ngx-skeleton-loader
+        *ngIf="!this.products?.length"
+        appearance="line"
+        animation="progress"
+        [theme]="{
+          height: '250px',
+          'border-radius': '2px',
+          'background-color': '#c8c8c8',
+          animation: 'fadeIn 1s'
+        }"
+      ></ngx-skeleton-loader>
+      <ngx-skeleton-loader
+        *ngIf="!this.products?.length"
+        appearance="line"
+        animation="progress-dark"
+        count="2"
+        [theme]="{ 'background-color': '#c8c8c8' }"
+      ></ngx-skeleton-loader>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center">
+    <a class="theme-btn-s2" [routerLink]="['/shop']"
+       style="background-color: rgb(0, 0, 0); color: rgb(207, 212, 218); width: auto; padding: 0.5rem 1.1rem;margin-top: 1em;">
+      {{ 'Show More' | translate }}
+    </a>
+  </div>
+</div>-->

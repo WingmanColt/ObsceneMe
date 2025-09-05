@@ -1,0 +1,17 @@
+    <div class="row">
+      <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12">
+
+     <ngb-accordion [closeOthers]="true" activeIds="static-1" class="accordion theme-accordion" id="accordionExample">
+      <ngb-panel [id]="'static-' + i" [title]="item.question | translate" *ngFor="let item of settings; index as i">
+       <ng-template ngbPanelContent>
+        <div style="font-size:1.2rem;overflow: visible; max-height: none; width: 100%; white-space: normal;">
+          <p style="word-break: break-word;"> 
+             {{ item.answer | translate }}         
+          </p>
+        </div>
+       </ng-template>
+      </ngb-panel>
+     </ngb-accordion>
+    </div>
+   </div>
+

@@ -1,0 +1,77 @@
+@import "../../../node_modules/bootstrap/scss/bootstrap.scss";
+@import "../fonts/fonts.scss";
+//@import "../fonts/svg/line-awesome-used.min.scss";
+//@import "../../../node_modules/line-awesome/dist/line-awesome/scss/line-awesome.scss";
+
+@import "./customDropdown";
+@import "./customCheckbox";
+@import "./theme/headers";
+@import "./utilities";
+@import "./theme/variables";
+@import "./theme/storyTeller";
+
+@import "./theme/circle-categories.scss";
+@import "./theme/filtering.scss";
+
+@import 'redZoom/styles/base';
+@import 'redZoom/styles/style-magnifier';
+
+// Pages
+@import "./pages/aboutus";
+@import "./pages/checkout-style-two";
+@import "./pages/product-four";
+@import "./pages/_subscribeFooter";
+//@import "./pages/shop/listing/details/template-one.scss";
+//@import "./pages/shop/listing/details/template-two.scss";
+//@import "./pages/shop/listing/details/template-three.scss";
+
+
+//@import "./pages/account/register-affiliate";
+@import "./pages/account/private-office"; // user panel
+@import "./pages/reviews/review-stories.scss";
+//@import "./pages/account/private-affiliate";
+
+
+// Home
+//@import "./home/collection";
+
+:root {
+    --theme-deafult: rgb(205, 121, 81);
+    --theme-deafult-2: rgb(82, 60, 7);
+    scroll-behavior: smooth;
+}
+
+//@import "flags/flags";
+@import "theme/_svgIcons";
+@import "theme/style";
+@import "theme/custom";
+@import "theme/reviews";
+//@import "theme/_video";
+@import "theme/customModals";
+@import "theme/paymentsSection";
+
+//@import "theme/theme-dark";
+@import "theme/menu";
+@import "theme/responsive";
+@import "theme/loader";
+@import "theme/cardClean";
+@import "theme/actionBanner";
+@import "theme/aboutSection";
+@import "./breadcumbs/breadcumb";
+
+// Slider
+@import "slider/circle-categories-home-slider";
+//@import "slider/slider-gallery";
+@import "slider/simple-slider";
+@import "slider/slider-categories-badges";
+@import "slider/main-slider-home";
+
+// Shop page filter menu top categories 
+@import "theme/categories-filter";
+
+// Rating Scss
+@import "../../../node_modules/ngx-bar-rating/themes/br-default-theme";
+
+.loader {
+    background-color: #eae9e9 !important;
+}

@@ -1,0 +1,81 @@
+<div *ngIf="isLoaded">
+ <form [formGroup]="userDetailsForm" (ngSubmit)="onSubmit()">
+  <h1 class="page-header">{{'Settings' | translate}}</h1>
+  <!-- Display errors here -->
+  <div *ngIf="outputMessages.length > 0" class="error-messages alert py-2 px-3 my-3">
+    <ul class="mb-0 ps-3">
+      <li *ngFor="let msg of outputMessages">{{ msg }}</li>
+    </ul>
+  </div>
+
+  <div class="private-office__column private-office__form-wrapper">
+    <div class="private-office__col">
+      <app-float-input-field label="Full Name" formControlName="fullName"></app-float-input-field>
+      <app-float-input-field label="Phone" formControlName="phoneNumber"></app-float-input-field>
+      <app-float-input-field label="Email Address" formControlName="email"></app-float-input-field>
+      <app-float-input-field label="Postal Code" formControlName="postalCode"></app-float-input-field>
+
+        <button type="submit" class="button private-office__submit-button" *ngIf="!isMobile"
+        [ngSwitch]="this.btnSubmitLoader" [class.disabled]="this.btnSubmitLoader == 3">
+            <span *ngSwitchCase="0">
+                {{ "Save" | translate }}
+            </span>
+
+            <span *ngSwitchCase="1">
+                <span class="spinner-border spinner-border-sm"></span> {{ "Saving settings" | translate }}
+            </span>
+
+            <span *ngSwitchCase="2">
+              <i class="las la-user-times"></i>
+              {{ "Updating failed." | translate }}
+          </span>
+
+          <span *ngSwitchCase="3">
+            <i class="las la-user-check"></i>
+            {{ "Updated successfully." | translate }}
+          </span>
+           
+        </button>
+    </div>
+
+    <div class="private-office__col">
+        <label for="city" class="label shipping__row-label" *ngIf="!isMobile">{{ "Country" | translate }} </label>
+        <div class="input-wrap profile-form-group">
+            <app-custom-dropdown [dropdownArray]="avaliableCountries"
+                [iconUrl]="'./assets/icons/'" [iconExt]="'.svg'" [selectedValue]="selectedCountryLabel"
+                (selectedValue)="setCountryValue($event)"></app-custom-dropdown>
+        </div>
+
+        <app-float-input-field label="Town/City" formControlName="city"></app-float-input-field>
+        <app-float-input-field label="State" formControlName="state"></app-float-input-field>
+        <app-float-input-field label="Address" formControlName="address"></app-float-input-field>
+
+        <a class="link subscription-link text-danger" (click)="openChangePassword()">{{ "Change Password" | translate }}</a>
+    </div>
+    
+        <button type="submit" class="button private-office__submit-button" *ngIf="isMobile"
+        [ngSwitch]="this.btnSubmitLoader" [class.disabled]="this.btnSubmitLoader == 3">
+            <span *ngSwitchCase="0">
+                {{ "Save" | translate }}
+            </span>
+
+            <span *ngSwitchCase="1">
+                <span class="spinner-border spinner-border-sm"></span> {{ "Saving settings" | translate }}
+            </span>
+
+            <span *ngSwitchCase="2">
+              <i class="las la-user-times"></i>
+              {{ "Updating failed." | translate }}
+          </span>
+
+          <span *ngSwitchCase="3">
+            <i class="las la-user-check"></i>
+            {{ "Updated successfully." | translate }}
+          </span>
+           
+        </button>
+  </div>
+ </form>
+</div>
+
+<app-loading *ngIf="!isLoaded"></app-loading>

@@ -1,0 +1,12 @@
+
+.qty-box .input-group span button, .qty-box-small .input-group span button {
+background: #212121 !important;
+border: unset !important;
+}
+
+.button {
+ &.disabled{
+  cursor: not-allowed;
+  opacity: 0.5;
+ }
+}

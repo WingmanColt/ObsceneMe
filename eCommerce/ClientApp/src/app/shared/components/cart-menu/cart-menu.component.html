@@ -1,0 +1,101 @@
+<div class="overlay" [class.active]="isCartMenuOpen" *ngIf="settings.myCartSettings.overlay"></div>
+<div id="mySidenav" class="sidenav" [class.openSide]="isCartMenuOpen" *ngIf="settings.showMyCart">
+
+  <nav>
+    <div class="sidebar-header text-start">
+      <i aria-hidden="true"></i> {{ "My Basket" | translate }}
+      <i class="las la-times" aria-hidden="true" (click)="closeCartMenu()"></i>
+    </div>
+    <ng-container *ngIf="!loading; else loadingTemplate">
+      <ng-container *ngIf="cartItems.length > 0; else noProductsTemplate">
+        <ul class="sidebar-menu">
+          <li *ngFor="let product of cartItems; trackBy: trackByProductId" class="clearfix">
+            <div class="product-wrapper">
+              <div class="img-wrapper" [routerLink]="['/shop/product/', product?.id]">
+                <img [defaultImage]="'assets/images/product/placeholder.jpg'" [lazyLoad]="product?.image" class="lazy-loading" />
+              </div>
+              <div class="item-content">
+                <div class="item-title">
+                  <h4 class="title"><span>{{ product?.title }}</span></h4>
+                </div>
+                <div class="about">{{ product.details?.substring(0, 40) }}</div>
+                <div class="item-price">
+                  <div class="qty-box">
+                    <div class="input-group">
+                      <span class="input-group-prepend">
+                        <button type="button" class="btn quantity-left-minus" (click)="changeQuantity(product, false)" [id]="product.id">
+                          <i class="las la-minus"></i>
+                        </button>
+                      </span>
+                      <span class="input number-box" role="textbox" contenteditable>{{ calculateStocksCount(product) | async }}</span>
+                      <span class="input-group-prepend">
+                        <button type="button" class="btn quantity-right-plus" (click)="changeQuantity(product, true)" 
+                        [class.disabled]="(calculateStocksCount(product) | async) >= product?.quantity">
+                          <i class="las la-plus"></i>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                  <span class="price-text">
+                    {{ baseService.calcCurrency(product.price - product.discountRate) | asCurrency: baseService.activeCurrency }}
+                  </span>
+                </div>
+              </div>
+              <button class="btn-unset delete-button" (click)="removeItem(product)" [disabled]="isRemoving">
+                <i *ngIf="!isRemoving" class="las la-trash-alt"></i>
+                <span *ngIf="isRemoving"><span class="spinner-border spinner-border-sm"></span></span>
+              </button>
+            </div>
+          </li>
+        </ul>
+      </ng-container>
+    </ng-container>
+
+    <ng-template #noProductsTemplate>
+      <div class="sidebar-empty">
+        <div class="cart-info-empty">{{ "Your cart is empty!" | translate }}</div>
+        <div class="cart-info">{{ "Add your favorite items to your cart." | translate }}</div>
+        <!-- <div class="cart-buttons mx-auto">
+          <a [routerLink]="['/shop']" class="btn-large btn-dark btn-card">
+            {{ "Explore Now" | translate }}
+          </a>
+        </div>-->
+      </div>
+    </ng-template>
+
+    <ng-template #loadingTemplate>
+      <ul class="sidebar-menu">
+        <li>
+          <ngx-skeleton-loader appearance="line" animation="progress-dark" count="3"></ngx-skeleton-loader>
+        </li>
+      </ul>
+    </ng-template>
+
+    <ng-container *ngIf="settings.myCartSettings.showSpecialOffers && (specialOffers$ | async) as adProducts">
+      <ul class="sidebar-menu" *ngIf="cartItems.length === 0">
+        <div class="cart-info">{{ "Customers who bought this item also bought" | translate }}</div>
+        <li *ngFor="let product of adProducts | slice: 0:3; trackBy: trackByProductId" class="clearfix" style="margin-bottom: unset">
+          <app-product-box-vertical [product]="product"></app-product-box-vertical>
+        </li>
+      </ul>
+    </ng-container>
+
+    <div class="sidebar-footer">
+      <div class="cart-total">
+        <ng-container *ngIf="cartCount; else noItemsTemplate">
+          <span>{{ "Subtotal" | translate }} ({{ cartCount }}):</span>
+        </ng-container>
+        <ng-template #noItemsTemplate></ng-template>
+        <span>{{ baseService.calcCurrency(getTotalAmount() | async) | asCurrency: baseService.activeCurrency }}</span>
+      </div>
+      <div class="cart-buttons mx-auto">
+        <a [routerLink]="['/shop/checkout']" class="btn-large btn-dark btn-card" [class.disabled]="!cartItems.length">
+          <i class="las la-lock"></i> {{ "CHECKOUT" | translate }}
+        </a>
+      </div>
+      <div class="cart-info" *ngIf="settings.myCartSettings.bottomInfo.length > 0">
+        {{ settings.myCartSettings.bottomInfo | translate }}
+      </div>
+    </div>
+  </nav>
+</div>

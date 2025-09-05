@@ -1,0 +1,157 @@
+<div class="checkout-header">
+  <h2>{{ "Your order" | translate }}</h2>
+  <span class="checkout-header__total"> </span>
+  <span class="checkout-header__mobile-arrow"></span>
+</div>
+
+<ng-container *ngIf="this.products?.length">
+  <div class="product-list-cart-wrap">
+    <div class="product-list-wrap">
+      <ul class="product-list scrolling">
+        <li *ngFor="let product of products" class="product-list__item">
+          <div class="product-list_product-item">
+            <a
+              class="product__image"
+              [routerLink]="['/shop/product/', product.id]"
+            >
+              <img
+                class="lazy-loading"
+                [lazyLoad]="product.image"
+                [alt]="product.title"
+              />
+            </a>
+            <div class="product__column">
+              <a class="product-item__info">
+                <div
+                  class="product__header"
+                  [routerLink]="['/shop/product/', product.id]"
+                >
+                  {{ product.title }}
+                </div>
+                <div class="product__header-desc">
+                  {{ product.details?.substring(0, 50) }}
+                </div>
+              </a>
+              <div class="product__count-list">
+                <!--  <span [id]="product.id">x {{this.calculateStocksCount(product) | async}}</span>-->
+                <div class="qty-box">
+                  <div class="input-group">
+                    <span class="input-group-prepend">
+                      <button
+                        type="button"
+                        class="btn quantity-left-minus"
+                        (click)="decrement(product)"
+                        data-type="minus"
+                        [id]="product.id"
+                      >
+                        <i class="las la-minus"></i>
+                      </button>
+                    </span>
+
+                    <span
+                      class="input number-box"
+                      role="textbox"
+                      contenteditable
+                      [id]="product.id"
+                      >{{ this.calculateStocksCount(product) | async }}</span
+                    >
+
+                    <span class="input-group-prepend">
+                      <button
+                        type="button"
+                        class="btn quantity-right-plus"
+                        (click)="increment(product)"
+                        [class.disabled]="quantity > product.quantity"
+                        data-type="plus"
+                        [id]="product.id"
+                      >
+                        <i class="las la-plus"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+                <div
+                  *ngIf="!product.isLoading"
+                  class="product__button-remove"
+                  (click)="removeItem(product)"
+                ></div>
+                <span
+                  class="spinner-border spinner-border-sm float-end"
+                  *ngIf="product.isLoading"
+                ></span>
+              </div>
+              <div class="product__price-column">
+                <div class="product__price">
+                  {{
+                    baseService.calcCurrency(
+                      product.price - product.discountRate
+                    ) | asCurrency : baseService.activeCurrency
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="product-item__additional-info"></div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!--<div class="checkout__column gift_wrap__select">
+<div class="checkout__row">
+<a href="#" data-source="/ajax/additional/wrap/">Изберете подаръчна опаковка</a>
+</div>
+</div>-->
+  <div class="product-total">
+    <div>
+      <span>{{ "Subtotal" | translate }}</span>
+      <span class="cost all">
+        {{
+          baseService.calcCurrency(getTotalAmount() | async)
+            | asCurrency : baseService.activeCurrency
+        }}
+      </span>
+    </div>
+    <div *ngFor="let ent of this.appliedCoupons">
+      <span>{{ "Voucher & Promo" | translate }}</span>
+      <span class="cost discount"
+        >- {{ (ent.discount * 100).toFixed(1) }} %</span
+      >
+    </div>
+    <div *ngIf="selectedShippingModel">
+      <span
+        >{{ "Shipping" | translate }}
+        <span>{{ selectedShippingModel.label }}</span></span
+      >
+      <span class="cost delivery" *ngIf="selectedShippingModel.cost > 0">{{
+        baseService.calcCurrency(selectedShippingModel.cost)
+          | asCurrency : baseService.activeCurrency
+      }}</span>
+      <span class="cost delivery" *ngIf="selectedShippingModel.cost <= 0">{{
+        "Free Shipping" | translate
+      }}</span>
+    </div>
+    <div class="product-total__amount">
+      <span>{{
+        env.defaultTax > 0 ? "Total (With VAT)" : ("Total" | translate)
+      }}</span>
+      <span class="cost-final">
+        {{
+          baseService.calcCurrency(calFinalTotalAmount() | async)
+            | asCurrency : baseService.activeCurrency
+        }}
+      </span>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!this.products?.length && isLoading">
+  <div class="center-body p-5">
+    <div class="circle-loader"></div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!this.products?.length && !isLoading">
+  <div class="center-body p-5">
+    {{ "Oops! It seems like your basket is empty at the moment." | translate }}
+  </div>
+</ng-container>

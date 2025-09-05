@@ -1,0 +1,120 @@
+[
+ {
+  "vId": 1,
+  "Title": "Size",
+  "Icon": "chart-bar",
+  "VariantItems": [
+   {
+    "vId": 1,
+    "Value": "XS"
+   },
+   {
+    "vId": 2,
+    "Value": "S"
+   },
+   {
+    "vId": 3,
+    "Value": "M"
+   },
+   {
+    "vId": 4,
+    "Value": "L"
+   },
+   {
+    "vId": 5,
+    "Value": "XL"
+   },
+   {
+    "vId": 6,
+    "Value": "XXL"
+   }
+  ]
+ },
+ {
+  "vId": 2,
+  "Title": "Color",
+  "Icon": "palette",
+  "VariantItems": [
+    {
+      "vId": 7,
+      "Value": "red"
+    },
+    {
+      "vId": 8,
+      "Value": "purple"
+    },
+    {
+      "vId": 9,
+      "Value": "blue"
+    },
+    {
+      "vId": 10,
+      "Value": "green"
+    },
+    {
+      "vId": 11,
+      "Value": "yellow"
+    },
+    {
+      "vId": 12,
+      "Value": "orange"
+    },
+    {
+      "vId": 13,
+      "Value": "pink"
+    },
+    {
+      "vId": 14,
+      "Value": "black"
+    },
+    {
+      "vId": 15,
+      "Value": "white"
+    },
+    {
+      "vId": 16,
+      "Value": "brown"
+    },
+    {
+      "vId": 17,
+      "Value": "gray"
+    },
+    {
+      "vId": 18,
+      "Value": "cyan"
+    },
+    {
+      "vId": 19,
+      "Value": "magenta"
+    },
+    {
+      "vId": 20,
+      "Value": "teal"
+    },
+    {
+      "vId": 21,
+      "Value": "lime"
+    },
+    {
+      "vId": 22,
+      "Value": "olive"
+    },
+    {
+      "vId": 23,
+      "Value": "maroon"
+    },
+    {
+      "vId": 24,
+      "Value": "navy"
+    },
+    {
+      "vId": 25,
+      "Value": "indigo"
+    },
+    {
+      "vId": 26,
+      "Value": "lavender"
+    }
+  ]
+}
+]

@@ -1,0 +1,83 @@
+<div class="login-card-logoBox">
+  <img [lazyLoad]="getLogoUrl(1)" class="cl-logoImage rounded" [alt]="settings.webName">
+    
+    <a [routerLink]="['/']" >
+        {{ settings.webName }}
+    </a>
+</div>
+<div class="login-card-alert" *ngIf="this.outputMessage?.length > 0">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 23">
+        <path fill="currentColor" fill-rule="evenodd"
+            d="M9.5 2A3.2 3.2 0 0 1 15 2l9 15.8a3.2 3.2 0 0 1-2.8 4.8H3.3c-2.4 0-4-2.6-2.8-4.8L9.5 2Zm4.4 15.8a1.6 1.6 0 1 1-3.2 0 1.6 1.6 0 0 1 3.2 0ZM12.3 5a1.6 1.6 0 0 0-1.6 1.6v4.8a1.6 1.6 0 0 0 3.2 0V6.6A1.6 1.6 0 0 0 12.3 5Z"
+            clip-rule="evenodd"></path>
+    </svg>
+    <div class="alertText-container">
+        <p>{{ this.outputMessage | translate }}</p>
+    </div>
+</div>
+<div class="login-card-header">
+    <h1> {{ "Sign In" | translate }}</h1>
+    <p>
+        {{ "to continue to" | translate }} {{ settings.webName }}</p>
+</div>
+<div class="login-card-body">
+
+    <div class="login-social-buttons">
+<div id="googleSignInDiv"></div>
+    </div>
+
+
+    <div class="row-divider">
+        <div class="line"></div>
+        <p>{{'or' | translate}}</p>
+        <div class="line-2"></div>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit(this.loginForm?.value)"
+        (keydown.enter)="onEnterKey($event)">
+        <div class="login-card-row" *ngIf="!emailEntered">
+            <div class="login-card-field">
+                <div class="login-card-fieldRow">
+                    <label for="email">{{ "Email" | translate }}</label>
+                </div>
+                <input type="email" name="email" [formControl]="loginForm?.controls['email']" autocomplete="username"
+                    [class.invalid]="loginForm?.controls.email.touched && loginForm?.controls.email.errors">
+            </div>
+        </div>
+
+        <div class="login-card-row" *ngIf="emailEntered">
+            <div class="login-card-field">
+                <div class="login-card-fieldRow">
+                    <label for="password">{{ "Password" | translate }}</label>
+                </div>
+                <input type="password" name="password" [formControl]="loginForm?.controls['password']"
+                    autocomplete="off"
+                    [class.invalid]="loginForm?.controls.password.touched && loginForm?.controls.password.errors">
+            </div>
+
+        </div>
+
+        <button type="button" (click)="onEmailContinue()" *ngIf="!emailEntered"
+            [class.disabled]="loginForm?.controls.email.errors">
+            <span *ngIf="!this.btnSubmitLoader">{{ 'Continue' | translate }}</span>
+            <span *ngIf="this.btnSubmitLoader"><span class="spinner-border spinner-border-sm"></span></span>
+        </button>
+
+        <button type="submit" class="btn-submit" [class.disabled]="!loginForm?.valid" *ngIf="emailEntered">
+            <span *ngIf="!this.btnSubmitLoader">{{ 'Continue' | translate }}</span>
+            <span *ngIf="this.btnSubmitLoader"><span class="spinner-border spinner-border-sm"></span></span>
+        </button>
+
+    </form>
+</div>
+<div class="login-card-footer">
+    <div class="footer-container" *ngIf="!emailEntered">
+        <span>{{'No account?' | translate}}</span>
+        <a (click)="switchPage('RegisterPage')">{{ "Sign Up" | translate }}</a>
+    </div>
+    <div class="footer-container" *ngIf="emailEntered">
+        <span>{{'Forgotten password ?' | translate}}</span>
+        <a (click)="switchPage('ForgetPasswordPage')">{{ "Update" | translate }}</a>
+    </div>
+
+</div>

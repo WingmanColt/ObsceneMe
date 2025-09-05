@@ -1,0 +1,118 @@
+<!--modal popup start-->
+<ng-template class="auth-modal" #authModal let-modal>
+    <div class="modal-content">
+        <div class="modal-body" *ngIf="!isRegisterPage">
+            <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit(this.loginForm?.value)">
+
+                <h2 class="pb-4">ВХОД В ПРОФИЛА</h2>
+                <div class="form-inner">
+                    <div class="float-input-group input-row">
+                        <input type="text" name="email" [formControl]="loginForm?.controls['email']" placeholder=" "
+                            autocomplete="on"
+                            [class.invalid]="loginForm?.controls.email.touched && loginForm?.controls.email.errors" />
+                        <span class="bar"></span>
+                        <label for="email">{{ "Email" | translate }} *</label>
+                    </div>
+                    <br>
+                    <div class="float-input-group input-row">
+                        <input type="password" name="password" [formControl]="loginForm?.controls['password']"
+                            placeholder=" " autocomplete="on"
+                            [class.invalid]="loginForm?.controls.password.touched && loginForm?.controls.password.errors" />
+                        <span class="bar"></span>
+                        <label for="password">{{ "Password" | translate }} *</label>
+                    </div>
+                    <div class="pt-5 pb-3">
+                        <button type="submit" class="button button-full-width">{{ "Login" | translate }}</button>
+                    </div>
+                    <div class="d-flex justify-content-between pt-3 pb-3">
+                        <div class="auth-link">{{ "Forgot password?" | translate }}
+                        </div>
+                        <a (click)="switchPage()" class="auth-link">{{ "Register" | translate }}</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="modal-body" *ngIf="isRegisterPage">
+            <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit(this.registerForm?.value)">
+
+                <h2 class="pb-4">{{ "Registration" | translate }}</h2>
+                <div class="form-inner">
+                    <div class="float-input-group input-row">
+                        <input type="text" name="fullname" [formControl]="registerForm?.controls['fullname']"
+                            placeholder=" " autocomplete="off"
+                            [class.invalid]="registerForm?.controls.fullname.touched && registerForm?.controls.fullname.errors" />
+                        <span class="bar"></span>
+                        <label for="fullname">{{ "Full Name" | translate }} *</label>
+                    </div>
+                    <div class="float-input-group input-row">
+                        <input type="email" name="email" [formControl]="registerForm?.controls['email']" placeholder=" "
+                            autocomplete="off"
+                            [class.invalid]="registerForm?.controls.email.touched && registerForm?.controls.email.errors" />
+                        <span class="bar"></span>
+                        <label for="email">{{ "Email" | translate }} *</label>
+                    </div>
+                    <br>
+                    <div class="float-input-group input-row">
+                        <input type="password" name="password" [formControl]="registerForm?.controls['password']"
+                            placeholder=" " autocomplete="off"
+                            [class.invalid]="registerForm?.controls.password.touched && registerForm?.controls.password.errors" />
+                        <span class="bar"></span>
+                        <label for="password">{{ "Password" | translate }} *</label>
+                    </div>
+                    <div class="float-input-group input-row">
+                        <input type="password" name="cpassword"
+                            [formControl]="registerForm?.controls['confirmPassword']" placeholder=" " autocomplete="off"
+                            [class.invalid]="registerForm?.controls.confirmPassword.touched && registerForm?.controls.confirmPassword.errors" />
+                        <span class="bar"></span>
+                        <label for="cpassword">{{ "Confirm Password" | translate }} *</label>
+                    </div>
+                    <div class="pt-5 pb-3">
+                        <button type="submit" class="button button-full-width">{{ "Register" | translate }}</button>
+                    </div>
+                    <div class="d-flex justify-content-between pt-3 pb-3">
+                        <div data-popup-handler="forget-password" class="auth-link">{{ "Forgot password?" | translate }}
+                        </div>
+                        <a (click)="switchPage()" class="auth-link">{{ "Already have an account?" | translate }}</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</ng-template>
+<!--modal popup end-->
+
+<!--<input type="hidden" name="enter" value="1">
+<input type="hidden" name="captcha" value="bot">
+<input type="hidden" name="src_page" value="">
+<div class="form-wrap">
+    <div class="form-inner-wrap">
+        <div class="popup-close close-icon"></div>
+        <h2>ВХОД В ПРОФИЛА</h2>
+        <div class="input-row">
+            <div class="animated-input-group">
+                <input id="auth" type="text" name="user_auth" placeholder="E-mail" value="" class="profile-form-input"
+                    required="">
+                <label for="auth" class="label">E-mail</label>
+                <span class="bar"></span>
+            </div>
+        </div>
+        <div class="input-row">
+            <div class="animated-input-group">
+                <input id="pw" type="password" name="user_pw" placeholder="Парола" value="" class="profile-form-input"
+                    required="">
+                <div class="password-show-button"></div>
+                <label for="pw" class="label">Парола</label>
+                <span class="bar"></span>
+            </div>
+        </div>
+        <div class="input-row">
+            <button type="submit" formnovalidate="" class="button full-width">Вход</button>
+        </div>
+        <div class="input-row links">
+            <div data-popup-handler="forget-password" class="auth-link">Забравена парола</div>
+            <a href="/register/" class="auth-link">Регистрация</a>
+        </div>
+    </div>
+</div>-->

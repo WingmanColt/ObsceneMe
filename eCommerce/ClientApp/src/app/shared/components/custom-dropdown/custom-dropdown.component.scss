@@ -1,0 +1,75 @@
+.custom-dropdown {
+  width: 100%;          // Make dropdown width flexible, takes full container width by default
+ // max-width: 400px;     // Optional max-width to avoid it growing too large on big screens
+
+  .dropdown-options {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    max-height: 300px;   // Max height before scrolling activates
+    overflow-y: auto;
+
+    scrollbar-width: thin;
+    scrollbar-color: #999 transparent;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #999;
+      border-radius: 4px;
+    }
+  }
+
+  .dropdown-arrow {
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    margin-left: auto;
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+
+    &.active {
+      transform: rotate(-135deg);
+    }
+  }
+
+  .dropdown-divider {
+    height: 1px;
+    margin: 8px 0;
+    overflow: hidden;
+    background-color: #e5e5e5;
+    border: none;
+  }
+
+  .dropdown-option {
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  // Responsive tweaks
+  @media (max-width: 600px) {
+    max-width: 100%;      // On smaller screens dropdown uses full width available
+    font-size: 14px;      // Slightly smaller font for narrow screens
+
+    .dropdown-options {
+      max-height: 200px;  // Reduce max height on smaller screens to avoid taking too much space
+      padding: 8px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    font-size: 13px;
+
+    .dropdown-options {
+      max-height: 180px;
+      padding: 6px;
+    }
+  }
+}

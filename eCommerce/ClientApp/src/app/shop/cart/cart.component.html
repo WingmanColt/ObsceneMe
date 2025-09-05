@@ -1,0 +1,136 @@
+<!--<app-breadcrumb [breadcrumbs]="currBreadCrumb"></app-breadcrumb>
+
+ section start -->
+<section class="cart-section section-b-space">
+ <div class="container">
+  <ng-container *ngIf="this.products$ | async as productsArray; else loading">
+   <div class="row" *ngIf="(products$ | async)?.length > 0">
+    <div class="col-sm-12">
+     <table class="table cart-table table-responsive-xs">
+      <thead>
+       <tr class="table-head">
+        <th scope="col">{{ "Products" | translate }}</th>
+        <th scope="col"></th>
+        <th scope="col">{{ "Cost" | translate }}</th>
+        <th scope="col">{{ "Quantity" | translate }}</th>
+        <th scope="col">{{ "Discount" | translate }}</th>
+        <th scope="col"></th>
+       </tr>
+      </thead>
+      <tbody *ngFor="let product of productsArray">
+       <tr>
+        <td>
+         <a [routerLink]="['/shop/product/', product?.id]">
+          <img [defaultImage]="product.images[0]?.src ? product.images[0]?.src : 'assets/images/product/placeholder.jpg'" [lazyLoad]="product.images[0]?.src" class="lazy-loading" alt="{{ product.images[0]?.alt }}" />
+         </a>
+        </td>
+
+        <td>
+         <a [routerLink]="['/shop/product/', product?.id]">{{ product?.title | titlecase }}</a>
+         <div class="mobile-cart-content row">
+          <div class="col">
+           <div class="qty-box">
+            <div class="input-group">
+             <input type="text" name="quantity" class="form-control input-number" disabled [(ngModel)]="product.quantity" />
+            </div>
+           </div>
+          </div>
+          <div class="col">
+           <!--<h2 class="td-color">
+                                            {{ (product.price | discount:product) * productService?.Currency.price |
+                                            currency:productService?.Currency.currency:'symbol' }}
+                                        </h2>-->
+          </div>
+          <div class="col">
+           <h2 class="td-color">
+            <a (click)="removeItem(product)" class="icon">
+             <i class="ti-close"></i>
+            </a>
+           </h2>
+          </div>
+         </div>
+        </td>
+        <td>
+         <h2>
+          {{ updateCurrency(product.price) | asCurrency : this.baseService.activeCurrency }}
+         </h2>
+        </td>
+        <td>
+<div class="qty-box">
+  <div class="input-group">
+    <span class="input-group-prepend">
+      <button type="button" class="btn quantity-left-minus" (click)="decrement(product)" data-type="minus" [id]="product.id">
+        <i class="las la-minus"></i>
+      </button>
+    </span>
+
+    <input type="text" name="quantity" class="form-control input-number" disabled value="{{ purchasedQuantity[product.id] || 0 }}" [id]="product.id" />
+
+    <span class="input-group-prepend">
+      <button type="button" class="btn quantity-right-plus" (click)="increment(product)" [class.disabled]="purchasedQuantity[product.id] >= product?.quantity" data-type="plus" [id]="product.id">
+        <i class="las la-plus"></i>
+      </button>
+    </span>
+  </div>
+</div>
+        </td>
+        <td>
+         <h2 class="td-color">-{{ updateCurrency(productTotalDiscount(productsArray) | async) | asCurrency : this.baseService.activeCurrency }}</h2>
+        </td>
+        <!--<td>
+         <a href="javascript:void(0)" (click)="removeItem(product)" class="icon">
+          <i class="ti-close"></i>
+         </a>
+        </td>-->
+       </tr>
+      </tbody>
+     </table>
+     <table class="table cart-table table-responsive-md">
+      <tfoot>
+       <tr>
+        <td>{{ "Subtotal" | translate }} :</td>
+        <td>
+         <h2>
+          {{ updateCurrency(this.productTotalPrice() | async) | asCurrency : this.baseService.activeCurrency }}
+         </h2>
+        </td>
+       </tr>
+      </tfoot>
+     </table>
+    </div>
+   </div>
+   <br />
+   <div class="container">
+    <div class="row">
+     <div class="col d-flex justify-content-end btn-center-mobile">
+      <a [routerLink]="['/shop']" class="btn-large btn-outline-dark btn-full-width"> <i class="las la-cart-arrow-down"></i> {{ "Continue shopping" | translate }}</a>
+
+      <a [routerLink]="['/shop/checkout']" *ngIf="(products$ | async)?.length > 0" class="btn-large btn-dark btn-full-width btn-full-width"> <i class="las la-lock"></i> {{ "Checkout" | translate }}</a>
+     </div>
+    </div>
+   </div>
+  </ng-container>
+  <ng-template #loading>
+   <div class="row">
+    <div class="col-sm-12">
+     <ngx-skeleton-loader
+      appearance="line"
+      animation="progress"
+      [theme]="{
+       height: '100px',
+       width: '100%',
+       'border-radius': '2px'
+      }"></ngx-skeleton-loader>
+    </div>
+   </div>
+  </ng-template>
+
+  <div class="col-sm-12 empty-cart-cls text-center" *ngIf="(products$ | async)?.length <= 0">
+   <img src="assets/images/icon-empty-cart.png" class="img-fluid mb-4" />
+   <h3>
+    <strong>{{ "Your cart is empty!" | translate }}</strong>
+   </h3>
+  </div>
+ </div>
+</section>
+<!--section end-->

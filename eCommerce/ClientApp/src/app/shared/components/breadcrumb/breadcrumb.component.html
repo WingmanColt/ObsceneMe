@@ -1,0 +1,46 @@
+<div class="container container-xxxl">
+ <div class="bread-crumb-header" *ngIf="title?.length > 0">{{ title | translate }}</div>
+ 
+
+ <div class="bread-crumbs">
+  <button class="bread-crumbs__back" (click)="goBack()">
+    <i class="las la-arrow-left"></i>
+  </button>
+  <ol class="mr-2">
+   <li>
+    <a [routerLink]="'/'">
+     {{ "Home" | translate }}
+    </a>
+   </li>
+   <ng-container *ngFor="let breadcumb of breadcrumbs; let i = index">
+    <li>
+     <a [routerLink]="breadcumb.url" [class.active]="i === breadcrumbs.length - 1">
+      <span>{{ breadcumb.title | translate }}</span>
+     </a>
+    </li>
+   </ng-container>
+  </ol>
+ </div>
+</div>
+
+<!-- 
+<<div class="breadcrumb-section">
+  <div class="container-xxl">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="page-title">
+          <h2>{{ title | translate }}</h2>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <nav aria-label="breadcrumb" class="theme-breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a [routerLink]="'/'">{{'Home' | translate}}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ breadcrumb | translate }}</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+-->

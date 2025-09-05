@@ -1,0 +1,20 @@
+<div>
+  <input [(ngModel)]="url" placeholder="Enter URL" />
+  <button (click)="fetchData()">Fetch Data</button>
+</div>
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+<div *ngIf="product">
+  <h1>{{ product.title }}</h1>
+  <p><strong>Price:</strong> {{ product.price }}</p>
+  <p><strong>Discount:</strong> {{ product.discountRate }}</p>
+  <div>
+    <strong>Images:</strong>
+    <div *ngFor="let image of product.images">
+      <img [src]="image.src" alt="Product Image" />
+    </div>
+  </div>
+  <div>
+    <strong>Description:</strong>
+    <div [innerHTML]="product.description"></div>
+  </div>
+</div>

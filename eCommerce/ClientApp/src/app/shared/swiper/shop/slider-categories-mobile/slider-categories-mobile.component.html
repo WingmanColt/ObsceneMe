@@ -1,0 +1,32 @@
+<app-simple-slider2
+  *ngIf="sliderConfig.slides?.length"
+  id="SliderCategoriesBadges"
+  [config]="sliderConfig"
+  [slideTemplate]="XSCategoriesSlideTemplate"
+></app-simple-slider2>
+
+<ng-template #XSCategoriesSlideTemplate let-slide="slide" let-index="index">
+  <div class="content-wrapper" (click)="handleOnClick(slide)">
+    <div class="content">
+      <div class="image-container" *ngIf="collectionSettings.showIconInsideCategory">
+        <div class="center-body" *ngIf="imageLoading">
+          <div class="circle-loader"></div>
+        </div>
+        
+        <img
+          [lazyLoad]="getCategoryImageUrl(slide)"
+          (load)="onImageLoad()"
+          (error)="onImageError()"
+        />
+      </div>
+      <span
+        class="subText"
+        *ngIf="collectionSettings.showIconInsideCategory"
+      >{{ slide.title | translate }}</span>
+      <span
+        class="subText-full"
+        *ngIf="!collectionSettings.showIconInsideCategory"
+      >{{ slide.title | translate }}</span>
+    </div>
+  </div>
+</ng-template>

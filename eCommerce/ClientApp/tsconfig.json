@@ -1,0 +1,41 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "paths": {
+      "simple-slider": [
+        "./dist/simple-slider"
+      ]
+    },
+    "target": "ES2022",
+    "module": "es2020",
+    "lib": [
+      "es2018",
+      "es2022",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": false,
+    "strictPropertyInitialization": false,
+    "strictInjectionParameters": false,
+    "strictFunctionTypes": false,
+    "strictBindCallApply": false,
+    "enableIvy": true
+  },
+  "angularDevServerOptions": {
+    "ssr": true,
+  }
+}

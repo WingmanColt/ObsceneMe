@@ -1,0 +1,119 @@
+
+<div [ngSwitch]="settings.headerType">
+  <app-header-one *ngSwitchCase="'One'"></app-header-one>
+  <app-header-two *ngSwitchCase="'Two'"></app-header-two>
+</div>
+
+<!--Main Slider Section-->
+<div class="p-0 bg-black" [ngClass]="{'container-fluid': settings.mainSliderFluid, 'container container-xxxl': !settings.mainSliderFluid}">
+  <app-main-slider></app-main-slider>
+</div>
+
+<section class="layout page-home">
+  <app-guarantees></app-guarantees>
+</section>
+
+
+<section>
+  <app-product-show></app-product-show>
+</section>
+
+
+
+<!-- Ad Banner section -->
+<div class="layout page-home pt-5"
+  [class.p-5]="!isMobile"
+  *ngIf="settings.showBannerOne"
+>
+  <app-lazy-loader
+    [lazyComponentType]="AdSwiperComponent"
+    (lazyComponentVisible)="AdComponentVisible = true"
+  >
+    <ng-container *ngIf="AdComponentVisible">
+      <!-- Translate content here -->
+      <ng-container *ngTemplateOutlet="adComponentContent"></ng-container>
+    </ng-container>
+  </app-lazy-loader>
+
+  <!-- Template for translating content -->
+  <ng-template #adComponentContent>
+    <!-- Content to be translated -->
+    <app-ad-banner-swiper></app-ad-banner-swiper>
+  </ng-template>
+</div>
+
+<section class="layout page-home" *ngIf="settings.showTrendingsSecond">
+  <app-lazy-loader
+    [lazyComponentType]="TrendingSwiperSecondComponent"
+    (lazyComponentVisible)="TrendingSecondComponentVisible = true"
+  >
+    <ng-container *ngIf="TrendingSecondComponentVisible">
+      <!-- Translate content here -->
+      <ng-container *ngTemplateOutlet="trendingSecondComponentContent"></ng-container>
+    </ng-container>
+  </app-lazy-loader>
+
+  <!-- Template for translating content -->
+  <ng-template #trendingSecondComponentContent>
+    <!-- Content to be translated -->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <div class="title4">
+            <h2 class="title-inner4">{{ "trending products" | translate }}</h2>
+            <div class="line">
+              <span></span>
+            </div>
+          </div>
+          <div class="row" [class.p-5]="!this.isMobile">
+            <div class="col">
+              <app-product-slider-trending></app-product-slider-trending>
+            </div>
+          </div>
+          <br />
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</section>
+
+<!--Product Review-->
+<div class="container container-xxxl p-5">
+  <app-lazy-loader
+    [lazyComponentType]="ProductReviewCarouselComponent"
+    (lazyComponentVisible)="ProductReviewCarouselComponentVisible = true"
+  >
+    <ng-container *ngIf="ProductReviewCarouselComponentVisible">
+      <!-- Translate content here -->
+      <ng-container *ngTemplateOutlet="productReviewCarouselComponentContent"></ng-container>
+    </ng-container>
+  </app-lazy-loader>
+
+  <!-- Template for translating content -->
+  <ng-template #productReviewCarouselComponentContent>
+      <app-product-review-carousel></app-product-review-carousel>
+  </ng-template>
+</div>
+
+
+<!-- product section end -->
+<div *ngIf="settings.showBannerTwo" class="section section-full bg-custom"  [class.p-5]="!this.isMobile">
+
+<app-lazy-loader
+[lazyComponentType]="AdSwiperComponent"
+(lazyComponentVisible)="AdComponentVisible = true">
+
+<ng-container *ngIf="AdComponentVisible">
+  <!-- Translate content here -->
+  <ng-container *ngTemplateOutlet="adSwiperContent"></ng-container>
+</ng-container>
+</app-lazy-loader>
+
+<!-- Template for translating content -->
+<ng-template #adSwiperContent>
+<!-- Content to be translated -->
+<app-ad-banner-swiper></app-ad-banner-swiper>
+</ng-template>
+</div>
+
+<app-footer-one></app-footer-one>

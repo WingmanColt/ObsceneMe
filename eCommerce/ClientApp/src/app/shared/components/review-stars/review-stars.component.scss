@@ -1,0 +1,29 @@
+.star-list {
+ display: flex;
+ align-items: center;
+}
+.star-list__item {
+ display: flex;
+ margin: 0 3px 0 0;
+ color: #212121;
+ font-size: 10px;
+ line-height: 24px;
+}
+
+.star-list .star-list__item.star-list__item-gray {
+ color: #b3b3b3;
+}
+
+.star-list__item-half {
+ color: #212121;
+ position: relative;
+}
+
+.star-list__item-half::before {
+ content: '★';
+ position: absolute;
+ color: #b3b3b3;
+ left: 0;
+ width: 50%;
+ overflow: hidden;
+}

@@ -1,0 +1,13 @@
+<div [class]="settings.badgeClass" *ngIf="settings.cardShowBadge && settings.cardTypeBadge == 'badges' && marketStatus !== MarketStatus.None" [ngSwitch]="marketStatus">
+ <span *ngSwitchCase="MarketStatus.Sale">{{ "Sale" | translate }}</span>
+ <span *ngSwitchCase="MarketStatus.New">{{ "New" | translate }}</span>
+ <span *ngSwitchCase="MarketStatus.PreOrder">{{ "Pre Order" | translate }}</span>
+ <span *ngSwitchCase="MarketStatus.Sold">{{ "Sold Out" | translate }}</span>
+ <span *ngSwitchCase="MarketStatus.Low">{{ "Limited" | translate }}</span>
+</div>
+
+<span [class]="settings.badgeClass" *ngIf="settings.cardShowBadge && settings.cardTypeBadge == 'like-btn'">
+ <a title="Add to cart">
+  <i class="lar la-heart"></i>
+ </a>
+</span>

@@ -1,0 +1,89 @@
+<div class="mega-menu-container" *ngIf="!onCategoriesPage"
+  [ngClass]="[settings.megaMenuStyle, isMegaMenuActive ? 'open' : '']"
+  (mouseenter)="setOverflow(true)" 
+  (mouseleave)="setOverflow(false)"
+  (touchstart)="onTouchStart($event)"
+  (touchend)="onTouchEnd($event)">
+
+  <div class="container" >
+    <div class="row">
+      <div class="mega-box">
+        <!-- Left Column -->
+        <div class="col-4 col-xxl-4 col-md-5">
+          <div class="link-section">
+            <span class="column-title" [ngClass]="settings.megaMenuStyle">
+              {{ menuItem.firstColumnTitle | translate }}
+            </span>
+
+            <ng-container>
+              <div
+                class="menu-title"
+                *ngFor="let entity of categoryItems; trackBy: trackById"
+                [ngClass]="{ 'selected': currentCategory?.id === entity.id }"
+                (mouseenter)="selectCategory(entity)"
+                (click)="clickOnCategory(entity)">
+                <a
+                  [ngClass]="settings.megaMenuStyle"
+                  [routerLink]="['/shop']"
+                  [queryParams]="{ categoryId: entity.id }">
+                  <h5 [ngClass]="settings.megaMenuStyle">
+                    {{ entity.title | translate }}
+                  </h5>
+                </a>
+                <span class="sub-arrow"></span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <!-- Right Column -->
+        <div class="col-8">
+          <div class="circle-categories-container">
+            <ng-container >
+              <div class="link-container">
+                <a class="link-text">
+                  <div class="icon-text-container" (click)="navigateToLink('/pages/categories', { category: currentCategory?.shortName })" >
+                    {{currentCategory?.title | translate}} &nbsp;
+                    <i class="icon las la-angle-right"></i>
+                  </div>
+                </a>
+              </div>
+
+              <div class="grid-container">
+                <div *ngFor="let sub of currentCategory?.subCategories; trackBy: trackById"
+                  class="grid-item">
+                  <a href="javascript:void(0)" (click)="navigateToLink('/shop', { categoryId: currentCategory.id, subCategoryId: sub?.id })">
+                    <div class="image-wrapper">
+                      <i class="las" [ngClass]="sub.icon" *ngIf="sub.icon?.startsWith('la')"></i>
+                      <img *ngIf="!sub.icon?.startsWith('la')"
+                           [lazyLoad]="settings.categoryImageUrl + currentCategory?.shortName + '/' + sub.icon + settings.categoryImageUrlExtension"
+                           class="lazy-loading"
+                           alt="{{ sub.title }}" />
+                    </div>
+                    <div class="text-container">
+                      <div class="item-title" [title]="sub.title">
+                        {{ sub.title | translate }}
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+
+            </ng-container>
+
+            <ng-template #noSubCategories>
+              <ngx-skeleton-loader appearance="line" animation="progress-dark" count="1" [theme]="{ width: '20%' }"></ngx-skeleton-loader>
+              <br/>
+              <ngx-skeleton-loader count="5" appearance="circle" animation="progress-dark"></ngx-skeleton-loader>
+              <ngx-skeleton-loader count="5" appearance="circle" animation="progress-dark"></ngx-skeleton-loader>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noCategories>
+    <ngx-skeleton-loader appearance="line" animation="progress-dark" count="5" [theme]="{ width: '95%' }"></ngx-skeleton-loader>
+  </ng-template>
+
+</div>

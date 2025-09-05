@@ -1,0 +1,190 @@
+<!-- breadcrumb End -->
+<app-breadcrumb [breadcrumbs]="currBreadCrumb"></app-breadcrumb>
+
+<section class="p-5rem section-b-space light-layout" *ngIf="loadingState === 2">
+ <div class="container">
+  <div class="row">
+   <div class="col-12">
+    <div class="success-text">
+     <div class="infinite-scrolling mt-3 mb-3 d-inline-block">
+      <i class="las la-exclamation-triangle"></i>
+      <h2>{{ "Invoice was not found." | translate }}</h2>
+      <p>{{ "Please check your email for invoice sent by us." | translate }}</p>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div class="p-5 d-flex row justify-content-evenly">
+   <div class="col-10">
+    <a [routerLink]="['/']" class="btn-large btn-outline-dark btn-full-width"> {{ "Back" | translate }}</a>
+   </div>
+  </div>
+ </div>
+</section>
+
+<div *ngIf="loadingState === 0">
+ <section class="light-layout">
+  <div class="container">
+   <div class="row">
+    <div class="col-12">
+     <div class="success-text">
+      <i class="las la-file-invoice-dollar"></i>
+      <h2>{{ "Invoice" | translate }}</h2>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="container">
+   <div class="row">
+    <div class="col-lg-6">
+     <div class="product-order">
+      <h3>{{ "Your order details" | translate }}</h3>
+
+      <div class="row product-order-detail" *ngFor="let product of this.Invoice?.products; let i = index">
+       <div class="col-3 order_detail">
+        <div>
+         <h4>{{ "Product name" | translate }}</h4>
+         <h5>{{ product.title }}</h5>
+        </div>
+       </div>
+       <div class="col-3 order_detail">
+        <div>
+         <h4>{{ "Quantity" | translate }}</h4>
+         <h5>{{ product.quantity }}</h5>
+        </div>
+       </div>
+       <div class="col-3 order_detail">
+        <div>
+         <h4>{{ "Discount" | translate }}</h4>
+         <h5>{{ updateCurrency(product.discountRate * Invoice?.currencyPrice) | getCurrencyEntity : this.Invoice.currency }}</h5>
+        </div>
+       </div>
+       <div class="col-3 order_detail">
+        <div>
+         <h4>{{ "Price" | translate }}</h4>
+         <h5>{{ updateCurrency(product.price * Invoice?.currencyPrice) | getCurrencyEntity : this.Invoice.currency }}</h5>
+        </div>
+       </div>
+      </div>
+
+      <div class="total-sec">
+       <ul>
+        <li>
+         {{ "Subtotal" | translate }}
+         <span>{{ updateCurrency(this.Invoice?.cost) | getCurrencyEntity : this.Invoice.currency }}</span>
+        </li>
+        <li>
+         {{ "Total Discount" | translate }}
+         <span>{{ updateCurrency(this.Invoice?.discount) | getCurrencyEntity : this.Invoice.currency }}</span>
+        </li>
+       </ul>
+      </div>
+      <div class="final-total">
+       <h3>
+        {{ "Total" | translate }}
+        <span>
+         {{ updateCurrency(this.Invoice?.cost - this.Invoice?.discount) | getCurrencyEntity : this.Invoice.currency }}
+        </span>
+       </h3>
+      </div>
+     </div>
+    </div>
+    <div class="col-lg-6">
+     <div class="row order-success-sec">
+      <div class="col-sm-6">
+       <h4>{{ "Summary" | translate }}</h4>
+       <ul class="order-detail">
+        <li>{{ "Order Code" | translate }}: {{ this.Invoice?.code }}</li>
+        <li>{{ "Order Date" | translate }}: {{ this.Invoice?.createdOn }}</li>
+        <li>{{ "Order Total" | translate }}: {{ updateCurrency(this.Invoice?.cost - this.Invoice?.discount) | getCurrencyEntity : this.Invoice.currency }}</li>
+       </ul>
+      </div>
+      <div class="col-sm-6">
+       <h4>{{ "Shipping Address" | translate }}</h4>
+       <ul class="order-detail">
+        <li>{{ this.Invoice?.adress }}</li>
+        <li>{{ this.Invoice?.state }}</li>
+        <li>{{ this.Invoice?.country }}, {{ this.Invoice?.postalCode }}</li>
+        <li>{{ "Contact No." | translate }} {{ this.Invoice?.phone }}</li>
+       </ul>
+      </div>
+      <hr />
+      <div class="col-sm-6 payment-mode">
+       <h4>{{ "Payment Method" | translate }}</h4>
+       <div [ngSwitch]="this.Invoice?.paymentType">
+        <p *ngSwitchCase="'COD'"><i class="las la-wallet"></i> {{ "Cash on Delivery" | translate }}</p>
+        <p *ngSwitchCase="'PayPal'"><i class="las la-wallet"></i> {{ "PayPal" | translate }}</p>
+        <p *ngSwitchCase="'Stripe'"><i class="las la-wallet"></i> {{ "Stripe" | translate }}</p>
+       </div>
+
+       <p *ngIf="this.Invoice?.pickUpAtHome">
+        <i class="las la-check-circle"></i>
+        {{ "Home Delivery" | translate }}
+       </p>
+       <p *ngIf="!this.Invoice?.pickUpAtHome">
+        <i class="las la-check-circle"></i>
+        {{ "Office Delivery" | translate }}
+       </p>
+      </div>
+
+      <div class="col-sm-6 payment-mode">
+       <h4>{{ "Note" | translate }}</h4>
+       <p>{{ this.Invoice?.note }}</p>
+      </div>
+
+      <div class="col-md-12">
+       <div class="delivery-sec">
+        <h3>{{ "expected date of delivery" | translate }}</h3>
+        <h2>{{ "1-5 days" | translate }}</h2>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="p-5 d-flex row justify-content-evenly">
+     <div class="col-3 desktop-only">
+      <a [routerLink]="['/']" class="btn-large btn-outline-dark btn-full-width"> {{ "Back" | translate }}</a>
+     </div>
+     <div class="col-10 mobile-only">
+        <a [routerLink]="['/']" class="btn-large btn-outline-dark btn-full-width"> {{ "Back" | translate }}</a>
+       </div>
+    </div>
+   </div>
+  </div>
+ </section>
+</div>
+<!--
+ <section class="p-5rem section-b-space light-layout" *ngIf="!finishedLoading">
+  <div class="container">
+   <div class="row">
+    <div class="col-12">
+     <div class="success-text">
+      <div class="infinite-scrolling mt-3 mb-3 d-inline-block">
+       <h2>{{ "Preparation of the invoice" | translate }}</h2>
+         <div class="center-body">
+            <div class="circle-loader"></div>
+          </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </section>
+-->
+
+<section class="p-5rem section-b-space light-layout" *ngIf="loadingState === 1">
+    <div class="container">
+     <div class="row">
+      <div class="col-12">
+       <div class="success-text">
+        <div class="infinite-scrolling mt-3 mb-3 d-inline-block">
+         <h2>{{ "Preparation of the invoice" | translate }}</h2>
+          <div class="center-body">
+            <div class="circle-loader"></div>
+          </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>

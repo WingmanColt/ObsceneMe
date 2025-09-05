@@ -1,0 +1,46 @@
+<div *ngIf="product">
+        <div class="card-progress mx-auto"
+                (mouseenter)="onMouseEnter()"
+                (mouseleave)="onMouseLeave()">
+                <div class="image-container"
+                        [routerLink]="['/shop/product/', product?.id]"
+                        target="_blank">
+                        <app-badges [settings]="settings"
+                                [marketStatus]="this.product.marketStatus"></app-badges>
+                        <img class="lazy-loading"
+                                [class]="class"
+                                [lazyLoad]="product.images[currentImageIndex].src" />
+                        <div *ngIf="hover"
+                                class="progress-bar"></div>
+                </div>
+                <div class="card__overlay">
+                        <div class="overlay__text">
+                                <a [routerLink]="['/shop/product/', product?.id]"
+                                        target="_blank"
+                                        title="Details">
+                                        <i class="las la-search"></i>
+                                </a>
+                                <a *ngIf="this.multiButtons"
+                                        href="javascript:void(0)"
+                                        class="mobile-quick-view global-button desktop-only"
+                                        (click)="QuickView.openModal()"
+                                        title="Quick View"> {{ "Quick View" | translate }} </a>
+                        </div>
+                </div>
+        </div>
+        <div class="card-basic-details"
+                [routerLink]="['/shop/product/', product?.id]">
+                <span class="title"
+                        itemprop="name">{{ product?.title | titlecase }}</span>
+                <span class="price">
+                        <span class="current_price">
+                                <span class="money"> {{ baseService.calcCurrency(product?.price - product?.discountRate)
+                                        | asCurrency : baseService.activeCurrency }}</span>
+                        </span>
+                        <!--<span class="was_price" *ngIf="product?.discountRate">{{ product?.price * productService.Currency?.price
+           | currency:productService.Currency?.currency:'symbol' }}</span>-->
+                </span>
+        </div>
+        <app-quick-view #quickView
+                [product]="product"></app-quick-view>
+</div>

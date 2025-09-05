@@ -1,0 +1,13 @@
+<div class="input-wrap profile-form-group">
+  <div class="float-input-group">
+    <input 
+      [type]="type"
+      [placeholder]="' '"
+      [value]="value"
+      (input)="onInputChange($event)"
+      (blur)="onBlur()" 
+    />
+    <span class="bar"></span>
+    <label>{{ label | translate }}</label>
+  </div>
+</div>

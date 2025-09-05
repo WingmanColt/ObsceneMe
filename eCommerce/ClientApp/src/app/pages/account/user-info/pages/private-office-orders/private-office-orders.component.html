@@ -1,0 +1,38 @@
+
+<app-loading *ngIf="isLoading == 0"></app-loading>
+
+<div class="private-office-order-history">
+  <h1 class="page-header">{{'History with your orders' | translate}} </h1>                   
+      <nav>
+      <div class="private-office__category-wrap">
+          <ul class="private-office__category-list">
+              <li (click)="filterOrders('all')" [class.active]="selectedTimePeriod === 'all'"  class="private-office__category-list__item">Всички</li>
+              <li (click)="filterOrders('this_month')" [class.active]="selectedTimePeriod === 'this_month'"  class="private-office__category-list__item">Този месец</li>
+              <li (click)="filterOrders('month_ago')" [class.active]="selectedTimePeriod === 'month_ago'"  class="private-office__category-list__item">Миналия месец</li>
+              <li (click)="filterOrders('this_year')" [class.active]="selectedTimePeriod === 'this_year'"  class="private-office__category-list__item">Тази година</li>
+              <li (click)="filterOrders('year_ago')" [class.active]="selectedTimePeriod === 'year_ago'"  class="private-office__category-list__item">Миналата година</li>
+          </ul>
+      </div>
+      </nav>
+
+  <ng-container *ngIf="isLoading == 1">
+   <div class="private-office__wish-list-wrap">
+      <ul class="order-list">
+          <li class="order-list__item" *ngFor="let order of orderHistoryFiltered; let i = index">
+              <app-order-history-card [orderHistory]="order"></app-order-history-card>
+          </li>
+      </ul>
+   </div>
+  </ng-container>
+
+  <ng-container *ngIf="isLoading  === 2">
+   <div class="private-office__wish-list-wrap">
+      <ul class="order-list">
+          <li class="order-list__item empty">
+              <span>{{'You have no order history.' | translate}}</span>
+          </li>
+      </ul>
+   </div>
+  </ng-container>
+
+</div>

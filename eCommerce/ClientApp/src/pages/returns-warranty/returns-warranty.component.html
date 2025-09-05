@@ -1,0 +1,54 @@
+<app-breadcrumb [title]="'Returns & Warranty'" [breadcrumb]="'Returns & Warranty'"></app-breadcrumb>
+<!-- section start-->
+<section class="p-0">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                
+                <div class="error-section">
+                    <h2>{{env.pagesSettings.ReturnsWarranty.title | translate}}</h2>
+
+                    <div class="p-5 d-flex row justify-content-evenly">
+                        <a href="javascipt:void(0)" class="btn-large btn-dark btn-full-width">
+                            {{env.socialSettings.email}}</a>
+        
+                            <a href="javascipt:void(0)" class="btn-large btn-dark btn-full-width">
+                            {{env.socialSettings.emailSupport}}</a>        
+                    </div>
+                    
+                    <strong>{{env.pagesSettings.ReturnsWarranty.about | translate}}</strong>
+                    <p>{{env.pagesSettings.ReturnsWarranty.descOne | translate}}</p>
+                    <p>{{env.pagesSettings.ReturnsWarranty.descTwo | translate}}</p>
+                    <p>{{env.pagesSettings.ReturnsWarranty.descThree | translate}}</p>
+                    <p>{{env.pagesSettings.ReturnsWarranty.descFour | translate}}
+                        <strong>{{env.socialSettings.emailSupport}}</strong>
+                        {{env.pagesSettings.ReturnsWarranty.descFourEnd |
+                        translate}}
+                    </p>
+                    <p>{{env.pagesSettings.ReturnsWarranty.descFive | translate}}</p>
+                    <a [routerLink]="['/returnsForm']" class="btn-large btn-outline-dark btn-full-width">
+                        {{'Find Your Order'|translate}}</a>
+                    <hr>
+
+                    <h2>{{env.pagesSettings.ReturnsWarranty.titleSectionTwoBig | translate}}</h2>
+                    <strong>{{env.pagesSettings.ReturnsWarranty.questionOneTitle | translate}}</strong>
+                    <p>{{env.pagesSettings.ReturnsWarranty.answerOne | translate}}</p>
+
+                    <strong>{{env.pagesSettings.ReturnsWarranty.questionTwoTitle | translate}}</strong>
+                    <p>{{env.pagesSettings.ReturnsWarranty.answerTwo | translate}}</p>
+
+                    <strong>{{env.pagesSettings.ReturnsWarranty.questionThreeTitle | translate}}</strong>
+                    <p>{{env.pagesSettings.ReturnsWarranty.answerThree | translate}}</p>
+                    <p>{{env.pagesSettings.ReturnsWarranty.answerThree2 | translate}}</p>
+
+                    <strong>{{env.pagesSettings.ReturnsWarranty.questionFourTitle | translate}}</strong>
+                    <p>{{env.pagesSettings.ReturnsWarranty.answerFour | translate}}</p>
+
+                    <strong>{{env.pagesSettings.ReturnsWarranty.questionFiveTitle | translate}}</strong>
+                    <p>{{env.pagesSettings.ReturnsWarranty.answerFive | translate}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Section ends-->

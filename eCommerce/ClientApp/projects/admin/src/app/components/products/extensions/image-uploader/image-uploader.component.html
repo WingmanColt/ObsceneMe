@@ -1,0 +1,98 @@
+<div class="row">
+ <div
+         class="col-xl-9 xl-50 col-sm-6 col-9">
+
+         <img [src]="imageUploadService.getImageFull(this.mainImage.src || placeHolder, this.mainImage.productId)"
+                 alt=""
+                 class="img-fluid image_zoom_1" />
+ </div>
+</div>
+<div class="form-group row">
+ <div class="col-xl-3 col-sm-4">
+         <label
+                 class="mb-0">{{'Images' | translate }}:</label>
+ </div>
+ <div class="col-xl-8 col-sm-7">
+         <div class="qty-box1">
+                 <div
+                         class="input-group">
+                         <i class="fa fa-minus btnGtr1"
+                                 (click)="decrement()"
+                                 [class.disabled]></i>
+                         <input class="touchspin1 text-center"
+                                 [value]="imagesCounter"
+                                 type="text" />
+                         <i class="fa fa-plus btnLess1"
+                                 (click)="increment()"></i>
+                 </div>
+         </div>
+ </div>
+</div>
+
+<div class="row" *ngIf="imageHolder && imageHolder.length > 0">
+ <div class="col-xl-10 xl-50 col-sm-10 col-12">
+   <ul class="file-upload-product">
+     <li *ngFor="let item of imageHolder; let i = index; trackBy: trackById">
+       <div class="custom-control custom-checkbox">
+        <strong class="pr-1">{{i}}</strong>
+
+         <input
+           class="custom-control-input"
+           type="checkbox"
+           [id]="'externalCheckbox' + i"
+           (change)="setExternal(item, i)"
+           [checked]="item.isExternal"
+         />
+
+         <label
+           [for]="'externalCheckbox' + i"
+           class="custom-control-label"
+           style="flex: min-content; line-height: 1.3;">
+           <span style="flex: min-content; line-height: 1.3;">{{'External Source' | translate}}</span>
+         </label>
+
+         <select class="form-control" [(ngModel)]="imageHolder[i].imageType">
+          <option *ngFor="let img of imageTypes" [value]="img" [selected]="img === (i === 0 ? 0 : 1)">
+            {{ imageTypeLabelMapping[img] }}
+          </option>
+        </select>
+        
+
+       </div>
+       <br />
+       <div class="box-input-file">
+         <!-- External Image Link Input -->
+         <div *ngIf="item.isExternal">
+           <input
+             class="upload image-input"
+             type="text"
+             [id]="'input-'+i"
+             (change)="updateImageSrc($event, i)"
+             [formControl]="imageInputs.at(i).get('image')"
+             placeholder="Image Link"
+           />
+         </div>
+         <!-- Local File Upload -->
+         <div *ngIf="!item.isExternal">
+           <input
+             class="upload image-input"
+             type="file"
+             (change)="handleFileInput($event, i)"
+           />
+         </div>
+
+         <div class="image-container" [ngClass]="{'img-active': item.imageType == 1}" (click)="setMainImage(i)">
+
+          <img
+            class="imgUpload"
+            [src]="imageUploadService.getImageFull(item?.src || placeHolder, item?.productId)"
+            alt="Uploaded Image"
+          />
+        </div>
+      
+       
+       </div>
+     </li>
+   </ul>
+ </div>
+</div>

@@ -1,0 +1,115 @@
+<!-- Product details for Desktop Devices -->
+<div *ngIf="!this.isMobile">
+  <app-breadcrumb
+    *ngIf="detailsSettings.detailsPageBreadcrumb"
+    [breadcrumbs]="currBreadCrumb"
+  ></app-breadcrumb>
+
+  <div class="product-listing-details">
+    <div class="collection-wrapper">
+
+<div *ngIf="!productNotFound">
+      <app-product-details
+        [template]="detailsSettings.detailsPageTemplate"
+        [productQuery]="this.productQuery"
+        (Product)="getProduct($event)"
+        (isLoaded)="isLoaded($event)">
+      </app-product-details>
+
+      <app-about-section
+        *ngIf="this.isProductLoaded"
+        [product]="this.product"
+        [isMobile]="false"
+        (reviewsModal)="ReviewModal?.openModal($event)" >
+      </app-about-section>
+    </div>
+
+      <app-notfound *ngIf="productNotFound"></app-notfound>
+
+    </div>
+
+
+    <!--Related products-->
+    <section class="layout page-home pb-5" *ngIf="detailsSettings.showRelatedProducts">
+    <app-lazy-loader
+    [lazyComponentType]="RelatedProductsComponent"
+    (lazyComponentVisible)="relatedComponentVisible">
+    <ng-container *ngIf="relatedComponentVisible">
+      <!-- Translate content here -->
+      <ng-container *ngTemplateOutlet="translateContent"></ng-container>
+    </ng-container>
+  </app-lazy-loader>
+
+  <!-- Template for translating content -->
+  <ng-template #translateContent>
+    <!-- Content to be translated -->
+    <app-related-products></app-related-products>
+  </ng-template>
+  
+    </section>
+  </div>
+</div>
+
+
+
+<!-- Product details for Mobile / Tablet Devices -->
+<div *ngIf="this.isMobile">
+  <app-breadcrumb
+    *ngIf="detailsSettings.detailsPageBreadcrumbMobile"
+    [breadcrumbs]="currBreadCrumb"
+  ></app-breadcrumb>
+
+  <section [class]="detailsSettings.detailsPageTemplateMobile == 'One' ? 'section-b-space product-listing-details'  : ''"
+    class="product-details bg-white">
+
+    <div class="collection-wrapper">
+    <ng-container *ngIf="!productNotFound; else notFoundBlockMobile">
+        <app-product-details
+          [template]="detailsSettings.detailsPageTemplateMobile"
+          [productQuery]="this.productQuery"
+          (Product)="getProduct($event)"
+          (isLoaded)="isLoaded($event)">
+        </app-product-details>
+
+        <app-about-section
+          *ngIf="this.isProductLoaded"
+          [product]="this.product"
+          [isMobile]="true"
+          (reviewsModal)="ReviewModal?.openModal($event)">
+        </app-about-section>
+      </ng-container>
+
+      <ng-template #notFoundBlockMobile>
+        <app-notfound></app-notfound>
+      </ng-template>
+
+    </div>
+
+    <!--Related products-->
+    <section class="layout page-home pb-5" *ngIf="detailsSettings.showRelatedProducts">
+      <app-lazy-loader
+      [lazyComponentType]="RelatedProductsComponent"
+      (lazyComponentVisible)="relatedComponentVisible">
+
+      <ng-container *ngIf="relatedComponentVisible">
+        <!-- Translate content here -->
+        <ng-container *ngTemplateOutlet="translateContent"></ng-container>
+      </ng-container>
+    </app-lazy-loader>
+  
+    <!-- Template for translating content -->
+    <ng-template #translateContent>
+      <!-- Content to be translated -->
+      <app-related-products></app-related-products>
+    </ng-template>
+    
+    </section>
+  </section>
+</div>
+
+
+<!-- Review Modal executed by @Output -->
+<app-review-modal *ngIf="this.product && detailsSettings.reviewsActive && detailsSettings.reviewType == 'Modal'"
+  #reviewModal
+  [productId]="this.product?.id">
+</app-review-modal>

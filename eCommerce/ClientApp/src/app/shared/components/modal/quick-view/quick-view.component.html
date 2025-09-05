@@ -1,0 +1,109 @@
+<div class="overlay" id="overlayPages"></div>
+<ng-template class="theme-modal" #quickView let-modal>
+ <div class="modal-content quick-view-modal">
+  <div class="modal-header">
+   <button type="button" class="close border-0" (click)="modal.dismiss('Cross click')">
+    <i class="las la-times-circle"></i>
+   </button>
+  </div>
+  <div class="modal-body">
+   <app-product-details [isQuickView]="true" [productId]="this.productId"></app-product-details>
+  </div>
+
+  <!--<div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-xs-12">
+            <app-widget-swiper [thumbImages]="product?.images" [alt]="product?.title"></app-widget-swiper>
+          </div>
+          <div class="col-lg-6 rtl-text">
+            <div class="product-right">
+              <h2>{{ product?.title | titlecase }}</h2>
+
+              <h3 style="word-spacing:8px;" *ngIf="!this.isProductLoaded">
+                <del *ngIf="product?.discountRate">{{ product?.price * productService.Currency?.price |
+                  currency:
+                  productService.Currency?.currency:'symbol' }}</del>
+
+                {{ (product?.price - product?.discountRate) * productService.Currency?.price | currency:
+                productService.Currency?.currency:'symbol' }}
+              </h3>
+
+              <ul class="color-variant">
+                <li [class]="item.color" [class.active]="item.isSelected == true"
+                  *ngFor="let item of Color(product?.variants); index as i" [ngStyle]="{'background-color': item.color}"
+                  (click)="this.changeActiveImage(item, i)">
+                </li>
+              </ul>
+              <div class="product-description border-product">
+                <div class="size-box" *ngIf="product?.variants">
+                  <ul class="size-variant">
+                    <li [class.active]="item.isSelected == true"
+                      *ngFor="let item of Size(product?.variants); index as i">
+                      <a href="javascript:void(0)" (click)="selectSize(item, i)">
+                        {{ item.size | titlecase }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <h5 class="avalibility" *ngIf="counter <= product.quantity"><span>{{'In Stock' | translate}}</span></h5>
+                <h5 class="avalibility" *ngIf="counter > product.quantity"><span>{{'Out Of Stock' | translate}}</span>
+                </h5>
+
+                <h6 class="product-title">{{'Quantity' | translate}}</h6>
+                <div class="qty-box">
+                  <div class="input-group">
+                    <span class="input-group-prepend">
+                      <button type="button" class="btn quantity-left-minus" data-type="minus" (click)="decrement()">
+                        <i class="las la-angle-left"></i>
+                      </button>
+                    </span>
+                    <input type="text" name="quantity" class="form-control input-number" [value]="counter" disabled>
+                    <span class="input-group-prepend">
+                      <button type="button" class="btn quantity-right-plus" data-type="plus" (click)="increment()"
+                        [class.disabled]="counter > product?.quantity">
+                        <i class="las la-angle-right"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="row justify-content-evenly">
+                <a *ngIf="this.isInCart != 1" [routerLink]="['/shop/product/info/', product?.id]" [title]="product?.id"
+                  class="btn-large btn-sm">
+                  <i class="las la-info"></i>
+                  {{'Details' | translate}}
+                </a>
+
+                <a *ngIf="this.isInCart == 1" href="javascrip:void(0)" class="btn-large btn-sm"
+                  (click)="modal.dismiss('Cross click')">
+                  <i class="las la-times"></i> {{'Close' | translate}}
+                </a>
+
+
+                <a href="javascrip:void(0)" class="btn-large btn-dark btn-sm"
+                  [class.disabled]="counter > product?.quantity"
+                  (click)="this.isInCart == 0 ? addToCart(product) : this.finishPurchase()" [ngSwitch]="this.isInCart">
+
+                  <span *ngSwitchCase="0"> <i [class]="isInCartIcon"></i> {{'Add to cart' | translate}}</span>
+                  <span *ngSwitchCase="1"> <i [class]="isInCartIcon"></i> {{'Finish the purchase' | translate}}</span>
+                  <span *ngSwitchCase="2"> <span class="spinner-border spinner-border-sm"></span> {{'Processing' |
+                    translate}}</span>
+                </a>
+              </div>
+
+              <div class="border-product" *ngIf="env.setting.showFastOrder">
+                <h5 class="product-title">{{'Fast Order' | translate}}</h5>
+                <small>{{'No registration !' | translate}}</small>
+                <br>
+                <app-fast-order [product]="product"></app-fast-order>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>-->
+ </div>
+</ng-template>
+<app-alert-modal #alertModal></app-alert-modal>

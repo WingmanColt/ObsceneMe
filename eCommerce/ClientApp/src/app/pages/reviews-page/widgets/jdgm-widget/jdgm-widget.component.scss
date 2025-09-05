@@ -1,0 +1,114 @@
+.jdgm-medals-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  overflow-x: auto;       /* Scroll horizontally if overflow */
+  -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+  white-space: nowrap;    /* Prevent medals from wrapping */
+  color: #108474;
+}
+
+.jdgm-medals__container {
+  display: flex;
+  gap: 16px;
+  flex-wrap: nowrap;      /* No wrap inside container */
+  align-items: center;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.jdgm-medal-wrapper {
+  position: relative;
+  flex: 0 0 auto;         /* Prevent shrinking */
+  width: 64px;
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.jdgm-medal {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.jdgm-medal__image,
+.jdgm-medal__image > img,
+.jdgm-medal__image > div,
+.jdgm-medal__image svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.jdgm-medal__value {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Nunito Sans", "Helvetica", Arial, sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  color: inherit; /* Will inherit color from medal tier */
+}
+
+/* Medal tier colors */
+.jdgm-medal[data-tier="bronze"] .jdgm-medal__value {
+  color: #a36710;
+}
+.jdgm-medal[data-tier="silver"] .jdgm-medal__value {
+  color: #666666;
+}
+.jdgm-medal[data-tier="gold"] .jdgm-medal__value {
+  color: #d2920f;
+}
+.jdgm-medal[data-tier="platinum"] .jdgm-medal__value {
+  color: #488282;
+}
+.jdgm-medal[data-tier="diamond"] .jdgm-medal__value {
+  color: #4c8eda;
+}
+
+/* Vertical separators */
+.jdgm-medals-separator {
+  width: 1px;
+  background-color: #e9eaeb;
+  margin: 0 8px;
+  display: none;
+  align-self: stretch;
+}
+
+@media (min-width: 768px) {
+  .jdgm-medals-separator {
+    display: block;
+  }
+}
+
+/* Hover effect */
+.jdgm-medal-wrapper:hover {
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .jdgm-medal-wrapper {
+    width: 48px;
+    height: 48px;
+    margin: 0 4px;
+  }
+
+  .jdgm-medal__value {
+    font-size: 14px;
+  }
+}

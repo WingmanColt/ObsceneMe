@@ -1,0 +1,93 @@
+<div *ngIf="product">
+  <div class="card1 card-minimal card-bordered-big2"
+    [class]="class"
+    [routerLink]="['/shop/product/info/', product?.id]">
+    <div class="card-img-wrapper">
+      <!--<app-badges [settings]="settings" [marketStatus]="this.product.marketStatus"></app-badges>-->
+      <img class="card-img-top"
+        *ngIf="product?.images == undefined"
+        [ngSrc]="product?.src?.length > 0 ? product?.src : this.defaultImage"
+        ngSrcset="100w, 200w, 300w"
+        [alt]="product?.title"
+        fill
+        loading="lazy" />
+      <img class="card-img-top"
+        *ngIf="product?.images !== undefined"
+        [ngSrc]="product?.images[0]?.src.length > 0 ? product?.images[0]?.src : this.defaultImage"
+        ngSrcset="100w, 200w, 300w"
+        [alt]="product?.title"
+        fill
+        loading="lazy" />
+    </div>
+    <div class="card1-body">
+      <!--<div class="rating-container">
+    <i class="lar la-star star"></i>
+    <i class="las la-star star-fill" [ngStyle]="{ width: product.rating.toFixed(2) * 10 + '%' }"></i>
+    <span class="rating-text">{{ product.rating.toFixed(2) }}</span>
+   </div>-->
+      <div class="card-title"
+        [routerLink]="['/shop/product/info/', product?.id]"
+        target="_blank">{{ product?.title.length > 25 ? (product?.title | slice : 0 : 25) + "..." : (product?.title |
+        titlecase) }}</div>
+      <div class="price-container">
+        <div class="card-price"> {{ baseService.calcCurrency(product?.price - product?.discountRate) | asCurrency :
+          baseService.activeCurrency }} </div>
+        <div class="card-old-price"> {{ baseService.calcCurrency(product?.discountRate) | asCurrency :
+          baseService.activeCurrency }} </div>
+      </div>
+    </div>
+    <div class="card__overlay">
+      <div class="overlay__text">
+        <a [routerLink]="['/shop/product/info/', product?.id]"
+          target="_blank"
+          class="global-button"
+          title="Details"> {{ "Details" | translate }} </a>
+        <a *ngIf="this.multiButtons"
+          href="javascript:void(0)"
+          class="mobile-quick-view global-button desktop-only"
+          (click)="QuickView.openModal()"
+          title="Quick View"> {{ "Quick View" | translate }} </a>
+      </div>
+    </div>
+    <!-- <span class="card-icon">
+      <a href="javascript:void(0)" title="Add to cart" (click)="CartModal.openModal(product)" *ngIf="cartModal">
+        <i class="lar la-heart la-2x"></i>
+      </a>
+    </span>
+    -->
+  </div>
+  <!--<div class="collection-list cols-4" id="collection-list" data-products-per-page="4">
+    <a class="product-container" [routerLink]="['/shop/product/info/', product?.id]">
+      <span class="img">
+        <span [ngStyle]="{ background: (!product.images[0] ? this.defaultImage : product.images[0]?.src) | asUrl }"
+          class="i first"></span>
+        <span [ngStyle]="{ background: (!product?.images[1]? this.defaultImage : product.images[1]?.src) | asUrl }"
+          class="i second"></span>
+      </span>
+      <span class="text">
+        <strong>{{ product?.title | titlecase }}</strong>
+        <span>
+          {{ product?.price - product?.discountRate * productService.Currency?.price | currency:
+          productService.Currency?.currency:'symbol' }}
+        </span>
+        <div class="variants">
+          <div class="variant" *ngIf="product?.variants">
+            <div class="var available" [class]="item.size" *ngFor="let item of Size(product?.variants); index as i">
+              <div class="t">{{item.size}}</div>
+            </div>
+          </div>
+
+          <div class="variant" *ngIf="product?.variants">
+            <div class="var color available" [class]="item.color"
+              *ngFor="let item of Color(product?.variants); index as i">
+              <div class="c" [ngStyle]="{'background-color': item.color}"></div>
+            </div>
+          </div>
+        </div>
+      </span>
+    </a>
+  </div>-->
+  <app-quick-view *ngIf="this.multiButtons"
+    #quickView
+    [productId]="product.id"></app-quick-view>
+</div>

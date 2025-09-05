@@ -1,0 +1,223 @@
+.aboutSection {
+ bar-rating {
+  //display: inline-block !important;
+ }
+
+ .accordion {
+  --bs-accordion-bg: #eeeeee;
+ }
+
+ .accordion-item {
+  border: 0;
+  border-top: 1px solid rgb(191, 191, 191);
+  margin-bottom: 0;
+
+  .accordion-rate {
+   bar-rating {
+    display: inline-block !important;
+   }
+  }
+
+  &:first-child {
+   border-top: 1px solid rgb(191, 191, 191);
+  }
+
+  .accordion-body {
+   padding: 0;
+  }
+ }
+
+ .accordion-button {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.6em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: auto;
+  -webkit-font-smoothing: subpixel-antialiased;
+  letter-spacing: 2px;
+  padding: 1rem 30px 1rem 0;
+  margin: 0 0 auto;
+
+  .accordion-rate {
+   margin-left: 40px;
+   pointer-events: none;
+
+   span {
+    font-size: 0.7em;
+    opacity: 0.8;
+    letter-spacing: 0;
+   }
+  }
+ }
+
+ .product-item-tabs {
+  padding: 56px 104px;
+  //padding: 1%;
+  border: 1px solid #ebebeb;
+  display: flex;
+  height: 400px;
+ }
+
+ @media (max-width: 1024px) {
+  .product-item-tabs {
+   padding: 24px;
+  }
+ }
+
+ @media (max-width: 1023px) {
+  .product-item-tabs {
+   flex-direction: column;
+   padding: 16px;
+   margin: 16px 0 0 0;
+   border: none;
+   height: auto;
+  }
+ }
+
+ .product-item-tabs .product-item-tabs__nav {
+  padding: 0;
+  list-style: none;
+  position: relative;
+  width: 30%;
+  border-right: 1px solid #ebebeb;
+ }
+
+ @media (max-width: 1023px) {
+  .product-item-tabs .product-item-tabs__nav {
+   width: auto;
+   max-width: calc(100% + 32px);
+   display: flex;
+   overflow: auto;
+   margin-bottom: 16px;
+   margin-left: -16px;
+   margin-right: -16px;
+   scroll-snap-align: end;
+   scroll-snap-type: y proximity;
+   scrollbar-width: none;
+   -ms-overflow-style: none;
+  }
+
+  .product-item-tabs .product-item-tabs__nav::-webkit-scrollbar {
+   display: none;
+  }
+
+  .product-item-tabs .product-item-tabs__nav::after {
+   content: "";
+   display: block;
+   position: absolute;
+   width: inherit;
+   height: 1px;
+   background: #ebebeb;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   z-index: 1;
+  }
+ }
+
+ .product-item-tabs .product-item-tabs__nav .active-tab {
+  position: relative;
+  color: #212121;
+  border-right: 1px solid #212121;
+ }
+
+ @media (max-width: 1023px) {
+  .product-item-tabs .product-item-tabs__nav .active-tab {
+   border: none;
+   border-bottom: 1px solid #212121;
+   z-index: 2;
+  }
+ }
+
+ .product-item-tabs .product-item-tabs__nav {
+  display: flex;
+  flex-direction: column;
+ }
+
+ .product-item-tabs .product-item-tabs__nav li {
+  font-family: FixelText, sans-serif;
+  cursor: pointer;
+  padding: 16px 0;
+  color: #a6a2a2;
+  margin: 0 -1px 0 0;
+  font-size: 16px;
+  line-height: 24px;
+ }
+
+
+ @media (max-width: 1024px) {
+  .product-item-tabs .product-item-tabs__nav li {
+   padding: 8px 0;
+  }
+ }
+
+ @media (max-width: 1023px) {
+  .product-item-tabs .product-item-tabs__nav li {
+   padding: 16px 20px;
+   color: #a6a2a2;
+   white-space: nowrap;
+   border-bottom: 1px solid #ebebeb;
+  }
+
+  .product-item-tabs .product-item-tabs__nav li:last-child {
+   margin: 0;
+  }
+ }
+
+ .product-item-tabs .product-item-tabs__content {
+  padding: 0 16px 0 56px;
+  list-style: none;
+  width: 76%;
+  font-size: 16px;
+  line-height: 24px;
+  max-height: 288px;
+  overflow: auto;
+ }
+
+ .product-item-tabs .product-item-tabs__content>li ul {
+  padding-left: 20px;
+ }
+
+ .product-item-tabs .product-item-tabs__content>li ul li {
+  display: unset;
+  list-style-type: none;
+  vertical-align: baseline;
+
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+
+  font-size: 100%;
+ }
+
+ .product-item-tabs .product-item-tabs__content>li ul li p {
+  margin-bottom: 1em;
+ }
+
+ .product-item-tabs .product-item-tabs__content>li p {
+  margin-bottom: 1em;
+ }
+
+ @media (max-width: 1023px) {
+  .product-item-tabs .product-item-tabs__content {
+   width: calc(100% + 16px);
+   padding: 4px 8px 4px 0;
+   max-height: 400px;
+  }
+ }
+
+ .product-info__description {
+  font-size: 16px;
+  line-height: 24px;
+ }
+
+ .product-info__description p {
+  margin: 0 0 16px;
+ }
+
+ .product-info__description ul li {
+  list-style-type: disc;
+  margin-left: 20px;
+ }
+}

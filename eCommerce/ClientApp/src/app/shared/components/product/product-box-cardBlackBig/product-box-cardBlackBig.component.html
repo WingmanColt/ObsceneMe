@@ -1,0 +1,56 @@
+<div class="cards-container" *ngIf="product">
+ <div class="card cardBlackBig">
+  <div class="top-bar">
+   <app-badges [badgeClass]="'badge-text'" [settings]="settings" [marketStatus]="this.product.marketStatus"></app-badges>
+  </div>
+
+  <div class="img-container" [routerLink]="['/shop/product/info/', product?.id]">
+   <img class="card-img-top" *ngIf="product?.images == undefined" [ngSrc]="product?.src?.length > 0 ? product?.src : this.defaultImage" ngSrcset="100w, 200w, 300w" [alt]="product?.title" fill loading="lazy" />
+   <img class="card-img-top" *ngIf="product?.images !== undefined" [ngSrc]="product?.images[0]?.src.length > 0 ? product?.images[0]?.src : this.defaultImage" ngSrcset="100w, 200w, 300w" [alt]="product?.title" fill loading="lazy" />
+  </div>
+
+  <div class="card-body" *ngIf="!this.deviceDetector.isDevice('Mobile')">
+   <div class="name-fav d-flex justify-content-between" [routerLink]="['/shop/product/info/', product?.id]">
+    <strong>
+     <!--   {{ product?.title.length > 30 ? (product?.title | slice : 0 : 30) + "..." : (product?.title | titlecase) }}-->
+     {{ product?.title | titlecase }}
+    </strong>
+   </div>
+
+   <div class="cardBlack-wrapper">
+    <!-- <bar-rating [(rate)]="product.rating" [max]="5" [readOnly]="true" [showText]="false">
+     <ng-template ratingActive>
+      <i class="las la-star" style="margin: 2px; color: #edb867"></i>
+     </ng-template>
+     <ng-template ratingInactive>
+      <i class="lar la-star" style="margin: 2px; color: #d2d2d2"></i>
+     </ng-template>
+    </bar-rating>
+-->
+    <p>
+     {{ baseService.calcCurrency(product?.price - product?.discountRate) | asCurrency : baseService.activeCurrency }}
+    </p>
+
+    <a href="javascrip:void(0)" class="btn-large btn-light btn-border" title="Преди да направиш поръчка, избери вариянт"> <i class="las la-cart-plus"></i> Поръчай сега </a>
+    <!--<div class="purchase d-flex justify-content-between">
+     <span>({{ product?.ratingVotes }})</span>
+
+     <a [routerLink]="['/shop/product/info/', product?.id]" class="icon">
+      <i class="las la-shopping-cart"></i>
+     </a>
+    </div>-->
+   </div>
+  </div>
+
+  <div class="card-body" *ngIf="this.deviceDetector.isDevice('Mobile')">
+   <div class="name-fav" [routerLink]="['/shop/product/info/', product?.id]">
+    <strong class="cardBlack-name">
+     {{ product?.title.length > 17 ? (product?.title | slice : 0 : 17) + "..." : (product?.title | titlecase) }}
+    </strong>
+   </div>
+   <p class="cardBlack-price">
+    {{ baseService.calcCurrency(product?.price - product?.discountRate) | asCurrency : baseService.activeCurrency }}
+   </p>
+  </div>
+ </div>
+</div>

@@ -1,0 +1,172 @@
+<!-- Mobile Floating Button -->
+<div 
+  *ngIf="isMobile"
+  [class.hide]="isDrawerOpen"
+  class="floating-button-container" 
+  [style.top.px]="position"
+  (mousedown)="onMouseDown($event)" 
+  (touchstart)="onTouchStart($event)">
+
+  <div class="floating-button" (click)="toggleDrawer()">
+    <i class="las la-sliders-h"></i>
+  </div>
+  <div class="button-labels" (click)="toggleDrawer()">
+    <span class="label">{{ 'Filter and Sort' | translate }}</span>
+  </div>
+</div>
+
+<!-- Mobile Drawer -->
+<div class="drawer" *ngIf="isMobile" [ngClass]="{ 'open': isDrawerOpen }">
+  <button 
+    class="site-close-handle" 
+    title="Close sidebar" 
+    (click)="toggleDrawer()">
+    <span class="hamburger-menu" aria-hidden="true">
+      <svg aria-hidden="true" focusable="false" role="presentation" width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.41418 0L16.9705 15.5563L15.5563 16.9706L-2.89679e-05 1.41421L1.41418 0Z" fill="#111111"></path>
+        <path d="M16.9706 1.41431L1.41423 16.9707L1.85966e-05 15.5564L15.5564 9.31025e-05L16.9706 1.41431Z" fill="#111111"></path>
+      </svg>
+    </span>
+    
+  </button>
+
+  <div class="filter-sidebar-container">
+    <p class="sidebar-title title">{{ 'Refine results' | translate }}</p>
+    <p class="subtitle">{{ totalItems }} {{ 'products' | translate }}</p>
+
+    <!-- Filters Section -->
+    <div class="top">
+      <p class="collapse-block-heading">{{ 'Filters' | translate }}:</p>
+
+      <!-- Brands Filter -->
+      <app-brands 
+        *ngIf="collectionSettings.brandsOnFilters" 
+        [selectedItems]="selectedFilters"
+        [isCollapsed]="true"
+        (updateFilter)="onBrandSelectionChange($event)">
+      </app-brands>
+
+      <!-- Trademarks Filter -->
+      <app-trademarks 
+      *ngIf="collectionSettings.trademarkOnFilters" 
+      [selectedIds]="selectedFilters?.trademarks"
+      [isCollapsed]="false"
+      [isMobile]="isMobile"
+      (updateFilter)="onTrademarkSelectionChange($event)">
+    </app-trademarks>
+
+
+      <!-- Occasions Filter -->
+      <app-occasions 
+        *ngIf="collectionSettings.occasionsOnFilters" 
+        [selectedIds]="selectedFilters?.occasions" 
+        [isCollapsed]="true">
+      </app-occasions>
+
+  <!-- Reusable Filters -->
+  <ng-container *ngFor="let filter of reusableFilters">
+    
+    <app-checkbox-list 
+      *ngIf="collectionSettings[filter.setting]"
+      [title]="filter.title | translate"
+      [items]="filter.items"
+      [selectedItems]="selectedFilters[filter.selectedKey]"
+      [isMultipleSelection]="selectedFilters[filter.isMultipleSelection]"
+      [isCollapsed]="false"
+      (updateSelection)="filter.updateFn($event)">
+    </app-checkbox-list>
+
+  </ng-container>
+  
+      <!-- Price Filter -->
+      <app-price 
+        *ngIf="collectionSettings.priceOnFilters"
+        [min]="0"
+        [max]="5000"
+        [constantMax]="10000"
+        [inputFrom]="selectedFilters?.minPrice"
+        [inputTo]="selectedFilters?.maxPrice"
+        [isCollapsed]="true"
+        (onPriceChange)="onPriceChange($event)">
+      </app-price>
+
+      <!-- Sort By -->
+      <div class="sorting">
+        <p class="collapse-block-heading">{{ 'Sort By' | translate }}:</p>
+        <app-custom-dropdown 
+          [dropdownArray]="dropdownItems" 
+          [dropdownArrayTwo]="dropdownItemsTwo" 
+          [openDirectionBottom]="false" 
+          (selectedValues)="onSortChange($event)">
+        </app-custom-dropdown>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Categories Swiper on Mobile -->
+<app-lazy-loader *ngIf="collectionSettings.categoriesSwiperOnMobile && isMobile" [lazyComponentType]="SliderCategoriesMobileComponent" (lazyComponentVisible)="ComponentVisible = true">
+    <ng-container *ngIf="ComponentVisible">
+      <app-slider-categories-mobile></app-slider-categories-mobile>
+    </ng-container>
+</app-lazy-loader>
+
+
+<!-- Desktop Filters -->
+<div class="collection-filter" *ngIf="!isMobile" [class.openFilterbar]="isDrawerOpen">
+  <!-- Categories Filter -->
+  <app-categories-filter 
+    [urlCategoryId]="urlCategoryId" 
+    [urlSubCategoryId]="urlSubCategoryId" 
+    (selectedCategories)="setSelectedCategories($event)">
+  </app-categories-filter>
+
+  <!-- Brands Filter -->
+  <app-brands 
+    *ngIf="collectionSettings.brandsOnFilters" 
+    [selectedItems]="selectedFilters"
+    [isCollapsed]="false"
+    (updateFilter)="onBrandSelectionChange($event)">
+  </app-brands>
+
+    <!-- Trademarks Filter -->
+    <app-trademarks 
+    *ngIf="collectionSettings.trademarkOnFilters" 
+    [selectedIds]="selectedFilters?.trademarks" 
+    [isCollapsed]="false"
+    [isMobile]="isMobile"
+    (updateFilter)="onTrademarkSelectionChange($event)">
+  </app-trademarks>
+
+
+  <!-- Occasions Filter -->
+  <app-occasions 
+    *ngIf="collectionSettings.occasionsOnFilters" 
+    [selectedIds]="selectedFilters?.occasions" 
+    [isCollapsed]="true">
+  </app-occasions>
+
+  <!-- Reusable Filters -->
+  <ng-container *ngFor="let filter of reusableFilters">
+    <app-checkbox-list 
+      *ngIf="collectionSettings[filter.setting]"
+      [title]="filter.title | translate"
+      [items]="filter.items"
+      [selectedItems]="selectedFilters[filter.selectedKey]"
+      [isMultipleSelection]="filter.isMultipleSelection"
+      [isCollapsed]="true"
+      (updateSelection)="filter.updateFn($event)">
+    </app-checkbox-list>
+  </ng-container>
+
+  <!-- Price Filter -->
+  <app-price *ngIf="collectionSettings.priceOnFilters" 
+    [min]="0" 
+    [max]="5000" 
+    [constantMax]="10000" 
+    [inputFrom]="selectedFilters?.minPrice" 
+    [inputTo]="selectedFilters?.maxPrice" 
+    [isCollapsed]="true" 
+    (onPriceChange)="onPriceChange($event)">
+  </app-price>
+</div>

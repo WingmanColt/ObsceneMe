@@ -1,0 +1,18 @@
+<div *ngIf="isLoaded">
+ <form [formGroup]="paymentsForm" (ngSubmit)="onSubmit()">
+  <h1 class="page-header">{{'Payment Providers' | translate}}</h1>
+  <div class="private-office__column private-office__form-wrapper">
+    <div class="private-office__col">
+      <app-float-input-field label="Email ( PayPal Account  )" formControlName="paymentEmail"></app-float-input-field>
+
+        <button type="submit" class="button private-office__submit-button">
+            {{"Save" | translate}}
+        </button>
+    </div>
+
+
+  </div>
+ </form>
+</div>
+
+<app-loading *ngIf="!isLoaded"></app-loading>

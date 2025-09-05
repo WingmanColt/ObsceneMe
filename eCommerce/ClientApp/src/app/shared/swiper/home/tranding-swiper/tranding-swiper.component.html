@@ -1,0 +1,83 @@
+
+<app-simple-slider2 *ngIf="sliderConfig.slides?.length"
+[config]="sliderConfig"
+[slideTemplate]="TrendingSlideTemplate"></app-simple-slider2>
+
+<ng-template #TrendingSlideTemplate let-slide="slide" let-index="index">
+
+ <app-product-base
+ *ngIf="this.sliderConfig.slides.length > 0"
+ [template]="settings.trendingsTwoCardTemplate"
+ [product]="slide">
+</app-product-base>
+
+<!-- Skeleton Loader -->
+<ng-container *ngIf="this.sliderConfig.slides.length === 0">
+ <ngx-skeleton-loader
+   appearance="line"
+   animation="progress"
+   [theme]="{
+     height: '250px',
+     'border-radius': '2px',
+     'background-color': '#c8c8c8',
+     animation: 'fadeIn 1s'
+   }">
+ </ngx-skeleton-loader>
+
+ <ngx-skeleton-loader
+   appearance="line"
+   animation="progress-dark"
+   count="2"
+   [theme]="{ 'background-color': '#c8c8c8' }">
+  </ngx-skeleton-loader>
+ </ng-container>
+</ng-template>
+
+
+
+  <!-- 
+<div #trendingSwiperContainer class="swiper-container swiper-trendingOne">
+  <div class="page-header-container-with-swiper">
+    <div class="page-header">{{ "Just Dropped" | translate }}</div>
+    <div class="swiper-button-container">
+      <div class="swiper-button-left"></div>
+      <div class="swiper-button-right"></div>
+      <div class="home-swiper_pagination swiper-pagination"></div>
+    </div>
+  </div>
+
+
+  <div class="swiper-wrapper">
+    <ng-container *ngIf="relatedProducts$ | async as products">
+      <div class="swiper-slide" *ngFor="let product of (products.length > 0 ? (products | slice: 0: 6) : env.ngxLoaderArray)">
+        
+    
+        <app-product-base
+          *ngIf="products.length > 0"
+          [template]="settings.trendingsTwoCardTemplate"
+          [product]="product">
+        </app-product-base>
+
+      
+        <ng-container *ngIf="products.length === 0">
+          <ngx-skeleton-loader
+            appearance="line"
+            animation="progress"
+            [theme]="{
+              height: '250px',
+              'border-radius': '2px',
+              'background-color': '#c8c8c8',
+              animation: 'fadeIn 1s'
+            }">
+          </ngx-skeleton-loader>
+          <ngx-skeleton-loader
+            appearance="line"
+            animation="progress-dark"
+            count="2"
+            [theme]="{ 'background-color': '#c8c8c8' }">
+          </ngx-skeleton-loader>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</div>-->

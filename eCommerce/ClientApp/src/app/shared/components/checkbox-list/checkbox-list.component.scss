@@ -1,0 +1,17 @@
+.checkbox-list {
+ // Add your styles here
+ .collection-checkbox-list {
+   list-style: none;
+   padding: 0;
+   
+   &__item {
+     cursor: pointer;
+     display: flex;
+     align-items: center;
+     
+     input[type='checkbox'] {
+       margin-right: 8px;
+     }
+   }
+ }
+}

@@ -1,0 +1,51 @@
+app-simple-slider2[hidden] {
+  background-color: black;
+}
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.video-volume-btn {
+  position: absolute;
+  bottom: 7%;       /* responsive from bottom */
+  right: 4%;        /* responsive from right */
+  background: rgba(201, 198, 198, 0.4);
+  border: none;
+  border-radius: 50%;
+  width: 6vw;       /* width relative to viewport */
+  height: 6vw;      /* height relative to viewport */
+  max-width: 35px;  /* limit on large screens */
+  max-height: 35px;
+  min-width: 20px;  /* limit on small screens */
+  min-height: 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.video-volume-btn.muted i {
+  color: #aaa;
+}
+
+.video-volume-btn.unmuted i {
+  color: white;
+}
+
+/* Optional: adjust for smaller screens */
+@media (max-width: 768px) {
+  .video-volume-btn {
+    width: 5vw;
+    height: 5vw;
+  }
+}
+
+.slide-logo-img {
+  width: 90px !important;
+  height: 90px !important;
+}
+

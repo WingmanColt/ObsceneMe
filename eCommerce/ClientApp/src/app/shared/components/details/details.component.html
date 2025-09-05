@@ -1,0 +1,52 @@
+<ng-container *ngIf="this.product$ | async as product; else loading">
+  <div *ngIf="product">
+  <div [ngSwitch]="this.isMobile ? detailsSettings.detailsPageTemplateMobile : detailsSettings.detailsPageTemplate">
+    <app-details-template-four *ngSwitchCase="'Four'"
+      [product]="product"
+      [thumbImages]="product?.images"
+      [swiperTemplate]="swiperTemplate"
+      [isQuickView]="isQuickView"
+      [isMobile]="this.isMobile"
+      [activeImage]="activeImage"
+      [swiperVariantType]="swiperVariantType"
+      [variants]="product?.variants"
+      [counter]="counter"
+      [isInCart]="isInCart"
+      (chartModal)="SizeChart?.openModal()"
+      (decrement)="decrement(product)"
+      (increment)="increment(product)"
+      (addToCart)="addToCart($event)"
+      (finishPurchase)="finishPurchase()"></app-details-template-four>
+  </div>
+  <app-size-modal #sizeChart
+    [product]="product"
+    [detailsSettings]="detailsSettings"></app-size-modal>
+</div>
+
+
+  <!-- Display 404 error message when no product is found -->
+  <div class="container p-5" *ngIf="!product">
+    <div class="row">
+      <div [class]="this.isMobile ? 'col-12' : 'col-md-12'">
+        <div class="error-section">
+          <h1>404</h1>
+          <h2>{{ 'page not found' | translate }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ng-container>
+
+<ng-template #loading>
+  <div
+    [ngSwitch]="this.isMobile ? detailsSettings.detailsPageTemplateMobile : detailsSettings.detailsPageTemplate">
+    <!--<app-one-skeleton *ngSwitchCase="'One'"></app-one-skeleton>
+    <app-two-skeleton *ngSwitchCase="'Two'"></app-two-skeleton>
+    <app-three-skeleton *ngSwitchCase="'Three'" [isMobile]="this.deviceDetector.isDevice('Mobile')"></app-three-skeleton>
+    -->
+    <app-four-skeleton *ngSwitchCase="'Four'" [isMobile]="this.isMobile"></app-four-skeleton>
+  </div>
+</ng-template>
+
+<app-alert-modal #alertModal></app-alert-modal>

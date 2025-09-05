@@ -1,0 +1,240 @@
+<form
+  class="reviewForm-container"
+  [formGroup]="reviewForm"
+  (ngSubmit)="onSubmit(this.reviewForm.value)"
+  [class.theme-form]="isModal"
+>
+  <div [class.modal-header]="isModal" *ngIf="!this.isReviewSend && isModal">
+    <h2>{{ "Comment" | translate }} <i class="las la-pen-fancy"></i></h2>
+
+    <button
+      type="button"
+      class="close border-0"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <i class="las la-times-circle"></i>
+    </button>
+  </div>
+
+  <div [class.modal-body]="isModal">
+    <div
+      class="row justify-content-center"
+      [class.d-flex]="!isMobile"
+      *ngIf="!this.isReviewSend"
+    >
+      <div class="col-md-12">
+        <div class="col-md-12">
+          <div class="bar-rating-container">
+            <div class="bar-text">
+              {{ "Rating" | translate }}
+            </div>
+            <bar-rating
+              [(rate)]="this.stars"
+              (hover)="onRateHover($event)"
+              [max]="5"
+              [readOnly]="false"
+              [showText]="false"
+            >
+              <ng-template ratingActive>
+                <i class="las la-star la-3x fill"></i>
+              </ng-template>
+              <ng-template ratingInactive>
+                <i class="lar la-star la-3x"></i>
+              </ng-template>
+            </bar-rating>
+            <input
+              type="text"
+              class="form-control"
+              [formControl]="reviewForm.controls['productStars']"
+              hidden
+            />
+          </div>
+          <!--<div class="bar-text">
+      {{ this.getRateText(this.starsHover).text }}
+     </div>-->
+        </div>
+        <div class="form-row pt-3">
+          <div class="form-group col-md-4">
+            <div class="float-input-group">
+              <input
+                type="text"
+                name="firstname"
+                [formControl]="reviewForm.controls['firstname']"
+                placeholder=" "
+                autocomplete="on"
+                [class.invalid]="
+                  reviewForm.controls.firstname.touched &&
+                  reviewForm.controls.firstname.errors?.required
+                "
+              />
+              <span class="bar"></span>
+              <label for="firstname">{{ "First Name" | translate }}</label>
+            </div>
+          </div>
+
+          <div class="form-group col-md-4">
+            <div class="float-input-group">
+              <input
+                type="text"
+                name="lastname"
+                [formControl]="reviewForm.controls['lastname']"
+                placeholder=" "
+                autocomplete="on"
+                [class.invalid]="
+                  reviewForm.controls.lastname.touched &&
+                  reviewForm.controls.lastname.errors?.required
+                "
+              />
+              <span class="bar"></span>
+              <label for="lastname">{{ "Last Name" | translate }}</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row pt-3">
+          <div class="form-group col-md-4">
+            <div class="float-input-group">
+              <input
+                type="text"
+                name="orderCode"
+                [formControl]="reviewForm.controls['orderCode']"
+                placeholder=" "
+                autocomplete="on"
+                [class.invalid]="
+                  reviewForm.controls.orderCode.touched &&
+                  reviewForm.controls.orderCode.errors?.required
+                "
+              />
+              <span class="bar"></span>
+              <label for="orderCode">{{ "Email or order code" | translate }}</label>
+
+              <div
+                *ngIf="this.error == 'Wrong order code. Please try again.'"
+                class="text text-danger"
+              >
+                {{ "Wrong order code. Please try again." | translate }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-4">
+            <div class="float-input-group">
+              <!-- Image URL Input -->
+              <input
+                type="text"
+                name="imageUrl"
+                [formControl]="reviewForm.controls['src']"
+                placeholder=" "
+                autocomplete="on"
+                [readonly]="isFileUploaded"
+              />
+              <span class="bar"></span>
+              <label for="imageUrl">{{ "Add Image Url / Upload from computer" | translate }}</label>
+          
+              <!-- Hidden File Input with Computer Icon -->
+                <input
+                type="file"
+                id="fileUpload"
+                (change)="onFileSelected($event)"
+                accept=".jpg,.jpeg,.png,.gif,.webp,.avif"
+                style="display: none"
+                #fileInput
+              />
+              <span class="file-icon" *ngIf="!isFileUploaded" (click)="triggerFileInput()">
+                <i class="las la-desktop"></i> <!-- Use computer icon (or another icon of your choice) -->
+              </span>
+
+              <span class="file-icon" *ngIf="isFileUploaded" (click)="resetFileUpload()">
+                <i class="las la-times"></i> <!-- Use computer icon (or another icon of your choice) -->
+              </span>
+            </div>
+          </div>
+          
+          
+        </div>
+        <div class="row d-flex justify-content-center pt-3">
+
+<div class="col-md-6">
+  <app-custom-dropdown *ngIf="!productId"
+    [dropdownArray]="dropdownArray"
+    [iconUrl]="'assets/icons/products/'"
+    [iconExt]="'.png'"                
+    [defaultValue]="'Select Product'"   
+    [openDirectionBottom]="true"
+    [multipleSelection]="false"
+    (selectedValues)="onProductSelected($event, i)"
+    style="width: 100%;">
+  </app-custom-dropdown>
+</div>
+</div>
+        <br />
+        <div class="row justify-content-evenly pt-3" [class.d-flex]="!isMobile">
+          <div class="col-md-6">
+            <div class="float-input-group">
+              <textarea
+                class="form-control"
+                [formControl]="reviewForm.controls['about']"
+                [placeholder]="'Write a Comment' | translate"
+                id="exampleFormControlTextarea1"
+                rows="6"
+                [class.invalid]="
+                  reviewForm.controls.about.touched &&
+                  reviewForm.controls.about.errors?.required
+                "
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row pt-3">
+        <div
+          class="form-group col-md-3"
+          [class.offset-3]="!isMobile"
+          *ngIf="this.isReviewSend"
+        >
+          <br />
+          <i class="las la-check-circle la-4x text-center text-success"></i>
+          <br />
+          <h2 class="text-center">{{ "Thank You" | translate }}</h2>
+        </div>
+
+        <div class="form-group col-md-6" [class.offset-3]="!isMobile">
+          <br />
+          <p
+            class="text text-danger"
+            *ngIf="
+              this.error?.length &&
+              this.error != 'Wrong order code or email address. Please try again.'
+            "
+          >
+            {{ this.error | translate }}
+          </p>
+        </div>
+
+        <div class="form-group col-md-3" [class.offset-5]="!isMobile">
+          <div
+            *ngIf="!this.isReviewSend"
+            [class.modal-footer]="isModal"
+            [class.w-auto]="!isMobile"
+            [class.disabled]="reviewForm.invalid"
+            class="btn btn-large btn-outline-dark btn-card"
+            (click)="onSubmit(this.reviewForm.value)"
+          >
+            {{ "Add a message" | translate }}
+          </div>
+
+          <div
+            *ngIf="this.isReviewSend"
+            [class.modal-footer]="isModal"
+            class="btn btn-large btn-outline-dark btn-card"
+            [class.w-auto]="!isMobile"
+            (click)="modal.dismiss('Cross click')"
+          >
+            {{ "Done" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<hr />

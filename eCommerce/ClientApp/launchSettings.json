@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "ecommerce": {
+      "commandName": "ecommerce",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:44312",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+<app-breadcrumb [breadcrumbs]="currBreadCrumb"></app-breadcrumb>
+
+<!-- section start -->
+<section class="p-0">
+ <div class="container">
+  <div class="row">
+   <div class="col-sm-12">
+    <div class="error-section">
+     <h1>404</h1>
+     <h2>{{ "Page not found" | translate }}</h2>
+     <a [routerLink]="'/'" class="btn btn-solid">{{ "Back to home" | translate }}</a>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+<!-- Section ends -->
+
+<!-- thank-you section start -->
+<section class="section-b-space light-layout">
+ <div class="container">
+  <div class="row">
+   <div class="col-md-12">
+    <div class="error-text">
+     <i class="las la-times" aria-hidden="true"></i>
+     <h2>{{ "Your payment was canceled" | translate }}</h2>
+     <p>{{ "Payment has been terminated, please try another way." | translate }}</p>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+<!-- Section ends -->

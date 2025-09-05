@@ -1,0 +1,60 @@
+.dark {
+ .payment-section {
+  .active {
+   border-color: #b7b6b6 !important;
+  }
+ }
+}
+
+.payment-section {
+ .active {
+  border-color: #000 !important;
+  margin-bottom: 2rem !important;
+ }
+ .radio__label__accessory .payment-icon {
+  cursor: default;
+  margin: -0.1428571429em 0 -0.4285714286em;
+ }
+ .payment-icon {
+  display: inline-block;
+  border-radius: 0.2142857143em;
+  background-size: cover;
+  background-repeat: no-repeat;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  width: 2.7142857143em;
+  height: 1.7142857143em;
+
+  -webkit-transition: opacity 0.5s cubic-bezier(0.3, 0, 0, 1);
+  transition: opacity 0.5s cubic-bezier(0.3, 0, 0, 1);
+  -webkit-backface-visibility: hidden;
+  i {
+   font-size: 2.5em;
+  }
+  &.payment-icon--visa {
+   background-image: url(//cdn.shopify.com/shopifycloud/shopify/assets/payment_icons/visa-319d545c6fd255c9aad5eeaad21fd6f7f7b4fdbdb1a35ce83b89cca12a187f00.svg), none;
+  }
+  &.payment-icon--maestro {
+   background-image: url(//cdn.shopify.com/shopifycloud/shopify/assets/payment_icons/maestro-d2055c6b416c46cf134f393e1df6e0ba31722b623870f954afd392092207889c.svg), none;
+  }
+  &.payment-icon--master {
+   background-image: url(//cdn.shopify.com/shopifycloud/shopify/assets/payment_icons/master-173035bc8124581983d4efa50cf8626e8553c2b311353fbf67485f9c1a2b88d1.svg), none;
+  }
+  &.payment-icon--stripe {
+   background-image: url("../../icons/stripe.svg"), none;
+  }
+  &.payment-icon--paypal {
+   background-image: url("../../icons/paypal.svg"), none;
+  }
+  &.payment-icon--cod {
+   background-image: url(//cdn.shopify.com/shopifycloud/shopify/assets/payment_icons/master-173035bc8124581983d4efa50cf8626e8553c2b311353fbf67485f9c1a2b88d1.svg), none;
+  }
+  .payment-icon-list__more {
+   vertical-align: middle;
+   margin-top: -2px;
+   margin-left: 0.25em;
+   display: inline-block;
+   cursor: default;
+  }
+ }
+}

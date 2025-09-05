@@ -1,0 +1,30 @@
+<div [ngSwitch]="homeType">
+ <!-- Style One Header -->
+ <ng-container *ngSwitchCase="'BigSwiper'">
+   <app-header-one class="mobile-only"
+                   [headerType]="headerType"
+                   [sticky]="detailsSetting.stickyHeader"
+                   [transparentHome]="detailsSetting.transparentHeader"
+                   [invisibleBottomMenu]="detailsSetting.invisibleBottomMenu"></app-header-one>
+                   
+   <app-header-one class="desktop-only"
+                   [headerType]="headerType"
+                   [sticky]="pagesSetting.stickyHeader"
+                   [transparentHome]="pagesSetting.transparentHeader"
+                   [invisibleBottomMenu]="pagesSetting.invisibleBottomMenu"></app-header-one>
+ </ng-container>
+
+ <!-- Style Two Header -->
+ <ng-container *ngSwitchCase="'Style-Two'">
+   <app-header-two></app-header-two>            
+ </ng-container>
+
+  <!-- Style Two Header -->
+
+  <ng-container *ngSwitchCase="'Single-Product-Style'">
+    <app-header-one></app-header-one>            
+  </ng-container>
+</div>
+
+<router-outlet></router-outlet>
+<app-footer-one></app-footer-one>

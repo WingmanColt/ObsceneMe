@@ -1,0 +1,28 @@
+.container {
+ max-width: 100%; /* Ensure the container takes the full width */
+}
+
+.row {
+ margin-left: 0;
+ margin-right: 0;
+}
+
+.col-auto {
+ padding-left: 0;
+ padding-right: 0;
+}
+
+.form-control {
+ width: 100%; /* Ensure full width for input and select */
+}
+
+.btn {
+ width: 100%; /* Ensure full width for button */
+}
+
+.ml-1 {
+ margin-left: .5rem;
+}
+.mr-1 {
+ margin-right: .5rem;
+}

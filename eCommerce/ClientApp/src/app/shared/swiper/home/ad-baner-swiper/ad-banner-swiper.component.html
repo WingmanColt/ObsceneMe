@@ -1,0 +1,10 @@
+
+<app-simple-slider2 *ngIf="sliderConfig.slides?.length"
+[config]="sliderConfig"
+[slideTemplate]="AdBannerSlideemplate"></app-simple-slider2>
+
+<ng-template #AdBannerSlideTemplate let-slide="slide" let-index="index">
+  <a [href]="slide.url" class="img-container">
+    <img [lazyLoad]="slide.image" class="lazy-loading" (load)="onImageLoad()" (error)="onImageError()"/>
+  </a>
+</ng-template>

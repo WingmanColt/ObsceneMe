@@ -1,0 +1,52 @@
+<div class="slot-machine">
+    <div class="stage notstarted">
+        <div class="button-area">
+            <button id="play" class="trigger" (click)="spinWheels()">Let's Play!</button>
+        </div>
+        <div class="slot-row console">
+            <div class="console-outer">
+                <div id="col1" class="slot-col first wheel">
+                    <div class="slot-container">
+                        <ul id="ring1" class="ring">
+                            <li *ngFor="let item of items1" [attr.data-content]="item.content" class="slot-item">
+                                <img [src]="item.images[0].src" alt="">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="col2" class="slot-col second wheel">
+                    <div class="slot-container">
+                        <ul id="ring2" class="ring">
+                            <li *ngFor="let item of items2" [attr.data-content]="item.content" class="slot-item">
+                                <img [src]="item.images[0].src" alt="">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="col3" class="slot-col third wheel">
+                    <div class="slot-container">
+                        <ul id="ring3" class="ring">
+                            <li *ngFor="let item of items3" [attr.data-content]="item.content" class="slot-item">
+                                <img [src]="item.images[0].src" alt="">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slot-row holdcontrols">
+                <div class="slot-col">
+                    <button data-controls="ring1" id="hold1" class="hold" (click)="toggleHold('ring1')">Hold</button>
+                </div>
+                <div class="slot-col">
+                    <button data-controls="ring2" id="hold2" class="hold" (click)="toggleHold('ring2')">Hold</button>
+                </div>
+                <div class="slot-col">
+                    <button data-controls="ring3" id="hold3" class="hold" (click)="toggleHold('ring3')">Hold</button>
+                </div>
+            </div>
+        </div>
+        <div class="results">
+            <div id="textcontent">How will you do?</div>
+        </div>
+    </div>
+</div>

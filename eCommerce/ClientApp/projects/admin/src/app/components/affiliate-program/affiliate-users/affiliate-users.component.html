@@ -1,0 +1,339 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="card">
+              <div class="card-header">
+                  <h5>Orders List</h5>
+              </div>
+              <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                      <div class="d-flex">
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Search by code..."
+                          [(ngModel)]="searchText"
+                          (ngModelChange)="onSearchTextChange()"
+                        />
+                      </div>
+          
+                      <div class="dropdown-button pull-right mr-2">
+                        <app-dropdown
+                          [items]="dropdownActions"   
+                          buttonLabel="Actions"      
+                          [multiSelect]="false"        
+                          (selectionChanged)="onActionSelected($event)">
+                        </app-dropdown>
+                      </div>
+                      
+                    </div>
+
+                  <div id="batchDelete" class="category-table custom-datatable">
+                      <div class="table-responsive">
+                          <table class="table table-striped">
+                              <thead>
+                                  <tr>
+                                      <th scope="col">#</th>
+                                      <th scope="col" sortable="code">Code</th>
+                                      <th scope="col" sortable="product">Product</th>
+                                      <th scope="col" sortable="cost">Cost</th>
+                                      <th scope="col" sortable="disc">Discount</th>
+                                      <th scope="col" sortable="currency">Currency</th>
+                                      <th scope="col" sortable="quantity">Qunatity</th>
+                                      <th scope="col" sortable="date">Date</th>
+                                      <th scope="col" sortable="action">Actions</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <ng-container *ngIf="paginatedArray.length > 0">
+                                      <tr *ngFor="let entity of paginatedArray; let i = index">
+                                          <th scope="row">{{ entity?.id || 'N/A' }}</th>
+                                          <td>
+                                            {{ entity?.code || 'N/A' }}
+                                          </td>
+                                          <td>
+                                            {{ entity?.productTitle || 'N/A' }}
+                                          </td>
+                                          <td>{{ entity?.totalCost || 0 }}</td>
+                                          <td>{{ entity?.totalDiscount || 0 }}</td>
+                                          <td>{{ entity?.currency || 'N/A' }}</td>
+                                          <td>{{ entity?.quantity || 0 }}</td>
+                                          <td>{{ entity?.createdOn || 0 }}</td>
+                                          <td>
+                                              <a href="javascript:void(0)" (click)="open(entity, entity.checkoutId)" aria-label="Edit category {{ entity?.title }}">
+                                                  <i class="fa fa-eye f-12"></i>
+                                              </a>
+                                              &nbsp;
+                                              <a href="javascript:void(0)" (click)="delete(entity?.id)" 
+                                                 aria-label="Delete category {{ entity?.title }}">
+                                                  <i class="fa fa-trash-o"></i>
+                                              </a>
+                                              
+                                          </td>
+                                      </tr>
+                                  </ng-container>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+
+                  <!-- Pagination Controls -->
+                  <div class="d-flex justify-content-center p-2">
+                      <nav aria-label="Page navigation">
+                          <ul class="pagination justify-content-center">
+                              <!-- First Page Button -->
+                              <li class="page-item" [class.disabled]="pageNumber === 1">
+                                  <a class="page-link" href="javascript:void(0)" (click)="goToFirstPage()">First</a>
+                              </li>
+
+                              <!-- Previous Page Button -->
+                              <li class="page-item" [class.disabled]="pageNumber === 1">
+                                  <a class="page-link" href="javascript:void(0)" (click)="changePage(pageNumber - 1)">Previous</a>
+                              </li>
+
+                              <!-- Page Numbers (Showing max 5 pages) -->
+                              <li class="page-item" *ngFor="let page of getPages()" [class.active]="page === pageNumber">
+                                  <a class="page-link" href="javascript:void(0)" (click)="changePage(page)">{{ page }}</a>
+                              </li>
+
+                              <!-- Next Page Button -->
+                              <li class="page-item" [class.disabled]="pageNumber === getTotalPages()">
+                                  <a class="page-link" href="javascript:void(0)" (click)="changePage(pageNumber + 1)">Next</a>
+                              </li>
+
+                              <!-- Last Page Button -->
+                              <li class="page-item" [class.disabled]="pageNumber === getTotalPages()">
+                                  <a class="page-link" href="javascript:void(0)" (click)="goToLastPage()">Last</a>
+                              </li>
+                          </ul>
+                      </nav>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+<!-- Modal Template -->
+<ng-template class="edit-modal" #popupModal let-modal>
+  <div class="modal-dialog modal-xxl modal-dialog-centered"> <!-- Applied modal-xxl and centered classes -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title f-w-600">Checkout Details</h5>
+        <button type="button" class="close btn-unset" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="modalForm" class="needs-validation">
+          
+          <div class="row">
+            <div class="form-group col">
+              <label for="fullName">Full Name:</label>
+              <input type="text" class="form-control" id="fullName" formControlName="fullName" placeholder="Full Name" />
+            </div>
+            <div class="form-group col">
+              <label for="phone">Phone:</label>
+              <input type="text" class="form-control" id="phone" formControlName="phoneNumber" placeholder="Phone" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="email">Email:</label>
+              <input type="email" class="form-control" id="email" formControlName="email" placeholder="Email" />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="address">Address:</label>
+              <input type="text" class="form-control" id="address" formControlName="address" placeholder="Address" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-4">
+              <label for="country">Country:</label>
+              <select class="form-control" formControlName="country">
+                <option value="0" selected="selected" disabled="disabled">Select Country</option>
+                <option *ngFor="let curr of countries" [value]="curr.label">{{ curr.label }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="city">City:</label>
+              <input type="text" class="form-control" id="city" formControlName="city" placeholder="city" />
+            </div>
+            <div class="form-group col-md-4">
+              <label for="state">State:</label>
+              <input type="text" class="form-control" id="state" formControlName="state" placeholder="State" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-2">
+              <label for="postalCode">Postal Code:</label>
+              <input type="text" class="form-control" id="postalCode" formControlName="postalCode" placeholder="Postal Code" />
+            </div>
+            <div class="form-group col-md-4">
+              <label for="note">Note:</label>
+              <textarea class="form-control" id="note" formControlName="note" placeholder="Note"></textarea>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="note">Cancellation Reason:</label>
+              <textarea class="form-control" id="ccr" formControlName="cancellationReason" placeholder="Cancellation Reason"></textarea>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="note">Tracking Number:</label>
+              <input type="text" class="form-control disabled" id="trackingNumber" formControlName="trackingNumber" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-4">
+              <label for="code">Order Code:</label>
+              <input type="text" class="form-control" id="code" formControlName="code" placeholder="Order Code" />
+            </div>
+            <div class="form-group col-md-4">
+              <label for="currency">Currency:</label>
+      
+              <select class="form-control" formControlName="currency">
+                <option value="0" selected="selected" disabled="disabled">Select Currency</option>
+                <option *ngFor="let curr of currency" [value]="curr.currency">{{ curr.name }} ({{ curr.symbol }})</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-4">
+              <label for="paymentType">Payment Type:</label>
+              <input type="text" class="form-control disabled" id="paymentType" formControlName="paymentType" />
+            </div>
+            <div class="form-group col-md-4">
+              <label for="shipping">Shipping Type:</label>
+              <select class="form-control" formControlName="shippingType">
+                <option value="0" selected="selected" disabled="disabled">Select Shipping</option>
+                <option *ngFor="let curr of shipping" [value]="curr.label">{{ curr.label }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-2">
+              <label for="costPerItem">Cost Per Item:</label>
+              <input type="number" class="form-control disabled" id="costPerItem" formControlName="costPerItem" />
+            </div>
+            <div class="form-group col-md-2">
+              <label for="discountPerItem">Discount Per Item:</label>
+              <input type="number" class="form-control disabled" id="discountPerItem" formControlName="discountPerItem" />
+            </div>
+            <div class="form-group col-md-2">
+              <label for="discount">Discount:</label>
+              <input type="number" class="form-control disabled" id="discount" formControlName="discount" />
+            </div>
+            <div class="form-group col-md-2">
+              <label for="cost">Cost:</label>
+              <input type="number" class="form-control disabled" id="cost" formControlName="cost" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-5">
+              <label for="approveType">Approve Status:</label>
+              <select class="form-control digits"
+              id="exampleFormControlSelect1"
+              formControlName="approveType">
+              <option value="0"
+                      selected="selected"
+                      disabled="disabled">
+                      Select Approve Type
+              </option>
+              <option *ngFor="let item of approveType"
+                      [value]="item">{{approveTypeLabelMapping[item]}} </option>
+               </select>
+            </div>
+
+            <div class="form-group col-md-2">
+              <label for="quantity">Quantity:</label>
+              <input type="number" class="form-control" id="quantity" formControlName="quantity" />
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="form-group col">
+              <label for="pickupAtHome">Pickup At Home:</label>
+              <input type="checkbox" style="margin-left: 10px; margin-bottom: 3px;" class="form-check-input" id="pickupAtHome" formControlName="pickupAtHome" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="saveModal()">Save</button>
+        <button type="button" class="btn btn-primary" (click)="modal.dismiss('Cross click')">Close</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+</div>
+
+
+<!-- 
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <h5>Manage Order</h5>
+        </div>
+        <div class="card-body">
+          <div class="custom-datatable">
+            <form>
+              <div class="mb-3">
+                <input type='text' class="filter-ngx form-control" placeholder='Search...' [(ngModel)]="searchText"
+                  autocomplete="off" />
+              </div>
+            </form>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" sortable="order_id" (sort)="onSort($event)">Order Id</th>
+                  <th scope="col" sortable="product" (sort)="onSort($event)">Payment</th>
+                  <th scope="col" sortable="payment_status" (sort)="onSort($event)">Payment Status</th>
+                  <th scope="col" sortable="paymeny_method" (sort)="onSort($event)">Payment Mehod</th>
+                  <th scope="col" sortable="order_status" (sort)="onSort($event)">Order Status</th>
+                  <th scope="col" sortable="date" (sort)="onSort($event)">Date</th>
+                  <th scope="col" sortable="total" (sort)="onSort($event)">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of tableItem$ | async">
+                  <th scope="row">{{ item.order_id }}</th>
+                  <td>
+                    <span *ngFor="let image of item.product">
+                      <img [src]="image" class="img-30 me-2">
+                    </span>
+                  </td>
+                  <td><span class='badge {{item.payment_class}}'>{{ item.payment_status }}</span></td>
+                  <td>{{ item.paymeny_method }}</td>
+                  <td><span class='badge {{item.order_class}}'>{{ item.order_status }}</span></td>
+                  <td>{{item.date}}</td>
+                  <td>{{item.total}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="d-flex justify-content-between p-2">
+              <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page"
+                [pageSize]="service.pageSize">
+              </ngb-pagination>
+              <select class="form-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
+                <option [value]="10" [selected]="true" [ngValue]="2">2 items per page</option>
+                <option [ngValue]="4">4 items per page</option>
+                <option [ngValue]="6">6 items per page</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+-->

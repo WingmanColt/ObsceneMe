@@ -1,0 +1,141 @@
+<section class="py-10 relative">
+    <div class="container" style="padding-bottom: 500px; padding-top: 500px;">
+
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+
+                <div id="merrywrap" class="merrywrap" [ngClass]="merrywrapClass">
+                    <div class="giftbox" (click)="openBox()">
+                        <div class="cover">
+                            <div></div>
+                        </div>
+                        <div class="box"></div>
+
+                    </div>
+                </div>
+                <app-gift-cards-carousel *ngIf="this.step === 8" [products]="products"></app-gift-cards-carousel>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+<!-- <section class="section-b-space" [class.gift-page]="!this.openGift" [class.gift-page-opened]="this.openGift">
+    
+        <div class="container" style="padding-bottom: 200px; padding-top: 100px;">
+
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                  <div class="gift1" (click)="toggleGift()">
+                  <div class="gift-top" [ngClass]="{'open-animation': openGift, 'close-animation': !openGift}"></div>
+                  <div class="gift-down" [ngClass]="{'down-animation': openGift, 'up-animation': !openGift}"></div>
+                </div>
+
+                
+         <div class="grid">
+       <ul class="list" [ngClass]="{'closed': !openGift, 'open': openGift}">
+           <app-product-box-rounded *ngFor="let card of cards" [product]="null" [ngClass]="card"></app-product-box-rounded>
+            <li *ngFor="let card of cards" [ngClass]="card"></li>
+        </ul>
+        
+              </div
+
+        </div>
+</div>
+
+              <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8">
+                 <app-product-box-rounded *ngFor="let card of cards" [product]="null" [ngClass]="card"></app-product-box-rounded>
+              </div>
+              
+        <div class="row">
+          <div class="col-12 d-flex justify-content-center">
+            <button #bubblyButtons class="bubbly-button" (click)="onClick(bubblyButtons)" [class.fade-in-out]="openGift" [class.active]="openGift">{{'Shuffle' | translate}}</button>
+          </div>
+        </div>
+    </div>
+    </section>  
+        -->
+<!-- <div class="container">
+              <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                  <div class="gift1" (click)="toggleGift()">
+                  <div class="gift-top" [ngClass]="{'open-animation': openGift, 'close-animation': !openGift}"></div>
+                  <div class="gift-down" [ngClass]="{'down-animation': openGift, 'up-animation': !openGift}"></div>
+                </div>
+             </div>
+            </div>
+                    <div class="grid grid-cols gap-8" *ngIf="openGift">
+                       <div class="product-box-rounded">
+                            <img src="https://techzaa.getappui.com/ecard/assets/images/7.jpg" class="rounded-t-2xl" alt="">
+
+                            <div class="mx-5 -mt-20 relative">
+                                <div class="p-6 rounded-2xl bg-white shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]">
+                                    <h4 class="text-lg font-semibold">MIG Turbo</h4>
+                                    <h2 class="text-3xl font-semibold mt-4">$890.00 CAD</h2>
+                                    <div class="flex items-center justify-between gap-6">
+                                        <div class="flex items-center gap-3">
+                                            <i class="ti ti-star-filled text-green-500"></i>
+                                            <p class="text-base font-semibold">4.8 <span class="font-medium text-gray-500">(28 reviews)</span></p>
+                                        </div>
+
+                                        <div class="h-10 w-10 rounded-full flex items-center justify-center text-black bg-gray-100 hover:text-red-500 transition-all duration-500">
+                                            <i class="ti ti-heart text-xl"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="product-box-rounded">
+                            <div class="relative">
+                                <img src="https://techzaa.getappui.com/ecard/assets/images/7.jpg" class="rounded-t-2xl" alt="">
+                                <div class="absolute inset-0 rounded-t-2xl bg-gray-800/5"></div>
+                            </div>
+
+                            <div class="mx-5 -mt-20 relative">
+                                <div class="p-6 rounded-2xl bg-white shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]">
+                                    <h4 class="text-lg font-semibold">Mini-1000</h4>
+                                    <h2 class="text-3xl font-semibold flex flex-wrap items-center mt-4">$680.00 CAD <span class="ms-2 text-sm line-through text-gray-500">$800, 00</span></h2>
+                                    <div class="flex items-center justify-between gap-6">
+                                        <div class="flex items-center gap-3">
+                                            <i class="ti ti-star-filled text-green-500"></i>
+                                            <p class="text-base font-semibold">4.5 <span class="font-medium text-gray-500">(35 reviews)</span></p>
+                                        </div>
+
+                                        <div class="h-10 w-10 rounded-full flex items-center justify-center text-green-500 bg-gray-100 hover:text-green-600 transition-all duration-500">
+                                            <i class="ti ti-heart-filled text-xl"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="product-box-rounded">
+                            <img src="https://techzaa.getappui.com/ecard/assets/images/7.jpg" class="rounded-t-2xl" alt="">
+
+                            <div class="mx-5 -mt-20 relative">
+                                <div class="p-6 rounded-2xl bg-white shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]">
+                                    <h4 class="text-lg font-semibold">DJI Mavic Pro Premium</h4>
+                                    <h2 class="text-3xl font-semibold mt-4">$760.00 CAD</h2>
+                                    <div class="flex items-center justify-between gap-6">
+                                        <div class="flex items-center gap-3">
+                                            <i class="ti ti-star-filled text-green-500"></i>
+                                            <p class="text-base font-semibold">4.2 <span class="font-medium text-gray-500">(46 reviews)</span></p>
+                                        </div>
+
+                                        <div class="h-10 w-10 rounded-full flex items-center justify-center text-black bg-gray-100 hover:text-red-500 transition-all duration-500">
+                                            <i class="ti ti-heart text-xl"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>-->

@@ -1,0 +1,69 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Product Lists</h5>
+                </div>
+                <div class="card-body">
+                    <div id="batchDelete" class="custom-datatable">
+                      <div class="table-responsive">
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th scope="col">#</th>
+                              <th scope="col" sortable="img">Image</th>
+                              <th scope="col" sortable="title">Product Title</th>
+                              <th scope="col" sortable="quantity">Quantity</th>
+                              <th scope="col" sortable="action">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let product of fetchedProducts">
+                              <th scope="row">{{ product.id }}</th>
+                              <td>
+
+                                <img 
+                                [src]="imageUploadService.getImageFull(product?.images[0]?.src, product?.id)"
+                                class="imgTable" 
+                                style="width: 20px" />
+
+                              <td class="product-title">{{ product.title }}</td>
+                              <td>{{ product.quantity }}</td>
+                              <td>
+                                <a [href]="env.webUrl + 'shop/product/info/' + product.id">
+                                  <i class='fa fa-eye f-12'></i>
+                                </a>&nbsp;
+                  
+                                <a [routerLink]="['/products/physical/update-product', product.id]">
+                                  <i class='fa fa-edit f-12'></i>
+                                </a>&nbsp;
+                  
+                                <div class="dropdown-button pull-right mr-2">
+                                  <app-dropdown
+                                    [items]="dropdownActions"
+                                    [multiSelect]="false"
+                                    [searchBar]="false"
+                                    [buttonLabel]="getStatusText(product.status)"
+                                    (selectionChanged)="onActionSelected($event, product.id)">
+                                    <a href="javascript:void(0)">
+                                      <i class='fa fa-list f-12'></i>
+                                    </a>
+                                  </app-dropdown>
+                                </div>
+                  
+                                <a href="javascript:void(0)" (click)="deleteProduct(product.id)">
+                                  <i class="fa fa-trash-o"></i>
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  
+            </div>
+        </div>
+    </div>
+</div>

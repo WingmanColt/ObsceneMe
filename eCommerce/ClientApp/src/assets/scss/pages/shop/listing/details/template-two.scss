@@ -1,0 +1,58 @@
+.product-right {
+    &.Two {
+
+        .input,
+        .textarea {
+            font-size: 1.3rem;
+            padding: 1px 10px;
+            border-bottom: 1px solid #ccc;
+            border-top: 1px solid #ccc;
+        }
+
+        .rating-container {
+            width: auto;
+            display: flex;
+            align-items: center;
+            /* Vertical centering */
+        }
+
+        .star-container {
+            position: relative;
+            width: 1.3rem;
+            /* Matching star size */
+            height: 1.3rem;
+            /* Matching star size */
+        }
+
+        .las.la-star.star,
+        .las.la-star.star-fill {
+            font-size: 1.3rem;
+            line-height: 1.3rem;
+            /* Adjust line height to match font size for vertical centering */
+        }
+
+        .las.la-star.star {
+            color: transparent;
+            /* Making the main star transparent */
+            position: absolute;
+        }
+
+        .las.la-star.star-fill {
+            color: gold;
+            /* Filled color */
+            overflow: hidden;
+            position: absolute;
+            white-space: nowrap;
+            // top: 0;
+            //left: 0;
+        }
+
+        .rating-text {
+            margin-left: 1.5rem;
+            /* Space between star and text */
+            line-height: 1.3rem;
+            /* Adjust line height to match star size for vertical centering */
+            font-weight: 600;
+        }
+    }
+}

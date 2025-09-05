@@ -1,0 +1,30 @@
+
+        <div class="stories-container">
+          <div class="stories-list">
+            
+            <app-simple-slider2 
+            #circleCategoriesSlider 
+            id="CircleCategoriesSlider"
+            *ngIf="sliderConfig.slides?.length"
+            [config]="sliderConfig"
+            [slideTemplate]="CircleCategoriesSlideTemplate"
+            ></app-simple-slider2>
+
+            <ng-template #CircleCategoriesSlideTemplate let-slide="slide" let-index="index">
+              <div class="stories-list__item__container">
+                <div class="stories-list__item" (click)="handleOnClick(slide)">
+                  <div class="stories-list__item__inner">
+
+                    <img 
+                    [lazyLoad]="getCategoryImageUrl(slide)"         
+                    (load)="onImageLoad()"
+                    (error)="onImageError()"
+                    alt="{{ slide.title }}" />
+
+                  </div>
+                </div>
+                <div class="tip stories-list__item__name" [title]="slide?.title | translate">{{ slide?.title | translate }}</div>
+              </div>
+            </ng-template>
+          </div>
+        </div>

@@ -1,0 +1,402 @@
+<!-- Container-fluid starts-->
+<div class="container-fluid">
+        <div class="row">
+                <div class="col-sm-12">
+                        <div class="card">
+                                <div class="card-header">
+                                        <h5>Add Product</h5>
+                                        <app-url-product-fetcher (fetchedDataOutput)="handleFetchDataFromURLChange($event)"></app-url-product-fetcher>
+                                        <button type="button"
+                                                class="btn btn-primary me-1 pull-right"
+                                                (click)="this.clearLocalStorage()">Clear Data</button>
+                                </div>
+                                <div class="card-body">
+                                        <form [formGroup]="productForm" (ngSubmit)="onSubmit()" (keydown.enter)="$event.preventDefault()" class="needs-validation">
+                                                
+                                                <div class="row product-adding">
+                                                        <div class="col-xl-5">
+                                                                <div class="add-product">
+                                                                        <app-image-uploader   
+                                                                        [product]="product"
+                                                                        [imageInputs]="imageInputs"
+                                                                        [productForm]="productForm"
+                                                                        [operation]="operation"
+                                                                        (imageHolderChange)="onImageHolderChange($event)"></app-image-uploader>
+                                                                              
+                                                                        <app-variant-selector *ngIf="variantActive"
+                                                                        [variantInputs]="variantInputs"
+                                                                        [imageHolder]="imageHolder"
+                                                                        [productForm]="productForm"
+                                                                        (imageSelectChange)="onImageSelectChange($event)"
+                                                                        (variantHolderChange)="onVariantHolderChange($event)"></app-variant-selector>
+
+                                                                        <app-bundle-editor 
+                                                                        [product]="this.productById"
+                                                                        (bundleCreated)="onBundleCreated($event)"></app-bundle-editor>
+                                                                </div>
+                                                        </div>
+                                                        <div class="col-xl-7">
+                                                                <div class="add-product-form">
+                                                                        <div class="form-group row">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label for="validationCustom01"
+                                                                                                class="mb-0">{{'Title' | translate}}
+                                                                                                </label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7">
+                                                                                        <input class="form-control"
+                                                                                                id="validationCustom01"
+                                                                                                type="text"
+                                                                                                [formControl]="productForm.controls['title']"
+                                                                                                required />
+                                                                                        <div *ngIf="productForm.controls.title.touched && productForm.controls.title.errors?.required"
+                                                                                                class="text text-danger">
+                                                                                                Title is required.</div>
+                                                                                        <div *ngIf="productForm.controls.title.touched && productForm.controls.title.errors?.minLength"
+                                                                                                class="text text-danger">
+                                                                                                Title must be at least
+                                                                                                {{
+                                                                                                productForm.controls.title.errors?.minLength.requiredLength
+                                                                                                }} characters long.
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label for="validationCustom01"
+                                                                                                class="mb-0">{{'About' | translate }}
+                                                                                                </label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7">
+                                                                                        <input class="form-control"
+                                                                                                id="validationCustom0213"
+                                                                                                type="text"
+                                                                                                [formControl]="productForm.controls['details']"
+                                                                                                required />
+                                                                                        <div *ngIf="productForm.controls.details.touched && productForm.controls.details.errors?.required"
+                                                                                                class="text text-danger">
+                                                                                                About is required.</div>
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label for="validationCustom02"
+                                                                                                class="mb-0">{{'Price' | translate }}
+                                                                                                <small>{{'In BGN' | translate }}</small></label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7">
+                                                                                        <input class="form-control"
+                                                                                                id="validationCustom02"
+                                                                                                type="number"
+                                                                                                [formControl]="productForm.controls['price']"
+                                                                                                required />
+                                                                                </div>
+                                                                                <div *ngIf="productForm.controls.price.touched && productForm.controls.price.errors?.required"
+                                                                                        class="text text-danger">Product
+                                                                                        Price is required.</div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label for="validationCustom02"
+                                                                                                class="mb-0">{{'Discount' | translate }}
+                                                                                                </label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7">
+                                                                                        <input class="form-control"
+                                                                                                id="validationCustom02"
+                                                                                                type="number"
+                                                                                                [formControl]="productForm.controls['discountRate']"
+                                                                                                
+                                                                                                 />
+                                                                                                 <span class="text-danger" *ngIf="productForm.controls.discountRate.value >= productForm.controls.price.value" >Please discountRate Value must below Price !!!</span>
+                                                                                </div>
+                                                                                <div *ngIf="productForm.controls.discountRate.touched && productForm.controls.discountRate.errors?.required"
+                                                                                        class="text text-danger">
+                                                                                        Discount is required.</div>
+                                                                        </div>
+                                                                        <div class="form-group row" *ngIf="genderActive">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label for="exampleFormControlSelect1"
+                                                                                                class="mb-0">{{'Gender' | translate}}
+                                                                                                </label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7">
+                                                                                        <select class="form-control digits"
+                                                                                                id="exampleFormControlSelect1"
+                                                                                                [formControl]="productForm.controls['gender']">
+                                                                                                <option [value]=""
+                                                                                                        selected="selected"
+                                                                                                        disabled="disabled">
+                                                                                                        {{'Select' | translate}} {{'Gender' | translate}}
+                                                                                                </option>
+                                                                                                <option *ngFor="let item of genders"
+                                                                                                        [value]="item">
+                                                                                                        {{
+                                                                                                        genderLabelMapping[item]
+                                                                                                        }} </option>
+                                                                                        </select>
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label for="exampleFormControlSelect1"
+                                                                                                class="mb-0">{{'Market Status' | translate}} </label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7">
+                                                                                        <select class="form-control digits"
+                                                                                                id="exampleFormControlSelect1"
+                                                                                                [formControl]="productForm.controls['marketStatus']">
+                                                                                                <option value="0"
+                                                                                                        selected="selected"
+                                                                                                        disabled="disabled">
+                                                                                                        {{'Select' | translate}} {{'Market Status' | translate}}
+                                                                                                </option>
+                                                                                                <option *ngFor="let item of marketStatus"
+                                                                                                        [value]="item">
+                                                                                                        {{
+                                                                                                        marketStatusLabelMapping[item]
+                                                                                                        }} </option>
+                                                                                        </select>
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="form-group row" *ngIf="trademarkActive">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label for="exampleFormControlSelect1"
+                                                                                                class="mb-0">{{'Manufacter' | translate}}</label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7" >
+                                                                                        
+                                                                                        <select class="form-control"
+                                                                                                id="exampleFormControlSelect15"
+                                                                                                [formControl]="productForm.controls['trademark']">
+                                                                                                <option value=""
+                                                                                                        selected
+                                                                                                        disabled>
+                                                                                                        {{'Select' | translate}} {{'Manufacter' | translate}}
+                                                                                                </option>
+                                                                                                <option *ngFor="let item of trademarks"
+                                                                                                        [value]="item">
+                                                                                                        <img height="50" width="50" [src]="'/assets/images/trademarks/' + trademarkLabelMapping[item] + '.webp'" alt="{{ item }}" />
+                                                                                                        {{ trademarkLabelMapping[item] }} 
+                                                                                                </option>
+                                                                                        </select>
+                                                                                </div>
+                                                                        </div>
+                                                                        <!--<div class="form-group row">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label for="validationCustom03"
+                                                                                                class="mb-0">Video Url
+                                                                                                </label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7">
+                                                                                        <input class="form-control"
+                                                                                                id="validationCustom03"
+                                                                                                type="url"
+                                                                                                [formControl]="productForm.controls['videoUrl']"
+                                                                                                placeholder="Paste video url if avaliable." />
+                                                                                </div>
+                                                                                <div *ngIf="productForm.controls.videoUrl.touched && productForm.controls.videoUrl.errors?.required"
+                                                                                        class="text text-danger">Video
+                                                                                        Url is required.</div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label for="exampleFormControlSelect1"
+                                                                                                class="mb-0">Bundle
+                                                                                                </label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7">
+                                                                                        <app-multi-checkbox-dropdown
+                                                                                                [items]="bundles"
+                                                                                                [buttonLabel]="'Select Bundle'"
+                                                                                                (selectionChanged)="handleBundleChange($event)"></app-multi-checkbox-dropdown>
+                                                                                </div>
+                                                                        </div>-->
+                                                                        <div class="form-group row">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label class="mb-0">{{'Quantity' | translate}} </label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7">
+                                                                                        <div class="qty-box1">
+                                                                                                <div
+                                                                                                        class="input-group">
+                                                                                                        <i class="fa fa-minus btnGtr1"
+                                                                                                                (click)="quantityDecrement()"></i>
+                                                                                                        <input class="touchspin1 text-center"
+                                                                                                                [formControl]="productForm.controls['quantity']" />
+                                                                                                        <i class="fa fa-plus btnLess1"
+                                                                                                                (click)="quantityIncrement()"></i>
+                                                                                                </div>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="form-group row" *ngIf="categoriesActive">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label for="exampleFormControlSelect1"
+                                                                                                class="mb-0">{{'Category' | translate}}</label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7">
+                                                                                        <app-multi-checkbox-dropdown
+                                                                                                [items]="categories"
+                                                                                                [selectedItems]="selectedCategoryItems"
+                                                                                                [buttonLabel]="'Select Categories'"
+                                                                                                [multiSelect]="multiSelectCategory"
+                                                                                                (selectionChanged)="handleCategoryChange($event)"></app-multi-checkbox-dropdown>
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="form-group row"  *ngIf="categoriesActive">
+                                                                                <ng-container>
+                                                                                        <div class="col-xl-3 col-sm-4">
+                                                                                                <label class="mb-0">{{'Sub Category' | translate}}</label>
+                                                                                        </div>
+                                                                                        <div class="col-xl-8 col-sm-7">
+                                                                                                <app-multi-checkbox-dropdown
+                                                                                                        [items]="subCategoryOptions"
+                                                                                                        [selectedItems]="selectedSubCategoryItems"
+                                                                                                        [buttonLabel]="'Select Sub Categories'"
+                                                                                                        [multiSelect]="multiSelectSubCategory"
+                                                                                                        (selectionChanged)="handleSubCategoryChange($event)"></app-multi-checkbox-dropdown>
+                                                                                        </div>
+                                                                                </ng-container>
+                                                                        </div>
+                                                                        <div class="form-group row" *ngIf="brandActive">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label class="mb-0">{{'Brand' | translate}}</label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7">
+                                                                                        <app-multi-checkbox-dropdown
+                                                                                                [items]="brands"
+                                                                                                [selectedItems]="selectedBrandItems"
+                                                                                                [buttonLabel]="'Select Brands'"
+                                                                                                [multiSelect]="multiSelectBrands"
+                                                                                                (selectionChanged)="handleBrandChange($event)"></app-multi-checkbox-dropdown>
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="form-group row" *ngIf="brandActive">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label class="mb-0">{{'Series' | translate}}</label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7">
+                                                                                        <app-multi-checkbox-dropdown
+                                                                                                [items]="brandSeriesOptions"
+                                                                                                [selectedItems]="selectedBrandSeriesItems"
+                                                                                                [buttonLabel]="'Select Series'"
+                                                                                                [multiSelect]="multiSelectBrandSeries"
+                                                                                                (selectionChanged)="handleSeriesChange($event)"></app-multi-checkbox-dropdown>
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="form-group row" *ngIf="brandActive">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label class="mb-0">{{'Sub Brand' | translate}}</label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7">
+                                                                                        <app-multi-checkbox-dropdown
+                                                                                                [items]="subBrandsOptions"
+                                                                                                [selectedItems]="selectedSubBrandItems"
+                                                                                                [buttonLabel]="'Select Sub Brand'"
+                                                                                                [multiSelect]="multiSelectSubBrands"
+                                                                                                (selectionChanged)="handleSubBrandChange($event)"></app-multi-checkbox-dropdown>
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="form-group row" *ngIf="occasionActive">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label class="mb-0">{{'Occasions' | translate}}</label>
+                                                                                </div>
+                                                                                <div class="col-xl-8 col-sm-7">
+                                                                                        <app-multi-checkbox-dropdown
+                                                                                                [items]="occasions"
+                                                                                                [selectedItems]="selectedOccasionItems"
+                                                                                                [buttonLabel]="'Select Occasions'"
+                                                                                                [multiSelect]="true"
+                                                                                                (selectionChanged)="handleOccasionChange($event)"></app-multi-checkbox-dropdown>
+                                                                                </div>
+                                                                        </div>
+                                                                        <div *ngIf="this.productForm">
+                                                                        <div class="form-group row">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label for="validationCustom03"
+                                                                                                class="mb-0">{{'Description' | translate}} </label>
+                                                                                </div>
+                                                                                <div class="col-xl-12 col-sm-10">
+                                                                                        <div class="description-lg">
+                                                                                                <div formGroupName="editorContent">
+                                                                                                        <app-editor [form]="productForm" contentKey="editorContent" (FormChange)="onEditorFormChange($event)">
+                                                                                                        </app-editor>
+                                                                                                      </div>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
+
+                                                                        <div class="form-group row">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label for="validationCustom03"
+                                                                                         class="mb-0">{{'Method Of Use' | translate}} </label>
+                                                                                </div>
+                                                                                <div class="col-xl-12 col-sm-10">
+                                                                                        <div class="description-lg">
+                                                                                                <app-editor [form]="productForm" contentKey="editorContentUsage" (FormChange)="onEditorFormChange($event)"></app-editor>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label for="validationCustom03"
+                                                                                                class="mb-0">{{'Composition' | translate}}</label>
+                                                                                                
+                                                                                </div>
+                                                                                <div class="col-xl-12 col-sm-10">
+                                                                                        <div class="description-lg">
+                                                                                                <app-editor [form]="productForm" contentKey="editorContentComposition" (FormChange)="onEditorFormChange($event)"></app-editor>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                                <div class="col-xl-3 col-sm-4">
+                                                                                        <label for="validationCustom03"
+                                                                                        class="mb-0">{{'Characteristics' | translate}}</label>
+
+                                                                                </div>
+                                                                                <div class="col-xl-12 col-sm-10">
+                                                                                        <div class="description-lg">
+                                                                                                <app-editor  [form]="productForm" contentKey="editorContentCharacteristic" (FormChange)="onEditorFormChange($event)"></app-editor>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                                <div class="form-group row mb-0">
+                                                                        <div class="col-sm-8 offset-xl-3 offset-sm-4">
+                                                                                <div class="product-buttons">
+                                                                                        <input class="form-control"
+                                                                                                type="number"
+                                                                                                [formControl]="productForm.controls['mockProductsCount']" />
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                                
+                                                                <div class="form-group row mb-0">
+                                                                        <div *ngIf="formErrors.length > 0" class="alert alert-danger">
+                                                                                <ul>
+                                                                                  <li *ngFor="let error of formErrors">{{ error }}</li>
+                                                                                </ul>
+                                                                              </div>
+
+                                                                        <div class="col-sm-8 offset-xl-3 offset-sm-4">
+                                                                                <div class="product-buttons">
+                                                                                        <button type="submit"
+                                                                                                class="btn btn-primary me-1">{{'Save' | translate}}</button>
+                                                                                        
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                        </form>
+
+                                 <app-storyteller-editor [productId]="this.productId" (storyChanged)="onStoryChanged($event)"></app-storyteller-editor>
+                                </div>
+                        </div>
+                </div>
+        </div>
+</div>
+<!-- Container-fluid Ends-->

@@ -1,0 +1,14 @@
+<div class="collection-collapse-block" [class.open]="!isCollapsed">
+ <h3 class="collapse-block-title" (click)="toggleCollapse()">{{ title | translate }}</h3>
+ <div class="collection-collapse-block-content">
+   <ul class="collection-checkbox-list use-scrolling">
+     <li
+       class="collection-checkbox-list__item popular"
+       *ngFor="let ent of items"
+       [class.checked]="isSelected(ent)"
+       (click)="onCheckboxChange(ent)">
+       <span>{{ ent.label | translate }}</span>
+     </li>
+   </ul>
+ </div>
+</div>

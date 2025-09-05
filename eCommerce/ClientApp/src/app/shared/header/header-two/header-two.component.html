@@ -1,0 +1,210 @@
+<div [class]="containerClass">
+  <header class="header-two" [ngClass]="class" *ngIf="headerType === 0 || headerType === undefined">
+    <ng-container *ngIf="checkoutSettings.freeShipping">
+      <div class="row">
+        <div class="top-header" *ngIf="isMobile && topbar">
+          <div class="featuresMobile">
+            <span>{{ freeShippingText }}</span>
+          </div>
+        </div>
+
+        <div class="top-header" *ngIf="!isMobile">
+          <div class="col-4 features">
+            <a *ngIf="checkoutSettings.freeShipping">
+              <span>{{ freeShippingText }}</span>
+            </a>
+          </div>
+
+          <div class="actions">
+            <ul class="header-top-list">
+              <li class="header-top-list__item">
+                <a class="header-top-list__link promoted">{{ "-50% Deals" | translate }}</a>
+              </li>
+              <li *ngIf="isPrivacyPageEnabled" class="header-top-list__item">
+                <a class="header-top-list__link" [routerLink]="['/pages/returns-warranty']">{{ "Returns & Warranty" | translate }}</a>
+              </li>
+              <li *ngIf="isFAQPageEnabled" class="header-top-list__item">
+                <a class="header-top-list__link" [routerLink]="['/pages/faq']">{{ "FAQ" | translate }}</a>
+              </li>
+              <li *ngIf="isAboutUsPageEnabled" class="header-top-list__item">
+                <a class="header-top-list__link" [routerLink]="['/pages/aboutus']">{{ "About us" | translate }}</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="lang-project">
+            <a class="header-top-list__link">
+              <span class="link-star">★</span>
+              {{ "Club Member" | translate }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+
+        <app-lazy-loader
+          [lazyComponentType]="SearchBarComponent"
+          [loadOnClick]="true"
+          (lazyComponentVisible)="SearchBarComponentVisible = true">
+        </app-lazy-loader>
+        
+        <ng-template #searchBarContent>
+          <!-- Search Bar -->
+          <app-searchbar (isOpen)="searchBarToggle($event)"></app-searchbar>
+        </ng-template>
+        
+        <!-- Optionally, if you want to conditionally show the cart menu when it's loaded -->
+        <ng-container *ngIf="SearchBarComponentVisible">
+          <ng-container *ngTemplateOutlet="searchBarContent"></ng-container>
+        </ng-container>
+        
+          <div class="main-menu" [class.pt-3]="isMobile">
+            <div class="col-3">
+              <div class="menu-left">
+                 <!--Social Icons On Left-->
+                <app-socialbar></app-socialbar>
+
+                <ul class="topIcons">
+                  <li class="toggle-nav" (click)="baseMenuToggle(undefined)">
+                    <i [ngClass]="{'header-bars sidebar-bar': !isMobileMenuOpen, 'las la-times sidebar-bar': isMobileMenuOpen}"></i>
+                  </li>
+                  <li class="toggle-search" (click)="searchBarToggle(undefined)">
+                    <i class="header-search searchbar-bar"></i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-6 text-center">
+              <div class="brand-logo">
+                <a [routerLink]="['/']">
+                  <h1 class="logoText">{{ settings.webName }}</h1>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-3">
+              <div class="d-flex menu-right flex-row-reverse">
+                <ul class="topIcons d-flex">
+                   <!--User Panel-->
+                  <li class="toggle-user" (click)="userSettingsToggle(undefined)" *ngIf="isAccountSystemEnabled">
+                    <span class="cart_qty_cls" [ngClass]="{ 'dotMobileColorOnBasket': isMobile,'dotColorOnBasket': !isMobile}" role="status">
+                      {{ favourites?.length || undefined }}
+                    </span>
+                    <i class="header-office"></i>
+                  </li>
+
+                   <!--Search-->
+                  <li class="toggle-search" (click)="searchBarToggle(undefined)">
+                    <div class="input-group" *ngIf="isSearchWithInputEnabled">
+                      <i class="header-search searchbar-bar searchbar-icon"></i>
+                      <input type="text" class="form-control search-minimal" [placeholder]="'Search' | translate" />
+                    </div>
+                    <i class="header-search" *ngIf="!isSearchWithInputEnabled"></i>
+                  </li>
+                  
+                   <!--My Cart-->
+                  <li class="toggle-cart" (click)="cartMenuToggle()">
+                    <span class="cart_qty_cls" [ngClass]="{ 'dotMobileColorOnBasket': isMobile,'dotColorOnBasket': !isMobile}" role="status">
+                      {{ cartLength || undefined }}
+                    </span>
+                    <i class="header-basket"></i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+              <app-lazy-loader
+                [lazyComponentType]="MobileMenuComponent"
+                [loadOnClick]="true"
+                (lazyComponentVisible)="MobileMenuComponentVisible = true">
+              </app-lazy-loader>
+              
+              <ng-template #mobileMenuContent>
+                <!--Mobile Nav Menu Black-->
+                <app-menu></app-menu>
+              </ng-template>
+              
+              <!-- Optionally, if you want to conditionally show the cart menu when it's loaded -->
+              <ng-container *ngIf="MobileMenuComponentVisible">
+                <ng-container *ngTemplateOutlet="mobileMenuContent"></ng-container>
+              </ng-container>
+
+
+              <app-lazy-loader
+              [lazyComponentType]="CartMenuComponent"
+              [loadOnClick]="true"
+              (lazyComponentVisible)="CartMenuComponentVisible = true">
+            </app-lazy-loader>
+            
+            <ng-template #cartMenuContent>
+              <!-- My Basket -->
+              <app-cart-menu></app-cart-menu>
+            </ng-template>
+            
+            <!-- Optionally, if you want to conditionally show the cart menu when it's loaded -->
+            <ng-container *ngIf="CartMenuComponentVisible">
+              <ng-container *ngTemplateOutlet="cartMenuContent"></ng-container>
+            </ng-container>
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-menu">
+        <div class="row">
+          <div class="col-12">
+            <app-menu-basic></app-menu-basic>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <header class="sticky" 
+    [ngClass]="headerClasses" 
+    [ngClass]="{ 'searchHeader-white': !searchHeaderWhiteColor }" 
+    *ngIf="headerType === 1">
+      
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-11">
+          <app-searchbarSimple (isOpen)="searchBarToggle($event)"></app-searchbarSimple>
+        </div>
+        <div class="col-1">
+          <div class="topIcons d-flex">
+
+             <!--Use Panel-->
+            <li class="toggle-user" (click)="userSettingsToggle()" *ngIf="isAccountSystemEnabled">
+              <span class="cart_qty_cls" [ngClass]="{ 'dotMobileColorOnBasket': isMobile,'dotColorOnBasket': !isMobile}" role="status">
+                {{ favourites?.length || undefined }}
+              </span>
+              <i class="header-office"></i>
+            </li>
+
+             <!--Search-->
+            <li class="toggle-search" (click)="searchBarToggle()">
+              <div class="input-group" *ngIf="isSearchWithInputEnabled">
+                <i class="header-search searchbar-bar searchbar-icon"></i>
+                <input type="text" class="form-control search-minimal" [placeholder]="'Search' | translate" />
+              </div>
+              <i class="header-search" *ngIf="!isSearchWithInputEnabled"></i>
+            </li>
+
+            <!--My Cart-->
+            <li class="toggle-cart" (click)="cartMenuToggle()">
+              <span *ngIf="isActiveDot" class="cart_qty_cls" [ngClass]="{ 'dotMobileColorOnBasket': isMobile,'dotColorOnBasket': !isMobile}" role="status">
+                {{ cartLength || undefined }}
+              </span>
+              <i class="header-basket"></i>
+            </li>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+</div>

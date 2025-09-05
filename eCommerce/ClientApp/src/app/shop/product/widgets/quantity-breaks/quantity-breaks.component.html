@@ -1,0 +1,78 @@
+<div class="quantity-breaks container mb-3rem" *ngIf="baseProduct.bundle?.bundleItems?.length > 0">
+  <h3 class="quantity-breaks__title d-flex align-items-center text-center">
+    <span class="line"></span>
+    <span class="mx-3 text-default">{{ 'Get more and save!' | translate }}</span>
+    <span class="line"></span>
+  </h3>
+
+  <div class="row g-3">
+    <div class="col-6 col-md-6" *ngFor="let item of baseProduct.bundle.bundleItems; let i = index">
+      <input
+        class="d-none"
+        type="radio"
+        name="bundleItem"
+        [id]="'bundleItem' + i"
+        [checked]="item.checked"
+      />
+
+      <label
+        [for]="'bundleItem' + i"
+        class="card h-100 p-2"
+        [ngClass]="{
+          'border-black': item.checked,
+          'no-border-black': !item.checked
+        }"
+        (click)="toggleSelection(item)"
+      >
+        <img
+          [src]="item.imageSrc || ''"
+          [alt]="item.title || 'Bundle Item'"
+          class="card-img-top img-fluid quantity-break-img"
+        />
+
+        <div class="card-body text-center p-2">
+          <h6 class="card-title mb-1" *ngIf="item.title">{{ item.title }}</h6>
+          <span
+            *ngIf="getBenefitLabel(item.price)"
+            class="quantity-break__benefit"
+            [attr.data-text]="getBenefitLabel(item.price)"
+          >
+            {{ getBenefitLabel(item.price) }}
+          </span>
+
+          <p class="card-text mb-1">
+            {{ 'You Save' | translate }}<br />
+            
+            <small class="text-danger">
+            {{
+              baseService.calcCurrency(
+                ((baseProduct?.price - baseProduct?.discountRate)  * item.quantity) - item?.price
+              ) | asCurrency : baseService.activeCurrency
+            }}
+            </small>
+          </p>
+
+          <p class="card-text text-purple mb-1">
+            <strong>
+              {{
+                baseService.calcCurrency(item?.price - item?.discountRate)
+                | asCurrency : baseService.activeCurrency
+              }}
+            </strong>
+          </p>
+
+          <p class="card-text mb-1">
+              {{ 'Original Price' | translate }}<br />
+            <del class="text-danger">
+              {{
+                baseService.calcCurrency(
+                  (baseProduct?.price - baseProduct?.discountRate) * item.quantity
+                ) | asCurrency : baseService.activeCurrency
+              }}
+            </del>
+          </p>
+        </div>
+      </label>
+    </div>
+  </div>
+</div>

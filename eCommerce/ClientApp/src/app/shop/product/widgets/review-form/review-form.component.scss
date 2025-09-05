@@ -1,0 +1,52 @@
+.rating-container {
+ width: 98%;
+ border: 1px solid #000;
+ border-radius: 10px;
+ margin-top: 10px;
+ margin-right: auto !important;
+ margin-left: auto !important;
+}
+.bar-rating-container {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ .bar-text {
+  margin-bottom: 10px; /* spacing */
+ }
+}
+.reviewForm-container{
+.float-input-group {
+    padding-bottom: 3%;
+}
+}
+
+/* Style for the input group */
+.float-input-group {
+    position: relative;
+}
+
+.float-input-group[readonly] {
+    border-color: #1db107 !important;
+    cursor: not-allowed; 
+}
+  
+  /* Styling for the icon */
+  .file-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+  }
+  
+  /* Optional: Add some styling to make it look consistent */
+  input[type="text"] {
+    padding-right: 40px; /* Make room for the icon */
+  }
+  
+  /* Optional: Make the icon look more clickable */
+  .file-icon:hover {
+    color: #007bff;
+  }
+  

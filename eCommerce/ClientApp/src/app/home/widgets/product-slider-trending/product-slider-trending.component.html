@@ -1,0 +1,9 @@
+
+<app-simple-slider2 *ngIf="sliderConfig.slides?.length"
+[config]="sliderConfig"
+[slideTemplate]="SimpleSlideTemplate"></app-simple-slider2>
+
+<ng-template #SimpleSlideTemplate let-slide="slide" let-index="index">
+ <app-product-base [template]="settings.trendingsOneCardTemplate" [product]="slide"></app-product-base>
+</ng-template>
+

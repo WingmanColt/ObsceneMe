@@ -1,0 +1,65 @@
+<div class="simple-slider-list__item banner simple-slider-list__item_action">
+       
+ <div class="action-item_quote-banner">
+
+   <a class="action-item-quote__link" [routerLink]="['/shop/product/',  productReviewCard.productId]" target="_blank">
+     <div class="simple-slider-list__image-wrapper">
+       <div class="simple-slider-list__image">
+        
+        <div class="center-body" style="position: absolute;" *ngIf="imageLoading == 1">
+         <div class="circle-loader"></div>
+        </div>
+
+        <img 
+        [src]="productReviewCard.reviewImage?.length > 0 ? getImageSrc(productReviewCard.reviewImage) : getImageSrc(productReviewCard.productImageUrl)"
+        [alt]="productReviewCard.productTitle"
+        class="lazy-loading"
+        (load)="onImageLoad()"
+        (error)="onImageError()" />
+
+       </div>
+       <div class="simple-slider-list__image-bg"></div>
+     </div>
+     <div class="simple-slider-list__quote">
+       <div class="simple-slider-list__name">
+           {{  productReviewCard.reviewComment }}
+       </div>
+       <div class="simple-slider-list__author">{{  productReviewCard.firstName }}</div>
+     </div>
+   </a>
+
+   <div class="info-product-wrapper">
+     <a class="tip simple-slider-list__name" [routerLink]="['/shop/product/',  productReviewCard.productId]" target="_blank">
+       {{ productReviewCard.productTitle}}
+     </a>
+      <div class="simple-slider-list__description">{{ productReviewCard.productAbout}}</div>
+
+      <!--
+    <div class="sponsored-tooltip sponsored-tooltip_banner" *ngIf=" productReviewCard.adStatus == 1">
+        Спонсорирано
+       <div class="sponsored-tooltip__content">Този продукт е популяризиран чрез услугата ни MAKEUP Ads. Научете повече за нашата <a href="https://makeup.bg/ads/">рекламна програма</a></div>
+     </div>-->
+     
+     <div class="simple-slider-list__bottom">
+       <div class="simple-slider-list__reviews">
+        <app-review-stars [productRating]=" productReviewCard.reviewRating" [maxStars]="5" [ratingVotes]=" productReviewCard.reviewRatingVotes"></app-review-stars>                  
+       </div>
+
+      <div class="simple-slider-list__price_container" *ngIf=" productReviewCard.productDiscountRate > 0">
+          <span class="simple-slider-list__price product-item__price_red">
+              <span class="price_item">{{ baseService.calcCurrency( productReviewCard.productPrice -  productReviewCard.productDiscountRate) | asCurrency : baseService.activeCurrency }}</span>
+          </span>
+          <span class="simple-slider-list__price_old">
+              <span class="price_item">{{ baseService.calcCurrency( productReviewCard.productPrice) | asCurrency : baseService.activeCurrency }}</span>
+          </span>
+      </div>
+      <div class="simple-slider-list__price_container" *ngIf=" productReviewCard.productDiscountRate <= 0">
+          <span class="simple-slider-list__price">
+              <span class="price_item">{{ baseService.calcCurrency( productReviewCard.productPrice) | asCurrency : baseService.activeCurrency }}</span>
+          </span>
+      </div>
+     </div>
+   </div>
+ </div>
+
+</div>

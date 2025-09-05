@@ -1,0 +1,33 @@
+<ng-template class="size-modal" #sizeChart let-modal>
+ <div class="modal-content">
+  <div class="modal-header">
+   <button type="button" class="close border-0" (click)="modal.dismiss('Cross click')">
+    <i class="las la-times-circle"></i>
+   </button>
+  </div>
+  <div class="modal-body" *ngIf="!detailsSettings.sizeChartTable.tableActive">
+   <img [ngSrc]="detailsSettings.sizeChartImage" fill />
+  </div>
+  <div class="modal-body" *ngIf="detailsSettings.sizeChartTable.tableActive">
+   <table>
+    <tbody>
+     <tr>
+      <th *ngFor="let heading of detailsSettings.sizeChartTable.sizeChartHeading" colspan="{{ heading.colspan }}">{{ heading.Title }}</th>
+     </tr>
+
+     <tr *ngFor="let body of detailsSettings.sizeChartTable.sizeChartBody">
+      <td>{{ body.Text }}</td>
+      <td>{{ body.TextFull }}</td>
+      <td>{{ body.Text2 }}</td>
+      <td>{{ body.Text3 }}</td>
+      <td>{{ body.Text4 }}</td>
+      <td>{{ body.Text5 }}</td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="modal-footer" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+   {{ "Ok" | translate }}
+  </div>
+ </div>
+</ng-template>

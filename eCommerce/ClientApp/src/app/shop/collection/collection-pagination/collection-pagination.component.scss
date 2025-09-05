@@ -1,0 +1,31 @@
+
+.ajax-loadable-slider {
+ min-height: 200px;
+}
+.section-mobile-space {
+ padding-bottom: unset;
+ padding-top: unset;
+}
+
+.filter-base {
+ position: relative;
+ height: 40px;
+ display: inherit;
+}
+
+.button_secondary {
+ width: 300px;
+ color: #212121;
+ border: 1px solid #212121;
+ background: #fff;
+
+ &.disabled, &:disabled {
+  cursor: default;
+  color: #b3b3b3;
+  border: 1px solid #b3b3b3;
+}
+}
+
+.mr-2 {
+ margin-right: 2rem;
+}

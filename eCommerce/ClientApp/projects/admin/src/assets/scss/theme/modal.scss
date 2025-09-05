@@ -1,0 +1,42 @@
+.EditModal {
+.modal-xxl {
+ --bs-modal-width: 70vw; /* Override the Bootstrap modal width */
+ --bs-modal-height: 50vh; /* Override the Bootstrap modal width */
+
+ max-width: var(--bs-modal-width); /* Set the width to 70% of the viewport width */
+ max-height: var( --bs-modal-height); /* Set the height to 60% of the viewport height */
+
+ margin-left: auto;
+ margin-right: auto;
+}
+
+.modal-dialog-centered {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ min-height: calc(100vh - 1rem); /* Ensure it's centered vertically */
+}
+
+.edit-dialog {
+ width: var(--bs-modal-width); /* Set the width to 70% of the viewport width */
+ height: var( --bs-modal-height); /* Set the height to 60% of the viewport height */
+
+ margin-left: auto;
+ margin-right: auto;
+}
+
+.modal-content {
+ width: var(--bs-modal-width); /* Set the width to 70% of the viewport width */
+ height: calc(100vh - 1rem); /* Ensure the modal content fills the modal-dialog height */
+
+ max-height: 100%; /* Ensure it doesn’t exceed modal-dialog height */
+ overflow-y: auto; /* Make modal scrollable if content overflows */
+}
+
+.modal-body {
+ display: flex;
+ flex-direction: column;
+ align-items: center; /* Center the content inside the modal */
+}
+
+}

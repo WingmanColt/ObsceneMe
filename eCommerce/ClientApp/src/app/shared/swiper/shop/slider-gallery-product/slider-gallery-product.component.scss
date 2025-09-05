@@ -1,0 +1,7 @@
+::ng-deep  #ProductGalleryMainSlider {
+  .slider {
+  max-width: 407px;
+  max-height: 510px;
+  touch-action: pan-y; /* allow vertical scrolling, block horizontal */
+  } 
+}

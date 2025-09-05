@@ -1,0 +1,33 @@
+<div class="private-office-wish-list">
+  <h2>{{ 'Favorites list' | translate }}</h2>
+
+  <app-loading *ngIf="isLoading"></app-loading>
+
+  <ng-container *ngIf="!isLoading && hasData">
+    <div class="private-office-wish-list-wrap">
+      <div class="private-office__wish-list-wrap">
+        <ul class="product-list private-office-type">
+          <div
+            class="col-xxl-4 col-xl-4 col-lg-3 col-md-3 col-sm-4 col-xs-2 col-6"
+            *ngFor="let product of favProducts$ | async; let i = index">
+            <app-product-base
+              [template]="deviceDetector.isDevice('Mobile') ? settings.cardTemplateMobile : settings.cardTemplate"
+              [product]="product"
+              [class]="i % 2 === 1 ? 'unique-card' : ''">
+            </app-product-base>
+          </div>
+        </ul>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading && !hasData">
+    <div class="private-office__wish-list-wrap">
+      <ul class="order-list">
+        <li class="order-list__item empty">
+          <span>{{ 'You have no favorite products.' | translate }}</span>
+        </li>
+      </ul>
+    </div>
+  </ng-container>
+</div>

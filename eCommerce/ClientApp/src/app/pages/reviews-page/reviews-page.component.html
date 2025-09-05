@@ -1,0 +1,204 @@
+<section class="page-section reviews-section">
+  <a id="reviews-section" class="scroll-anchor"></a>
+  <a id="new_reviews" class="scroll-anchor"></a>
+
+  <div class="container reviews-container">
+    <h2 class="page-section-title clearfix text-center">
+      {{ "Rating & Reviews" | translate }}
+    </h2>
+    <hr />
+    <div class="reviews-general-rating pad-sep-xs">
+      <div class="text-center">
+        <p class="review-rating-data">{{ averageRating?.toFixed(2) }}</p>
+        <div class="review-rating-stars justify-content-center">
+          <bar-rating [(rate)]="averageRating" [max]="5" [readOnly]="true" [showText]="false">
+            <ng-template ratingActive>
+              <i class="las la-star fill"></i>
+            </ng-template>
+            <ng-template ratingInactive>
+              <i class="lar la-star"></i>
+            </ng-template>
+          </bar-rating>
+        </div>
+        <p class="small semibold font-size-sm text-muted">{{ reviews?.length }} {{ "Reviews" | translate }}</p>
+      </div>
+      <div>
+        <div class="reviews-summary-container">
+          <div class="reviews-summary-bars" *ngFor="let item of StarsArray; index as i">
+            <a class="star-title">{{ i + 1 }} {{ "Stars" | translate }}</a>
+            <a>
+              <div class="progress">
+                <div class="progress-bar" [style.width.%]="item"></div>
+              </div>
+            </a>
+            <a class="star-title">(<small>{{ item }}</small>)</a>
+          </div>
+        </div>
+      </div>
+      <div class="mobile-flex-split"></div>
+      <div class="verified-reviews">
+        <p class="text-center"><i class="las la-user-check la-2x text-success"></i></p>
+        <p class="semibold">{{ reviews?.length }}</p>
+        <p class="text-muted text-center">{{ "Customer reviews" | translate }}</p>
+      </div>
+      <div class="vsep"></div>
+      <div class="recommending-reviews js-recommending-reviews">
+        <p class="text-center"><i class="las la-thumbs-up la-2x text-primary"></i></p>
+        <p class="semibold">{{ positiveRating }}%</p>
+        <p class="text-muted text-center">{{ "Positive reviews" | translate }}</p>
+      </div>
+      <div class="ask-review text-xs-center text-sm-left hidden-xs hidden-sm">
+        <div class="reviews-own-box relative">
+          <p class="title">
+            {{ "You have the product or have used it?" | translate }}
+          </p>
+          <p class="text-gray">{{ "Choose a star to rate the product" | translate }}</p>
+
+          <a *ngIf="detailsSettings.reviewType == 'Modal'" (click)="openReviewModal()" class="btn btn-large btn-dark btn-sm leave-comment">
+            {{ "Leave a comment / Ask a question" | translate }}
+          </a>
+          <a *ngIf="detailsSettings.reviewType == 'Collapse'" (click)="openReviewCollapse()" class="btn btn-large btn-dark btn-sm leave-comment">
+            {{ "Leave a comment / Ask a question" | translate }}
+          </a>
+        </div>
+      </div>
+    </div>
+        <hr />
+    <app-jdgm-widget [reviews]="reviews"></app-jdgm-widget>
+    <div class="container review-forms" [class.active]="reviewFormCollapse">
+      <app-review-form [isMobile]="isMobile" [isModal]="false"></app-review-form>
+    </div>
+
+<div class="product-conversations-list">
+  <!-- <h2 class="products-related-title">{{ "Comments" | translate }}</h2>-->
+  <div class="product-review-item row"
+    *ngFor="let review of reviewsList">
+    <div class="col-md-2">
+      <div class="product-review-head">
+        <div class="product-review-user-avatar">
+          <div class="thumb"
+            [ngStyle]="{ 'background-color': review.colour }">
+            <div class="thumb-text">{{ review.firstName?.substring(0, 1) }} {{ review.lastname?.substring(0, 1) }}</div>
+          </div>
+        </div>
+        <div class="product-review-user-meta pt-2"
+          [ngStyle]="{ 'vertical-align': isMobile ? 'unset' : 'middle' }">
+          <p class="product-review-author mrg-top-xs semibold">{{ review?.firstName }} {{ review?.lastName }}</p>
+          <p class="small text-muted date">{{ review.formattedCreatedOn }}</p>
+        </div>
+        <p class="verified-order mobile-only">
+          <i class="las la-user-check la-1x text-success"></i>&nbsp;<span class="semibold"
+            *ngIf="!isMobile">{{ "Verified" | translate }} {{ "Client" | translate }}</span>
+        </p>
+      </div>
+
+  <div class="review-header mt-3">
+    <div class="review-product-avatar">
+      <div class="center-body" style="position: absolute;" *ngIf="imageLoading == 1">
+        <div class="circle-loader"></div>
+      </div>
+      <img *ngIf="review.productImageUrl !== undefined"
+           [src]="review.productImageUrl?.length > 0 ? getImageSrc(review.productImageUrl) : defaultImage"
+           [alt]="alt"
+           class="img-thumbnail rounded lazy-loading"
+           (load)="onImageLoad()"
+           (error)="onImageError()" />
+    </div>
+
+    <div class="review-text-container">
+      <a [routerLink]="['/shop/product/info', review.productId]" class="review-title-link">
+        <p class="review-title semibold m-0">
+          {{ review?.productTitle?.substring(0, 18) }}
+        </p>
+      </a>
+    </div>
+  </div>
+
+    </div>
+    <div class="col-md-10">
+      <div class="product-review-body">
+        <h3 class="product-review-title">
+          <a>{{ this.onRateChange(review.productStars) | translate }}</a>
+        </h3>
+        <div class="star-rating-container">
+          <bar-rating [(rate)]="review.productStars"
+            [max]="5"
+            [readOnly]="true"
+            [showText]="false"
+            style="--br-font-size: 0.8em">
+            <ng-template ratingActive>
+              <i class="las la-star fill"></i>
+            </ng-template>
+            <ng-template ratingInactive>
+              <i class="lar la-star"></i>
+            </ng-template>
+          </bar-rating>
+          <p class="verified-order desktop-only">
+            <i class="las la-user-check la-1x text-success"></i>&nbsp;<span class="semibold">{{ "Verified" | translate
+              }} {{ "Client" | translate }}</span>
+          </p>
+        </div>
+        <br />
+        <div class="review-body-container"> {{ review?.reviewComment }} </div>
+        <br />
+        <div class="center-body" style="position: absolute;" *ngIf="imageLoading == 1">
+          <div class="circle-loader"></div>
+        </div>
+        <img *ngIf="review.reviewImage !== undefined"
+                [src]="review.reviewImage?.length > 0 ? getImageSrc(review.reviewImage) : defaultImage"
+                [alt]="alt"
+                class="img-thumbnail rounded lazy-loading"
+                style="width: 150px; height: 150px; object-fit: cover;"
+                (load)="onImageLoad()"
+                (error)="onImageError()" />
+      </div>
+    </div>
+  </div>
+
+     <div class="product-pagination"
+    *ngIf="reviewsList?.length">
+    <div class="theme-paggination-block">
+        <div class="container-fluid p-0">
+            <div class="row">
+                <div class="col-xl-12 col-md-12 col-sm-12">
+                    <nav>
+                        <ul class="pagination justify-content-center mx-auto"
+                            *ngIf="reviewsList.pages && reviewsList.pages.length">
+                            <li class="page-item"
+                                [ngClass]="{disabled:reviewsList.currentPage === 1}">
+                                <a class="page-link"
+                                    (click)="pageSet(1)"
+                                    aria-label="Previous">
+                                    <span aria-hidden="true"><i class="las la-angle-double-left"></i></span>
+                                    <span class="sr-only">{{'Previous' | translate}}</span>
+                                </a>
+                            </li>
+                            <li class="page-item active"
+                                *ngFor="let page of reviewsList.pages"
+                                [ngClass]="{ active: reviewsList.currentPage == page }">
+                                <a class="page-link"
+                                    (click)="pageSet(page)">{{ page }}</a>
+                            </li>
+                            <li class="page-item"
+                                [ngClass]="{ disabled: reviewsList.currentPage == reviewsList.totalPages }">
+                                <a class="page-link"
+                                    (click)="pageSet(reviewsList.totalPages)"
+                                    aria-label="Next">
+                                    <span aria-hidden="true"><i class="las la-angle-double-right"></i></span>
+                                    <span class="sr-only">{{'Next' | translate}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  </div>
+
+
+<app-story-gallery></app-story-gallery>
+</div>
+

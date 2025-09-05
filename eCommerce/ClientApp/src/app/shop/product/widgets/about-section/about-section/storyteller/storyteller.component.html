@@ -1,0 +1,185 @@
+<!-- Loading Indicator -->
+<div *ngIf="isLoading" class="text-center py-5">
+  <p>Loading story...</p>
+</div>
+
+<!-- Full Custom HTML Mode -->
+<div *ngIf="!isLoading && storyPage?.html && storyPage?.html.length > 10" class="container-xxl g-0" style="max-width: 1600px;">
+  <div class="row">
+    <div class="col-12 mx-auto" [class.col-10]="isMobile">
+      <div class="rich-theme" [class.theme-dark]="storyPage.style" [innerHTML]="htmlPreview"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Block-Based Mode -->
+<div *ngIf="!isLoading && (!storyPage?.html || storyPage?.html?.trim().length <= 10)" class="container-xxl g-0" style="max-width: 1600px;">
+  <div class="row">
+    <div class="col-12 mx-auto" [class.col-10]="isMobile">
+      <div class="rich-theme" [class.theme-dark]="storyPage?.style">
+        <ng-container *ngFor="let block of storyBlocks">
+
+          <!-- TITLE -->
+          <section *ngIf="block.type === 'title'" class="rich-text story-block">
+            <div class="rich-text__wrapper">
+              <div class="rich-text__blocks left">
+                <h2 class="rich-text__heading rte">{{ block.heading | translate }}</h2>
+              </div>
+            </div>
+          </section>
+
+          <!-- TEXT -->
+          <section *ngIf="block.type === 'text'" class="rich-text story-block">
+            <div class="rich-text__wrapper">
+              <div class="rich-text__blocks left">
+                <h2 *ngIf="block.heading" class="rich-text__heading rte">{{ block.heading | translate }}</h2>
+                <div class="rich-text__text rte">
+                  <p *ngFor="let line of block.content">{{ line | translate }}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- IMAGE LEFT -->
+          <section *ngIf="block.type === 'image-left'" class="rich-text container py-5 story-block">
+            <div class="row align-items-center">
+              <div class="col-12 col-md-6">
+                <div class="p-3">
+                  <img [src]="block.image" class="img-fluid rounded" alt="Image Left" />
+                </div>
+              </div>
+              <div class="col-12 col-md-5 offset-md-1 mt-3 mt-md-0">
+                <h2 *ngIf="block.heading" class="rich-text__heading rte">{{ block.heading | translate }}</h2>
+                <div class="rich-text__text rte">
+                  <p *ngFor="let line of block.content">{{ line | translate }}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- IMAGE RIGHT -->
+          <section *ngIf="block.type === 'image-right'" class="rich-text container py-5 story-block">
+            <div class="row align-items-center">
+              <div class="col-12 col-md-5 offset-md-1">
+                <h2 *ngIf="block.heading" class="rich-text__heading rte">{{ block.heading | translate }}</h2>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="p-3">
+                  <img [src]="block.image" class="img-fluid rounded" alt="Image Right" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+<!-- VIDEO -->
+<section *ngIf="block.type === 'video'" class="rich-text container py-5 story-block">
+  <div class="row align-items-center">
+    <!-- Centered Heading -->
+    <div class="col-12 mb-3">
+      <h2 *ngIf="block.heading" class="rich-text__heading rte text-center text-uppercase fw-bold">
+        {{ block.heading | translate }}
+      </h2>
+    </div>
+
+    <!-- Video content -->
+    <div class="col-12 d-flex justify-content-center">
+      <div class="p-3" style="max-width: 720px; width: 100%;">
+        <!-- Video thumbnail + custom play button -->
+        <div
+          class="video-wrapper position-relative cursor-pointer"
+          *ngIf="!block.isPlaying"
+          (click)="playVideo(block)"
+          tabindex="0"
+          role="button"
+          aria-label="Play video"
+          (keydown.enter)="playVideo(block)"
+          (keydown.space)="playVideo(block)"
+        >
+          <img
+            [src]="block.thumbnail || getYouTubeThumbnail(block.videoUrl)"
+            class="img-fluid rounded shadow"
+            alt="Video thumbnail"
+            loading="lazy"
+          />
+          <button
+            class="internal-video__play position-absolute top-50 start-50 translate-middle border-0 bg-transparent p-0"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+            <div class="play-button color-accent-1 ripple-animation">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 14" fill="currentColor" width="64" height="64">
+                <path d="M1.48.81C.82.45 0 .93 0 1.69v10.52c0 .78.86 1.26 1.53.85l9.01-5.56c.65-.4.63-1.36-.04-1.73L1.48.81Z" />
+              </svg>
+            </div>
+          </button>
+        </div>
+
+        <!-- Inject iframe on play -->
+        <div class="video-wrapper" *ngIf="block.isPlaying">
+          <iframe
+            [src]="getSafeVideoUrl(block.videoUrl)"
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            width="100%"
+            height="400"
+            class="rounded shadow"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+          <!-- LIST -->
+          <section *ngIf="block.type === 'list'" class="rich-text story-block">
+            <div class="rich-text__wrapper">
+              <div class="rich-text__blocks left">
+                <div class="rich-text__text rte">
+                  <p>
+                    <strong>
+                      <span *ngFor="let item of block.content">
+                        ✅ {{ item | translate }}<br />
+                      </span>
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- NOTES -->
+          <section *ngIf="block.type === 'notes'" class="rich-text story-block">
+            <div class="rich-text__wrapper">
+              <div class="rich-text__blocks left">
+                <h4 class="rich-text__heading rte">{{ block.heading | translate }}</h4>
+                <div class="rich-text__text rte">
+                  <strong>
+                    <span *ngFor="let note of block.content">{{ note | translate }}<br /></span>
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- CUSTOM HTML -->
+          <section *ngIf="block.type === 'custom'" class="rich-text story-block">
+            <div class="rich-text__wrapper">
+              <div class="rich-text__blocks left" [innerHTML]="block.customHtml"></div>
+            </div>
+          </section>
+
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- No Content Message -->
+<div *ngIf="!isLoading && storyBlocks.length === 0 && (!storyPage?.html || storyPage.html.length <= 10)" class="text-center py-5">
+  <p>No story found for this product.</p>
+</div>

@@ -1,0 +1,31 @@
+<!--modal popup start-->
+<ng-template class="auth-modal" #authModal let-modal>
+    <div class="login-card">
+    <button type="button" class="close border-0" (click)="modal.dismiss('Cross click')">
+        <i class="las la-times-circle"></i>
+    </button>
+   
+        <div class="modal-body" *ngIf="pageName === 'LoginPage' && !currentUser?.isAuthenticated">
+            <app-modal-auth-login (UserData)="handleUserData($event)" (pageChange)="switchPage($event)"
+                (CloseModal)="CloseModal()"></app-modal-auth-login>
+        </div>
+
+        <div class="modal-body"
+            *ngIf="pageName === 'RegisterPage' && !currentUser?.isAuthenticated">
+            <app-modal-auth-register (UserData)="handleUserData($event)" (pageChange)="switchPage($event)"
+                (CloseModal)="CloseModal()"></app-modal-auth-register>
+        </div>
+
+        <div class="modal-body"
+            *ngIf="pageName === 'VerificationPage' || (currentUser?.isAuthenticated && !currentUser?.isEmailConfirmed)">
+            <app-verification-sent [userData]="userData" (pageChange)="switchPage($event)"
+                (CloseModal)="CloseModal($event)"></app-verification-sent>
+        </div>
+
+        <div class="modal-body" *ngIf="pageName === 'ResponsePage'">
+            <app-modal-auth-response  (pageChange)="switchPage($event)"
+                (CloseModal)="CloseModal()"></app-modal-auth-response>
+        </div>
+    </div>
+</ng-template>
+

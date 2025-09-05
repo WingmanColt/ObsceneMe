@@ -1,0 +1,27 @@
+<div class="dropdown">
+   <button class="dropdown-button"
+     type="button"
+     class="custom-button"
+     [ngStyle]="{ 'height': calculateMaxHeight() + 'px' }"
+     (click)="toggleDropdown()">
+     {{ selectedTitles.length > 0 ? selectedTitles.join(', ') : buttonLabel }} &#9662;
+   </button>
+   <div class="dropdown-content"
+     [ngClass]="{ 'show': isOpen }">
+     <input type="text"
+       placeholder="Search ..."
+       [(ngModel)]="searchQuery"
+       (ngModelChange)="onSearch($event)"
+       class="search-input">
+     <div *ngFor="let item of filteredItems">
+       <label class="checkbox-label">
+         <input type="checkbox"
+           [id]="'checkbox-' + item.id"
+           [(ngModel)]="item.isSelected"
+           (change)="onItemChange(item)" />
+         {{ item.title }}
+       </label>
+     </div>
+   </div>
+ </div>
+ 

@@ -1,0 +1,32 @@
+<form class="pt-3" [formGroup]="checkoutForm" (ngSubmit)="onSubmit(this.checkoutForm?.value)">
+ <div class="row">
+  <div class="col-7 desktop-only">
+   <div class="input-group fast-order mb-3">
+    <input type="text" class="form-control" [placeholder]="'Write Phone Number' | translate" [formControl]="checkoutForm?.controls['phone']" />
+    <div class="input-group-append">
+     <button class="btn btn-outline-dark" type="submit" [disabled]="!checkoutForm?.valid || isVariantSelected" [ngSwitch]="this.isInCart">
+      <span *ngSwitchCase="0">{{ "Order Now" | translate }}</span>
+      <span *ngSwitchCase="1" class="spinner-border spinner-border-sm"></span>
+      <span *ngSwitchCase="2"><i class="las la-check"></i> {{ "Successfuly Sent" | translate }}</span>
+      <span *ngSwitchCase="3"><i class="las la-exclamation-triangle"></i> {{ "Duplicated Order" | translate }}</span>
+     </button>
+    </div>
+   </div>
+  </div>
+
+  <div class="mobile-only" [class]="this.col">
+   <div class="input-group fast-order mb-3">
+    <input class="form-control" [placeholder]="'Write Phone Number' | translate" [formControl]="checkoutForm?.controls['phone']" type="text" />
+    <div class="input-group-append">
+     <button class="btn btn-outline-dark" type="submit" [disabled]="!checkoutForm?.valid" [disabled]="!checkoutForm?.valid || isVariantSelected" [ngSwitch]="this.isInCart">
+      <span *ngSwitchCase="0"><i class="las la-phone"></i></span>
+      <span *ngSwitchCase="1" class="spinner-border spinner-border-sm"></span>
+      <span *ngSwitchCase="2"><i class="las la-check"></i> {{ "Successfuly Sent" | translate }}</span>
+      <span *ngSwitchCase="3"><i class="las la-exclamation-triangle"></i> {{ "Duplicated Order" | translate }}</span>
+     </button>
+    </div>
+   </div>
+  </div>
+ </div>
+</form>
+<app-alert-modal #fastOrderModal></app-alert-modal>

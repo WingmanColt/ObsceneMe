@@ -1,0 +1,21 @@
+<div class="simple-slider-list__other-info">
+ <!--<div class="product-item__volume-item product-item__volume-radio">
+     <div class="variant checked" title="40 ml" data-variant-id="499358" data-price="32.19" data-price-old="37.87" data-favourite="false" data-img="https://i.makeup.bg/j/jj/jjcq3wyccwfk.jpg">
+         <img class="variant__image" src="https://i.makeup.bg/s/so/sosyp6hmrdbo.jpg" alt=""> 
+         40 ml
+        </div>
+        </div>-->
+     
+         <div class="simple-slider-list-buttons">
+         <div class="button buy" [class.disabled]="product?.marketStatus == 4" (click)="AddToCart()">
+
+            <span *ngIf="!isLoadingActive">
+              <i *ngIf="product?.marketStatus == 4" class="las la-times" ></i>        
+                {{"Purchase" | translate }}       
+            </span>
+
+              <span *ngIf="isLoadingActive">
+                <span class="spinner-border spinner-border-sm"></span>
+              </span>
+
+</div>

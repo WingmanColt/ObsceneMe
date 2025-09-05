@@ -1,0 +1,46 @@
+
+<div class="product-wrapper-grid" [ngClass]="layoutView" [class.p-2]="!this.isMobile">
+
+ <div *ngIf="clientProducts.length > 0"
+   infiniteScroll
+   class="search-results"
+   [infiniteScrollDistance]="3"
+   [infiniteScrollThrottle]="150">
+
+   <div class="title4">
+    <h2 class="title-inner4">{{ "Winter Deals" | translate }}</h2>
+    <div class="line">
+      <span></span>
+    </div>
+  </div>
+
+  
+   <div class="row">
+    <div [class]="'col-grid-box'" [ngClass]="this.grid" *ngFor="let product of clientProducts; let i = index; trackBy: trackByProductId">
+      <app-product-base 
+        [template]="this.isMobile ? this.collectionSettings.topProductsCardTemplateMobile : this.collectionSettings.topProductsCardTemplate" 
+        [product]="product" 
+        [class]="i >= clientProducts.length - addItemCount ? 'product-dropup' : ''" 
+        [ngClass]="{ 'unique-card': (i % 2 === 1)}">
+      </app-product-base>
+    </div>
+  </div>
+  
+ </div>
+
+ <div class="container-xxl">
+  <div class="row">
+    <div class="col-12">
+     <div class="ajax-loadable-slider loading" 
+     *ngIf="loaderState === LoaderState.FetchingFromServer || loaderState === LoaderState.OnScroll"
+     [ngStyle]="{'min-height': clientProducts.length <= 0? '200px' : 'auto'}"> </div>
+    </div>
+  </div>
+
+  <div class="col d-flex justify-content-center pt-5 pb-3" *ngIf="clientProducts.length > 0">
+   <a class="theme-btn-s2 center" [class.disabled]="loaderState == LoaderState.OnScroll || loaderState == LoaderState.Empty" (click)="onScroll()" style="background-color: rgb(0, 0, 0); color: rgb(207, 212, 218);">{{'Show More' | translate}}</a>
+</div>
+</div>
+</div>
+
+

@@ -1,0 +1,28 @@
+.error-messages {
+  color: #d9534f; /* Bootstrap danger red or your preferred color */
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.error-messages ul {
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.error-messages li {
+  list-style-type: disc;
+}
+ .error-messages, .error-messages ul, .error-messages li {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 1;
+} 
+.error-messages ul {
+  padding-left: 1rem; /* ensure bullets show */
+  margin-bottom: 0;
+  line-height: 1.4;
+}
+
+.error-messages li {
+  margin-bottom: 0.25rem;
+}

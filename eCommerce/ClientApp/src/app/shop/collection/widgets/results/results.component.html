@@ -1,0 +1,16 @@
+<div class="row">
+  <div 
+    [class]="colClass" 
+    [ngClass]="getGridClass()" 
+    *ngFor="let product of products; trackBy: trackByProductId; let i = index">
+    
+    <app-product-base 
+      [class.product-dropup]="!animToBottom" 
+      [class.product-dropdown]="animToBottom" 
+      [template]="isMobile ? settings.cardTemplateMobile : settings.cardTemplate" 
+      [product]="product" 
+      [ngClass]="{ 'unique-card': (i % 2 === 1) && settings.useUniqueCard && isMobile}">
+    </app-product-base>
+    
+  </div>
+</div>

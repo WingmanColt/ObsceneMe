@@ -1,0 +1,133 @@
+<div class="row">
+    <ng-container *ngFor="let item of this.variants; index as i">
+        <!-- For column layout or if item.values has more than 5 items, take full width, else half -->
+        <div [class]="viewLayout === 'column' || item.values?.length > 5 ? 'col-12' : 'col-12'">
+
+            <!--When it isn`t size, taste or color use -->
+            <div class="product-description" 
+            *ngIf="(item.title != 'Size' && item.title != 'Taste')">
+                <h6 class="product-title size-text p-1"> {{ item.title | translate }} :
+                     <small>{{ this.selectedVariant[item.title]?.item.value | translate }}</small>
+                </h6>
+
+                <div class="custom-dropdown">
+                    <div class="selected-item full-border"
+                        (click)="toggleDropdown()">
+
+                        <img *ngIf="this.selectedVariant[item.title]?.item?.image?.length"
+                            [lazyLoad]="this.baseService.getImageFull(this.selectedVariant[item.title]?.item?.image, productId)"
+                            class="lazy-loading selected-icon" /> 
+
+                            {{ this.selectedVariant[item.title] ? 
+                            (this.selectedVariant[item.title]?.item?.value | translate) 
+                             : ("Select Option" | translate) 
+                             }}
+                            
+                            <span class="dropdown-arrow" [class.reversed]="this.showDropdown"></span>
+                    </div>
+                    <div class="dropdown-options"
+                        [class.active]="showDropdown">
+                        <div class="dropdown-option"
+                            [class.active]="ent.isSelected == true"
+                            *ngFor="let ent of item.variantItems; index as i"
+                            (click)="selectDropdownItem(item.title, ent)">
+
+                            <img *ngIf="ent.image?.length" 
+                            [lazyLoad]="this.baseService.getImageFull(ent.image, productId)"
+                            class="lazy-loading option-icon" /> 
+
+                            {{ ent.value | translate }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Taste -->
+            <div class="product-description"
+                *ngIf="item.title == 'Taste'">
+                <h6 class="product-title size-text p-1"> {{ item.title | translate }} :
+                 <small>{{ this.selectedVariant[item.title]?.item.value }}</small>
+                </h6>
+                <div class="custom-dropdown">
+                    <div class="selected-item full-border"
+                        (click)="toggleDropdown()">
+                        <img *ngIf="this.selectedVariant[item.title]?.item?.image?.length && !this.selectedVariant[item.title]?.item?.image?.startsWith('las la-')"
+                            [src]="selectedImageUrl"
+                            class="selected-icon" />
+                        <i *ngIf="this.selectedVariant[item.title]?.item?.image?.length && this.selectedVariant[item.title]?.item?.image?.startsWith('las la-')"
+                            [class]="selectedItem?.image"
+                            class="selected-icon"> </i>
+                        <img *ngIf="!this.selectedVariant[item.title]?.item?.image?.length"
+                            [src]="selectedIconUrl"
+                            class="selected-icon" /> {{ this.selectedVariant[item.title]?.item?.value ? this.selectedVariant[item.title]?.item?.value 
+                            : ("Select Option" | translate) }} 
+                            <span class="dropdown-arrow" [class.reversed]="this.showDropdown"></span>
+                    </div>
+                    <div class="dropdown-options"
+                        [class.active]="showDropdown">
+                        <div class="dropdown-option"
+                            [class.active]="ent.isSelected"
+                            *ngFor="let ent of item.variantItems; index as i"
+                            (click)="selectDropdownItem(item.title, ent)">
+                            <img *ngIf="!ent?.image?.length" [src]="getIconUrl(ent.value)"
+                                class="option-icon" /> 
+                            <img *ngIf="ent?.image?.length" [src]="getIconUrl(ent.image)"
+                                class="option-icon" /> 
+                             {{ ent.value | translate }}
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="size-box">
+     <ul class="size-variant">
+      <li [class.active]="ent.isSelected == true" *ngFor="let ent of item.values; index as i">
+       <a (click)="selectVariant(item.title, ent)"> <img width="25" height="25" [lazyLoad]="'https://img.icons8.com/color/48/' + ent.value?.toLowerCase() + '.png'" class="lazy-loading" /></a>
+      </li>
+     </ul>
+    </div>-->
+            </div>
+
+             <!-- Color 
+            <div class="product-description"
+                *ngIf="item.title == 'Color'">
+                <h6 class="product-title size-text p-1"> {{ item.title | translate }} : 
+                <small>{{ this.selectedVariant[item.title]?.item.value }}</small>
+                </h6>
+                <ul class="color-variant">
+                    <li [class]="ent.value"
+                        [class.active]="ent.isSelected == true"
+                        *ngFor="let ent of item.variantItems; index as i"
+                        [ngStyle]="{ 'background-color': ent.value }"
+                        (click)="selectVariant(item.title, ent)"></li>
+                </ul>
+            </div>-->
+
+             <!-- Size  -->
+            <div class="product-description"
+                *ngIf="item.title == 'Size'">
+                <div class="d-flex justify-content-between">
+                    <h6 class="product-title size-text p-1"> {{ item.title | translate }} : 
+                    <small>{{ this.selectedVariant[item.title]?.item.value }}</small>
+                    </h6>
+                    <a (click)="openChart()">
+                        <i class="las la-chart-bar la-1x"></i>
+                    </a>
+                </div>
+                <div class="size-box">
+                    <ul class="size-variant">
+                        <li [class.active]="ent.isSelected == true"
+                            *ngFor="let ent of item.variantItems; index as i">
+                            <a (click)="selectVariant(item.title, ent)">{{ ent.value }}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+       
+        </div>
+        <!-- Check if viewLayout is 'row' and the next item can be on the same row 
+        <div *ngIf="viewLayout === 'row' && variantsArray != undefined && variantsArray[i + 1] && variantsArray[i + 1]?.variantItems?.length <= 5 && item?.variantItems?.length <= 5"
+            class="col-6">
+            
+        </div>
+        -->
+    </ng-container>
+</div>

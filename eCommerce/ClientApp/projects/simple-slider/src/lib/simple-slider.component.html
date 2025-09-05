@@ -1,0 +1,59 @@
+<div class="slider" *ngIf="config.slides?.length > 0">
+  <div class="slider__wrapper">
+    
+  <!-- Thumbnails navigation -->
+  <ul *ngIf="config.paginationEnabled" [class]="paginationClass">
+    <li *ngFor="let slide of config.slides; let i = index" 
+        [class.active]="(currentSlide === i) || (i === 0 && currentSlide === config.slides?.length) || (i === config.slides?.length - 1 && currentSlide === -1)">
+      <!-- Thumbnail content -->
+    </li>
+  </ul>
+
+  <div *ngIf="config.navEnabled" [class]="navClass">
+    <button class="btn slider-button btn--previous"
+            title="Go to previous slide"
+            (click)="onPreviousClick()"
+            [disabled]="isPreviousDisabled">
+      {{ config.previousText }} <span class="left"></span>
+    </button>
+    <button class="btn slider-button btn--next"
+            title="Go to next slide"
+            (click)="onNextClick()"
+            [disabled]="isNextDisabled">
+      {{ config.nextText }} <span class="right"></span>
+    </button>
+  </div>
+
+  
+  <div class="simple-slider-list" [ngStyle]="{ 'grid-template-columns': getSliderWidth() }"
+    [style.transform]="'translateX(-' + (currentSlide * (100 / slidesPerViewAdjusted)) + '%)'">
+
+      <div *ngFor="let slide of config.slides; let i = index; trackBy: trackBySlideId"
+    class="slide"
+    [ngClass]="{
+      'slide--current': (i === currentSlide || (i === 0 && currentSlide === config.slides?.length) || (i === config.slides?.length - 1 && currentSlide === -1)),
+      'slide--next': (i === (currentSlide + 1) % (config.slides?.length + 2)),
+      'slide--previous': (i === (currentSlide - 1 + (config.slides?.length + 2)) % (config.slides?.length + 2))
+    }"
+    [ngStyle]="{ width: slideWidth }" 
+    (click)="onSlideClick(i)">
+  
+  <ng-container *ngTemplateOutlet="slideTemplate; context: { slide: slide, index: i }"></ng-container>
+  </div>
+
+<!-- Cloned first slide -->
+<div class="slide" *ngIf="config.loop == 2"
+    [ngClass]="{ 'slide--current': currentSlide === -1 }">
+  <ng-container *ngTemplateOutlet="slideTemplate; context: { slide: config.slides[0], index: 0 }"></ng-container>
+</div>
+
+<!-- Cloned last slide -->
+<div class="slide" *ngIf="config.loop == 2"
+    [ngClass]="{ 'slide--current': currentSlide === config.slides?.length }">
+  <ng-container *ngTemplateOutlet="slideTemplate; context: { slide: config.slides[config.slides?.length - 1], index: config.slides?.length - 1 }"></ng-container>
+</div>
+
+
+  </div>
+ </div>
+</div>

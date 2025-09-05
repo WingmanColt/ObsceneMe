@@ -1,0 +1,325 @@
+<section class="section-b-space">
+    <div class="container">
+        <div class="checkout-page">
+            <div class="checkout-form">
+                <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit(this.checkoutForm?.value)">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-12 col-xs-12">
+                            <div class="checkout-title">
+                                <h3>{{ "Billing Details" | translate }}</h3>
+                            </div>
+                            <div class="row check-out">
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <div class="field-label">{{ "Full Name" | translate }}</div>
+                                    <input type="text" formControlName="fullName" autocomplete="off" />
+                                    <div *ngIf="checkoutForm?.controls.fullName.touched && checkoutForm?.controls.fullName.errors?.required"
+                                        class="text text-danger">{{ "Full Name" | translate }} {{ "is required." |
+                                        translate }}</div>
+                                    <div *ngIf="checkoutForm?.controls.fullName.touched && checkoutForm?.controls.fullName.errors?.pattern"
+                                        class="text text-danger">{{ "Full Name" | translate }} {{ "must be an alphabet."
+                                        | translate }}</div>
+                                    <div *ngIf="checkoutForm?.controls.fullName.touched && checkoutForm.controls.fullName.errors?.nonAscii"
+                                        class="text text-danger">{{ "Should contain only ASCII characters" | translate
+                                        }}</div>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">{{ "Postal Code" | translate }}</div>
+                                    <input type="text" name="postalCode"
+                                        [formControl]="checkoutForm?.controls['postalCode']"
+                                        formControlName="postalCode" placeholder="" autocomplete="off" />
+                                    <div *ngIf="checkoutForm?.controls.postalCode.touched && checkoutForm?.controls.postalCode.errors?.required"
+                                        class="text text-danger">{{ "Postal Code" | translate }} {{ "is required." |
+                                        translate }}</div>
+                                </div>
+
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">{{ "Phone" | translate }}</div>
+                                    <input type="text" name="phoneNumber"
+                                        [formControl]="checkoutForm?.controls['phoneNumber']"
+                                        formControlName="phoneNumber" placeholder="" autocomplete="off" />
+                                    <div *ngIf="checkoutForm?.controls.phoneNumber.touched && checkoutForm?.controls.phoneNumber.errors?.required"
+                                        class="text text-danger">{{ "Phone" | translate }} {{ "is required." | translate
+                                        }}</div>
+                                    <div *ngIf="checkoutForm?.controls.phoneNumber.touched && checkoutForm?.controls.phoneNumber.errors?.pattern"
+                                        class="text text-danger">{{ "Phone" | translate }} {{ "must be an number." |
+                                        translate }}</div>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">{{ "Email Address" | translate }}</div>
+                                    <input type="text" name="email" [formControl]="checkoutForm?.controls['email']"
+                                        formControlName="email" placeholder="" autocomplete="off" />
+                                    <div *ngIf="checkoutForm?.controls.email.touched && checkoutForm?.controls.email.errors?.required"
+                                        class="text text-danger">{{ "Email" | translate }} {{ "is required." | translate
+                                        }}</div>
+                                    <div *ngIf="checkoutForm?.controls.email.touched && checkoutForm?.controls.email.errors?.email"
+                                        class="text text-danger">{{ "Email" | translate }} {{ "is invalid." | translate
+                                        }}</div>
+                                    <div *ngIf="checkoutForm?.controls.email.touched && checkoutForm.controls.email.errors?.nonAscii"
+                                        class="text text-danger">{{ "Should contain only ASCII characters" | translate
+                                        }}</div>
+                                </div>
+
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">{{ "Country" | translate }}</div>
+
+                                    <select class="form-control digits" id="exampleFormControlSelect1"
+                                        [formControl]="checkoutForm?.controls['country']">
+                                        <option value="" selected disabled>{{ "Select" | translate }} {{ "Country" |
+                                            translate }}</option>
+                                        <option *ngFor="let item of this.avaliableCountries" [value]="item">
+                                            {{ [item] }}
+                                        </option>
+                                    </select>
+
+                                    <div *ngIf="checkoutForm?.controls.country.touched && checkoutForm?.controls.country.errors?.required"
+                                        class="text text-danger">{{ "Country" | translate }} {{ "is required." |
+                                        translate }}</div>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">{{ "Town/City" | translate }}</div>
+                                    <input type="text" name="city" [formControl]="checkoutForm?.controls['city']"
+                                        formControlName="city" placeholder="" autocomplete="off" />
+                                    <div *ngIf="checkoutForm?.controls.city.touched && checkoutForm?.controls.city.errors?.required"
+                                        class="text text-danger">{{ "Town/City" | translate }} {{ "is required." |
+                                        translate }}</div>
+                                    <div *ngIf="checkoutForm?.controls.city.touched && checkoutForm.controls.city.errors?.nonAscii"
+                                        class="text text-danger">{{ "Should contain only ASCII characters" | translate
+                                        }}</div>
+                                </div>
+
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">{{ "Address" | translate }}</div>
+                                    <input type="text" name="address" [formControl]="checkoutForm?.controls['address']"
+                                        formControlName="address" placeholder="" autocomplete="off" />
+                                    <div *ngIf="checkoutForm?.controls.address.touched && checkoutForm?.controls.address.errors?.required"
+                                        class="text text-danger">{{ "Address" | translate }} {{ "is required." |
+                                        translate }}</div>
+                                    <div *ngIf="checkoutForm?.controls.address.touched && checkoutForm?.controls.address.errors?.maxlength"
+                                        class="text text-danger">
+                                        {{ "Maximum 50 characters" | translate }}
+                                    </div>
+                                    <div *ngIf="checkoutForm?.controls.address.touched && checkoutForm.controls.address.errors?.nonAscii"
+                                        class="text text-danger">{{ "Should contain only ASCII characters" | translate
+                                        }}</div>
+                                </div>
+
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">{{ "State" | translate }}</div>
+                                    <input type="text" name="state" [formControl]="checkoutForm?.controls['state']"
+                                        value="" placeholder="" autocomplete="off" />
+                                    <div *ngIf="checkoutForm?.controls.state.touched && checkoutForm?.controls.state.errors?.required"
+                                        class="text text-danger">{{ "State" | translate }} {{ "is required." | translate
+                                        }}</div>
+                                    <div *ngIf="checkoutForm?.controls.state.touched && checkoutForm.controls.state.errors?.nonAscii"
+                                        class="text text-danger">{{ "Should contain only ASCII characters" | translate
+                                        }}</div>
+                                </div>
+                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                    <div class="field-label">{{ "Note" | translate }}</div>
+                                    <textarea name="note" [formControl]="checkoutForm?.controls['note']"
+                                        [placeholder]="'If there is anything we need to know before shipping, please note here.' | translate"> </textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="this.products$ | async as productsArray; else loading">
+                            <div class="col-lg-6 col-sm-12 col-xs-12">
+                                <div class="checkout-details" *ngIf="(this.products$ | async)?.length > 0">
+                                    <div class="order-box">
+                                        <div class="title-box">
+                                            <div>
+                                                {{ "Product" | translate }} <span> {{ "Cost" | translate }}</span>
+                                            </div>
+                                        </div>
+
+                                        <ul class="qty">
+                                            <li *ngFor="let product of productsArray">
+                                                {{ product.title }} × {{ this.productCount(product) | async }}
+                                                <span> {{ updateCurrency(product.price) | asCurrency :
+                                                    baseService.activeCurrency }} </span>
+                                            </li>
+                                        </ul>
+
+                                       <!-- <ul class="sub-total">
+                                            <li>
+                                                {{ "Discount" | translate }}
+                                                <span class="count"> - {{
+                                                    updateCurrency(productTotalDiscount(productsArray) | async) |
+                                                    asCurrency : baseService.activeCurrency }} </span>
+                                            </li>
+                                        </ul>-->
+
+                                        <div class="payment-box">
+                                            <div class="title-box">
+                                                <div>{{ "Payment" | translate }}</div>
+                                            </div>
+
+                                            <div class="payment-section container">
+                                                <div class="border rounded mb-2"
+                                                    *ngFor="let option of allPayments; let i = index"
+                                                    [ngClass]="{ active: i === selectedPayment }">
+                                                    <!-- This line is updated -->
+
+                                                    <div class="d-flex justify-content-between align-items-center p-2">
+                                                        <input type="radio"
+                                                            [formControl]="checkoutForm?.controls['payment']"
+                                                            name="paymentOption" [(ngModel)]="selectedPayment"
+                                                            [value]="i" (change)="toggleCollapse(i)" />
+                                                        <label class="flex-grow-1 ms-3">{{ option.label | translate
+                                                            }}</label>
+                                                        <ul role="list">
+                                                            <li class="payment-icon" [ngClass]="option.icon"
+                                                                aria-current="false">
+                                                                <span class="visually-hidden"> {{ option.label |
+                                                                    translate }} </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div [ngbCollapse]="!option.isExpanded">
+                                                        <div class="p-2">
+                                                            <p class="bold text-default"><i
+                                                                    class="las la-exclamation-circle"></i> {{
+                                                                option.content | translate }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="upper-box">
+                                                <div class="payment-options">
+                                                    <div class="title-box">
+                                                        <div>{{ "Shipping" | translate }}</div>
+                                                    </div>
+
+                                                    <div class="payment-section container">
+                                                        <div class="border rounded mb-2"
+                                                            *ngFor="let option of shippingMethods; let i = index"
+                                                            [ngClass]="{ active: i === selectedShipping }">
+                                                            <!-- This line is updated -->
+
+                                                            <div
+                                                                class="d-flex justify-content-between align-items-center p-2">
+                                                                <input type="radio"
+                                                                    [formControl]="checkoutForm?.controls['shipping']"
+                                                                    name="shippingOption" [(ngModel)]="selectedShipping"
+                                                                    [value]="i" (change)="toggleCollapseShipping(i)" />
+                                                                <label class="flex-grow-1 ms-3">{{ option.label |
+                                                                    translate }}</label>
+                                                                <ul role="list">
+                                                                    <li class="payment-icon" [ngClass]="option.icon"
+                                                                        aria-current="false">
+                                                                        <span class="visually-hidden"> {{ option.label |
+                                                                            translate }} </span>
+                                                                    </li>
+                                                                </ul>
+                                                                <span *ngIf="option.freeShipping"
+                                                                    class="badge badge-dark">{{ "Free Shipping" |
+                                                                    translate }}</span>
+                                                            </div>
+                                                            <div [ngbCollapse]="!option.isExpanded">
+                                                                <div class="p-2">
+                                                                    <p class="bold text-default"><i
+                                                                            class="las la-exclamation-circle"></i> {{
+                                                                        option.content | translate }}</p>
+                                                                    <div class="row">
+                                                                        <div class="custom-control custom-checkbox collection-filter-checkbox col-6"
+                                                                            *ngFor="let ent of orderReceivePlace">
+                                                                            <input type="checkbox" [value]="ent"
+                                                                                [checked]="checked(ent)" [id]="ent"
+                                                                                (change)="appliedFilter($event)"
+                                                                                class="custom-control-input"
+                                                                                [formControl]="checkoutForm?.controls['pickupAtHome']" />
+                                                                            <label class="custom-control-label"
+                                                                                for="{{ ent }}">{{ ent | translate
+                                                                                }}</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <ul class="total">
+                                            <li>
+                                                <strong>{{ "All Products" | translate }}:</strong>
+                                                <span>
+                                                    {{ updateCurrency(productTotalWithDiscount() |
+                                                    async) | asCurrency : baseService.activeCurrency }}
+                                                </span>
+                                            </li>
+                                            <!--<li>
+            <strong>{{ "Tax" | translate }}</strong>
+            <span class="count"> + {{ (updateCurrency(productTotalWithDiscount(productsArray, false) | async) * this.env.defaultTax).toFixed(2) | asCurrency :  baseService.activeCurrency }} </span>
+           </li>-->
+                                            <li>
+                                                <strong class="total-sum">{{ "Total (With VAT)" | translate }}:</strong>
+                                                <span class="total-sum">
+                                                    {{ updateCurrency(productTotalWithDiscount(productsArray, true) |
+                                                    async) | asCurrency : baseService.activeCurrency }}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <button type="submit" [disabled]="!checkoutForm?.valid"
+                                                class="btn-large btn-dark btn-card" *ngIf="products$ | async">
+                                                <span *ngIf="!this.btnSubmitLoader"> <i class="las la-credit-card"></i>
+                                                    {{ "Place Order" | translate }} </span>
+
+                                                <span *ngIf="this.btnSubmitLoader">
+                                                    <span class="spinner-border spinner-border-sm"></span>
+                                                    {{ "Processing" | translate }}
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col">
+                                            <a [routerLink]="['/shop']" class="btn-large btn-outline-dark btn-card"> <i
+                                                    class="las la-times-circle"></i> {{ "Cancel" | translate }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="checkout-details" *ngIf="(products$ | async)?.length == 0">
+                                    <div class="success-text">
+                                        <i class="las la-shopping-bag"></i>
+                                        <h2>{{ "Empty Basket" | translate }}</h2>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <a [routerLink]="['/']" class="btn-large btn-outline-dark btn-card"> <i
+                                                    class="las la-times-circle"></i> {{ "Cancel" | translate }}</a>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col">
+                                            <a [routerLink]="['/shop']" class="btn-large btn-outline-dark btn-card"> <i
+                                                    class="las la-cart-plus"></i> {{ "Add a product" | translate }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-template #loading>
+                            <div class="col-lg-6 col-sm-12 col-xs-12">
+                                <div class="checkout-details">
+                                    <div class="p-5 success-text">
+                                        <span class="square-loader"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,212 @@
+<style>
+    im, .im {
+        color: #cfd4da;
+    }
+</style>
+<body style="border-radius: 4px; background-color:#000000">
+    <table border="0" cellpadding="0" cellspacing="0" align="center" style="border-collapse: collapse; border-spacing: 0">
+     <tbody>
+      <tr>
+       <td valign="top">
+        <div style="display: block; padding: 0; margin: 0; height: 100%; max-height: none; min-height: none; line-height: normal; overflow: visible">
+         <table border="0" cellpadding="0" cellspacing="0" align="center" style="border-collapse: collapse; border-spacing: 0; width: 742px">
+          <tbody>
+           <tr>
+            <td style="width: 50px"></td>
+            <td>
+             <h1 style="font-size: 1.7rem; font-weight: 600; color: #fff">{{contact.WEBNAME}}</h1>
+            </td>
+            <td align="right" style="font-size: 32px; font-weight: 300; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: rgb(136, 136, 136)">Invoice</td>
+            <td style="width: 50px"></td>
+           </tr>
+           <tr height="20">
+            <td colspan="4"> </td>
+           </tr>
+           <tr></tr>
+           <tr>
+            <td colspan="4" align="center">
+             <table border="0" cellspacing="0" cellpadding="0" width="660" style="border-collapse: collapse; border-spacing: 0">
+              <tbody>
+               <tr>
+                <td>
+                 <table
+                  border="0"
+                  cellpadding="0"
+                  cellspacing="0"
+                  style="border-collapse: collapse; border-spacing: 0; color: #cfd4da; background-color: #222222; border-radius: 3px; font-size: 12px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif">
+                  <tbody>
+                   <tr height="46">
+                    <td width="320" colspan="2" style="padding-left: 20px; border-style: solid; border-color: #404040; border-left-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-top-width: 0px">
+                     <span style="color: #cfd4da; font-size: 10px"> CUSTOMER</span><br /><a href="#" target="_blank">{{contact.CUSTOMERID}}</a>
+                    </td>
+                    <td width="340" rowspan="3" style="color: #cfd4da; padding-left: 20px; border-style: solid; border-color: #404040; border-left-width: 0px; border-right-width: 0px; border-top-width: 0px; border-bottom-width: 0px">
+                     <span style="color: #cfd4da; font-size: 10px">BILLED TO</span><br />
+                     {{contact.CUSTOMERNAME}} <br />
+                     {{contact.ADDRESS}} <br />
+                     {{contact.COUNTRY}}, {{contact.STATE}}, {{contact.TOWN}}, {{contact.POSTALCODE}} <br />
+                     {{contact.CURRENCY}} <br />
+                     Phone: {{contact.PHONE}} <br />
+                     Email: {{contact.CUSTOMEREMAIL}} <br />
+                     Customer ID: {{contact.CUSTOMERID}}
+                    </td>
+                   </tr>
+                   <tr height="46">
+                    <td style="padding-left: 20px; border-style: solid; border-color: #404040; border-left-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-top-width: 0px">
+                     <span style="color: #cfd4da; font-size: 10px">INVOICE DATE</span><br /><span dir="auto">{{contact.ORDERDATE}}</span>
+                    </td>
+                   </tr>
+                   <tr height="46">
+                    <td style="padding-left: 20px; border-style: solid; border-color: #404040; border-left-width: 0; border-right-width: 1px; border-bottom-width: 0px; border-top-width: 0px">
+                     <span style="color: #cfd4da; font-size: 10px">ORDER CODE</span><br /><span style="color: #0070c9"><a href="#">{{contact.ORDERCODE}}</a></span>
+                    </td>
+                   </tr>
+                  </tbody>
+                 </table>
+                </td>
+               </tr>
+   
+               <tr height="30">
+                <td></td>
+               </tr>
+               <tr>
+                <td>
+                 <table width="660" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-spacing: 0; width: 660px; color: #cfd4da; font-size: 12px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif">
+                  <tbody>
+                   <tr height="24" style="background-color: #222222">
+                    <td colspan="3" width="350" style="width: 350px; padding-left: 10px; border-top-left-radius: 3px; border-bottom-left-radius: 3px"><span style="font-size: 14px; font-weight: 500">Purchased Items</span></td>
+                   </tr>
+                   <tr height="15">
+                    <td colspan="3"></td>
+                   </tr>
+                   {{contact.ITEMS}}
+                  </tbody>
+                 </table>
+                </td>
+               </tr>
+               <tr>
+                <td>
+                 <table width="660" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-spacing: 0; width: 660px; color: rgb(51, 51, 51); font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif">
+                  <tbody>
+                   <tr height="15">
+                    <td colspan="3"></td>
+                   </tr>
+                   <tr>
+                    <td colspan="3" align="right" style="padding: 0 20px 0 0; white-space: nowrap">
+                     <table align="right" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-spacing: 0; color: rgb(51, 51, 51); font-size: 12px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif">
+                      <tbody>
+                       <tr>
+                        <td align="right"><span style="color: rgb(102, 102, 102); white-space: nowrap">Total Cost</span></td>
+                        <td width="10"> </td>
+                        <td align="right">
+                         <span style="font-weight: 600; white-space: nowrap">{{contact.TOTALCOST}} {{contact.CURRENCY}}</span>
+                        </td>
+                       </tr>
+                       <tr>
+                        <td align="right"><span style="color: rgb(102, 102, 102); white-space: nowrap">Discount</span></td>
+                        <td width="10"> </td>
+                        <td align="right">
+                         <span style="font-weight: 600; white-space: nowrap">{{contact.TOTALDISCOUNT}} {{contact.CURRENCY}}</span>
+                        </td>
+                       </tr>
+   
+                       <tr>
+                        <td align="right"><span style="color: rgb(102, 102, 102); white-space: nowrap">VAT charged at 20%</span></td>
+                        <td width="10"> </td>
+                        <td align="right">
+                         <span style="font-weight: 600; white-space: nowrap">{{contact.TAX}} {{contact.CURRENCY}}</span>
+                        </td>
+                       </tr>
+   
+                       <tr>
+                        <td colspan="3" height="4"> </td>
+                       </tr>
+                       <!-- <tr>
+                        <td align="right"><span style="color: rgb(102, 102, 102); white-space: nowrap">VAT charged at 20%</span></td>
+                        <td width="10"> </td>
+                        <td align="right" style="min-width: 45px"><span style="white-space: nowrap; font-weight: 600">0,41 лв</span></td>
+                       </tr>-->
+                      </tbody>
+                     </table>
+                    </td>
+                   </tr>
+                   <tr height="15">
+                    <td colspan="3"></td>
+                   </tr>
+                   <tr height="1">
+                    <td height="1" colspan="3" style="padding: 0 10px 0 10px"><div style="line-height: 1px; height: 1px; background-color: rgb(238, 238, 238)"></div></td>
+                   </tr>
+                   <tr height="48">
+                    <td align="right" style="color: rgb(102, 102, 102); font-size: 10px; font-weight: 600; padding: 0 30px 0 0; border-width: 1px; border-color: rgb(238, 238, 238)">TOTAL</td>
+                    <td width="1" style="background-color: #222222; width: 1px"></td>
+                    <td width="90" align="right" style="width: 120px; padding: 0 20px 0 0; font-size: 16px; font-weight: 600; white-space: nowrap">{{contact.TOTALAMOUNT}} {{contact.CURRENCY}}</td>
+                   </tr>
+                   <tr height="1">
+                    <td height="1" colspan="3" style="padding: 0 10px 0 10px"><div style="line-height: 1px; height: 1px; background-color: rgb(238, 238, 238)"></div></td>
+                   </tr>
+                  </tbody>
+                 </table>
+                </td>
+               </tr>
+              </tbody>
+             </table>
+            </td>
+           </tr>
+           <tr style="height: 20px">
+            <td colspan="4"> </td>
+           </tr>
+           <tr>
+            <td></td>
+           </tr>
+           <tr style="height: 20px">
+            <td colspan="4"> </td>
+           </tr>
+   
+           <tr style="height: 40px">
+            <td colspan="4"> </td>
+           </tr>
+           <tr>
+            <td></td>
+            <td colspan="2" align="center" style="font-size: 12px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: rgb(102, 102, 102)">
+             <h1 style="font-size: 1.7rem; font-weight: 600; color: #fff">{{contact.WEBNAME}}</h1>
+            </td>
+            <td></td>
+           </tr>
+           <tr height="8">
+            <td colspan="4"> </td>
+           </tr>
+           <tr>
+            <td></td>
+            <td colspan="2" align="center" style="font-size: 12px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: rgb(102, 102, 102)">
+             <a href="{{contact.WEBURL}}" style="color: #0073ff" target="_blank">Our Community</a> • <a href="{{contact.WEBURL}}pages/returns-warranty" style="color: #0073ff" target="_blank">Returns & Warranty</a> • <a
+              href="{{contact.WEBURL}}pages/privacy"
+              style="color: #0073ff"
+              target="_blank"
+              >Privacy Policy</a
+             >• <a href="{{contact.WEBURL}}pages/faq" style="color: #0073ff" target="_blank">FAQ</a>
+            </td>
+            <td></td>
+           </tr>
+           <tr height="25">
+            <td colspan="4"> </td>
+           </tr>
+           <tr>
+            <td></td>
+            <td colspan="2" align="center" dir="auto" style="font-size: 12px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: rgb(102, 102, 102)">
+             Copyright © {{contact.YEAR}} {{contact.WEBNAME}}.<br />
+             <a href="{{contact.WEBURL}}" style="color: #1187ff" target="_blank">All rights reserved</a>
+             <br />
+            </td>
+            <td></td>
+           </tr>
+           <tr height="25">
+            <td colspan="4" height="30"> </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </body>
+   
