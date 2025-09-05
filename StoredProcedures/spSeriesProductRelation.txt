@@ -1,0 +1,101 @@
+CREATE PROCEDURE [dbo].[spSeriesProductRelation]
+(
+    @id INT = NULL,
+    @ProductId INT = NULL, 
+    @SeriesId INT = NULL, 
+    @StatementType VARCHAR(100) = '',
+    @newId INT = NULL OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @defaultProductId INT = ISNULL(@ProductId, 0);
+    DECLARE @defaultSeriesId INT = ISNULL(@SeriesId, 0);
+
+    IF @StatementType = 'Create'
+    BEGIN 
+     BEGIN TRANSACTION;
+        INSERT INTO SeriesProductRelation (ProductId, SeriesId) 
+        VALUES (@ProductId, @SeriesId);	
+        
+        SET @newId = SCOPE_IDENTITY();
+        COMMIT TRANSACTION; -- Commit the transaction
+        RETURN @newId;
+    END 
+
+    ELSE IF @StatementType = 'GetById'
+    BEGIN
+        SELECT * FROM SeriesProductRelation WHERE Id = @Id;
+    END
+
+    ELSE IF @StatementType = 'SeriesProductRelationExists'
+    BEGIN
+        SELECT COUNT(1) FROM SeriesProductRelation
+        WHERE SeriesId = @defaultSeriesId AND ProductId = @defaultProductId;
+    END
+        
+    ELSE IF @StatementType = 'GetAllByProductId'
+    BEGIN
+        SELECT * FROM SeriesProductRelation WHERE ProductId = @ProductId;
+    END
+
+    ELSE IF @StatementType = 'GetAllBySeriesId'
+    BEGIN
+        SELECT * FROM SeriesProductRelation WHERE SeriesId = @defaultSeriesId;
+    END
+
+    ELSE IF @StatementType = 'GetAll'
+    BEGIN
+        SELECT * FROM SeriesProductRelation;
+    END
+
+    ELSE IF @StatementType = 'GetAllFull'
+    BEGIN
+        SELECT RELATION.Id AS RelationId, PRODUCT.Id AS ProductId, Series.Id AS SeriesId
+        FROM SeriesProductRelation AS RELATION
+        LEFT JOIN Products AS PRODUCT ON RELATION.ProductId = PRODUCT.Id
+        LEFT JOIN Series AS Series ON RELATION.SeriesId = Series.Id;
+    END
+
+    ELSE IF @StatementType = 'Update'
+    BEGIN
+      BEGIN TRANSACTION;
+        UPDATE SeriesProductRelation 
+        SET ProductId = @ProductId, SeriesId = @SeriesId
+        WHERE Id = @id;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+      BEGIN TRANSACTION;
+        DELETE FROM SeriesProductRelation WHERE Id = @id;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE IF @StatementType = 'DeleteByProduct'
+    BEGIN
+        DELETE FROM SeriesProductRelation WHERE ProductId = @ProductId;
+    END
+
+        ELSE IF @StatementType = 'DeleteBySeries'
+    BEGIN
+        DELETE FROM SeriesProductRelation WHERE SeriesId = @defaultSeriesId;
+    END
+
+    ELSE IF @StatementType = 'Truncate'
+    BEGIN
+      BEGIN TRANSACTION;
+        TRUNCATE TABLE SeriesProductRelation;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+END

@@ -1,0 +1,68 @@
+CREATE PROCEDURE [dbo].[spCoupon]
+(
+    @Id INT = NULL,
+    @Title NVARCHAR(254) = NULL,
+    @Code NVARCHAR(100) = NULL,
+    @Discount FLOAT = NULL,
+    @SpecificUser NVARCHAR(254) = NULL,
+    @CouponState INT = NULL,
+    @CreatedOn VARCHAR(60) = NULL,
+    @ExpiredOn VARCHAR(60) = NULL,
+    @StatementType VARCHAR(100) = '',
+    @newId INT = NULL OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @defaultCode NVARCHAR(100) = ISNULL(@Code, '');
+
+    -- Validate parameters for specific operations
+    IF @StatementType IN ('Delete') AND @Id IS NULL
+    BEGIN
+        RAISERROR('ID is required for Delete operation', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction    
+        RETURN;
+    END
+
+    IF @StatementType = 'Create'
+    BEGIN
+     BEGIN TRANSACTION;
+        INSERT INTO Coupons
+        (Title, Code, SpecificUser, Discount, CouponState, CreatedOn, ExpiredOn)
+        VALUES
+        (@Title, @Code, @SpecificUser, @Discount, @CouponState, @CreatedOn, @ExpiredOn);
+
+        SET @newId = SCOPE_IDENTITY();
+        COMMIT TRANSACTION; -- Commit the transaction
+        RETURN @newId;
+    END
+    ELSE IF @StatementType = 'GetAll'
+    BEGIN
+        SELECT Id, Title, Code, SpecificUser, Discount, CouponState, CreatedOn, ExpiredOn
+        FROM Coupons;
+    END
+    ELSE IF @StatementType = 'GetByCode'
+    BEGIN
+        SELECT Id, Title, Code, SpecificUser, Discount, CouponState, CreatedOn, ExpiredOn
+        FROM Coupons
+        WHERE Code = @defaultCode;
+    END
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+      BEGIN TRANSACTION;
+        DELETE FROM Coupons WHERE Id = @Id;
+      COMMIT TRANSACTION;
+    END
+    ELSE IF @StatementType = 'Truncate'
+    BEGIN
+        TRUNCATE TABLE Coupons;
+    END
+    ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+END

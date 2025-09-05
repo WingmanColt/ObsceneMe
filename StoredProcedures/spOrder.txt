@@ -1,0 +1,321 @@
+CREATE PROCEDURE [dbo].[spOrder]
+(
+    @id INT = NULL,
+    @WillEarnRewardPoints INT = NULL,
+    @Tax DECIMAL(10, 2) = NULL,
+    @CostPerItem DECIMAL(10, 2) = NULL,
+    @DiscountPerItem DECIMAL(10, 2) = NULL,
+    @TotalCost DECIMAL(10, 2) = NULL,
+    @TotalDiscount DECIMAL(10, 2) = NULL,
+    @Currency VARCHAR(50) = NULL,
+    @PaymentType NVARCHAR(50) = NULL,
+    @ShippingType NVARCHAR(50) = NULL,
+    @CheckoutId INT = NULL,
+    @ProductId INT = NULL,
+    @ProductTitle NVARCHAR(254) = NULL,
+    @Phone VARCHAR(50) = NULL,
+    @Quantity INT = NULL,
+    @IsPayed BIT = 0,
+    @Code VARCHAR(60) = NULL,
+    @UserId NVARCHAR(254) = NULL,
+    @Notes VARCHAR(254) = NULL,
+    @TrackingNumber VARCHAR(254) = NULL,
+    @CancellationReason VARCHAR(254) = NULL,
+    @CreatedOn VARCHAR(60) = NULL,
+    @ExpiredOn VARCHAR(60) = NULL,
+    @StatementType VARCHAR(100) = '',
+    @LastSavedId INT = NULL,
+    @PageSize INT = NULL,
+    @Offset INT = NULL,
+    @Take INT = NULL,
+    @newId INT = NULL OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+
+    -- Parameter validation for specific operations
+    IF @StatementType IN ('Update', 'Delete', 'UpdateIsPayed', 'GetById') AND @id IS NULL
+    BEGIN
+        RAISERROR('ID is required for Update and Delete operations', 16, 1);
+        RETURN;
+    END
+
+    IF @StatementType = 'Create'
+    BEGIN 
+        -- Additional checks for required fields in the Create operation
+        IF @CheckoutId IS NULL OR @ProductId IS NULL OR @Quantity IS NULL OR @TotalCost IS NULL
+        BEGIN
+            RAISERROR('CheckoutId, ProductId, Quantity, and TotalCost are required for creating an order.', 16, 1);
+            RETURN;
+        END
+
+        BEGIN TRY
+            BEGIN TRANSACTION;
+            INSERT INTO [dbo].[Order]
+            (
+                CheckoutId, ProductId, Quantity, WillEarnRewardPoints, Tax, IsPayed, Code,
+                CostPerItem, DiscountPerItem, TotalCost, TotalDiscount, Currency, PaymentType,
+                ShippingType, ProductTitle, Phone, CreatedOn, ExpiredOn, UserId, Notes, CancellationReason, TrackingNumber
+            )
+            VALUES 
+            (
+                @CheckoutId, @ProductId, @Quantity, @WillEarnRewardPoints, @Tax, @IsPayed, @Code,
+                @CostPerItem, @DiscountPerItem, @TotalCost, @TotalDiscount, @Currency, @PaymentType,
+                @ShippingType, @ProductTitle, @Phone, @CreatedOn, @ExpiredOn, @UserId, @Notes, @CancellationReason, @TrackingNumber
+            );
+
+            SET @newId = SCOPE_IDENTITY(); 
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW; -- Rethrow the original error
+        END CATCH
+
+        RETURN @newId;
+    END
+
+    ELSE IF @StatementType = 'Update'
+    BEGIN
+        IF @id IS NULL OR @Quantity IS NULL OR @TotalCost IS NULL
+        BEGIN
+            RAISERROR('ID, Quantity, and TotalCost are required for Update operations.', 16, 1);
+            RETURN;
+        END
+
+        BEGIN TRY
+            BEGIN TRANSACTION;
+            UPDATE [dbo].[Order]
+            SET 
+                Quantity = @Quantity,
+                WillEarnRewardPoints = @WillEarnRewardPoints,
+                IsPayed = @IsPayed,
+                Code = @Code,
+                Currency = @Currency,
+                PaymentType = @PaymentType,
+                ShippingType = @ShippingType,
+                Phone = @Phone,
+                Notes = @Notes,
+                CancellationReason = @CancellationReason,
+                TrackingNumber = @TrackingNumber
+
+            WHERE 
+                id = @id;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW; -- Rethrow the original error
+        END CATCH
+
+        RETURN @id;
+    END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+        IF @id IS NULL
+        BEGIN
+            RAISERROR('ID is required for Delete operations', 16, 1);
+            RETURN;
+        END
+
+        BEGIN TRY
+            BEGIN TRANSACTION;
+            DELETE FROM [dbo].[Order] WHERE id = @id;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW; -- Rethrow the original error
+        END CATCH
+    END
+
+    ELSE IF @StatementType = 'UpdateIsPayed'
+    BEGIN
+        IF @id IS NULL
+        BEGIN
+            RAISERROR('ID is required for updating IsPayed status.', 16, 1);
+            RETURN;
+        END
+
+        BEGIN TRY
+            BEGIN TRANSACTION;
+            UPDATE [dbo].[Order]
+            SET IsPayed = @IsPayed
+            WHERE id = @id;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW; -- Rethrow the original error
+        END CATCH
+
+        RETURN @id;
+    END
+
+    ELSE IF @StatementType = 'GetAllCountBy'
+    BEGIN
+        SELECT COUNT(*) 
+        FROM [dbo].[Order]
+        WHERE CheckoutId = @CheckoutId OR ProductId = @ProductId;
+    END
+
+    ELSE IF @StatementType = 'GetAllByCheckout'
+    BEGIN
+        SELECT
+            id, CheckoutId, ProductId, Quantity, WillEarnRewardPoints, Tax, IsPayed, Code,
+            CostPerItem, DiscountPerItem, TotalCost, TotalDiscount, Currency, PaymentType,
+            ShippingType, ProductTitle, Phone, CreatedOn, ExpiredOn, UserId, Notes, CancellationReason, TrackingNumber
+        FROM [dbo].[Order]
+        WHERE CheckoutId = @CheckoutId;
+    END
+
+ELSE IF @StatementType = 'GetAll'
+BEGIN
+    SELECT 
+    o.Phone, 
+    o.CreatedOn, 
+    o.Quantity, 
+    o.ProductTitle, 
+    o.TotalCost, 
+    o.PaymentType, 
+    o.Currency, 
+    c.FullName, 
+    c.Email, 
+    c.Address, 
+    c.Country, 
+    c.City, 
+    c.State, 
+    c.PostalCode, 
+    o.Notes, 
+    c.PickupAtHome
+
+    FROM [dbo].[Order] o
+    LEFT JOIN [dbo].[Checkout] c ON o.CheckoutId = c.Id
+    ORDER BY o.Id;
+END
+
+ELSE IF @StatementType = 'GetAllPaginated'
+BEGIN
+    -- CTE to select all order IDs
+    WITH FilteredOrderIds AS (
+        SELECT DISTINCT T1.Id
+        FROM [dbo].[Order] AS T1
+    )
+
+    -- Result set 1: Return total count of orders
+    SELECT COUNT(*) AS TotalCount FROM FilteredOrderIds;
+
+    -- Result set 2: Return paginated results based on PageSize and Offset
+    SELECT
+        T1.Id,
+        T1.CheckoutId,
+        T1.ProductId,
+        T1.Quantity,
+        T1.WillEarnRewardPoints,
+        T1.Tax,
+        T1.IsPayed,
+        T1.Code,
+        T1.CostPerItem,
+        T1.DiscountPerItem,
+        T1.TotalCost,
+        T1.TotalDiscount,
+        T1.Currency,
+        T1.PaymentType,
+        T1.ShippingType,
+        T1.ProductTitle,
+        T1.Phone,
+        T1.CreatedOn,
+        T1.ExpiredOn,
+        T1.UserId,
+        T1.Notes,
+        T1.CancellationReason,
+        T1.TrackingNumber
+    FROM [dbo].[Order] AS T1
+    ORDER BY T1.Id  -- Order by ID to ensure correct pagination
+    OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
+END
+
+
+    ELSE IF @StatementType = 'CheckExistingOrder'
+    BEGIN
+        IF EXISTS (
+            SELECT 1
+            FROM [dbo].[Order]
+            WHERE
+                CheckoutId = @CheckoutId
+                AND ProductId = @ProductId
+                AND Quantity = @Quantity
+                AND TotalCost = @TotalCost
+                AND CreatedOn = @CreatedOn
+        )
+        BEGIN
+            SELECT 1 AS [Exists];
+        END
+        ELSE
+        BEGIN
+            SELECT 0 AS [Exists];
+        END
+    END
+
+    ELSE IF @StatementType = 'GetByCode'
+    BEGIN
+        SELECT
+            id, CheckoutId, ProductId, Quantity, WillEarnRewardPoints, Tax, IsPayed, Code,
+            CostPerItem, DiscountPerItem, TotalCost, TotalDiscount, Currency, PaymentType,
+            ShippingType, ProductTitle, Phone, CreatedOn, ExpiredOn, UserId, Notes, CancellationReason, TrackingNumber
+        FROM [dbo].[Order]
+        WHERE Code = @Code;
+    END
+
+    ELSE IF @StatementType = 'CheckIfExistsByPhone'
+    BEGIN
+        SELECT CASE WHEN EXISTS (
+            SELECT 1
+            FROM [dbo].[Order]
+            WHERE Phone = @Phone AND ProductTitle = @ProductTitle
+        ) THEN 1 ELSE 0 END AS [Exists];
+    END
+
+    ELSE IF @StatementType = 'GetByUserId'
+    BEGIN
+        SELECT
+            id, CheckoutId, ProductId, Quantity, WillEarnRewardPoints, Tax, IsPayed, Code,
+            CostPerItem, DiscountPerItem, TotalCost, TotalDiscount, Currency, PaymentType,
+            ShippingType, ProductTitle, Phone, CreatedOn, ExpiredOn, UserId, Notes, CancellationReason, TrackingNumber
+        FROM [dbo].[Order]
+        WHERE UserId = @UserId;
+    END
+
+    ELSE IF @StatementType = 'GetById'
+    BEGIN
+        SELECT
+            id, CheckoutId, ProductId, Quantity, WillEarnRewardPoints, Tax, IsPayed, Code,
+            CostPerItem, DiscountPerItem, TotalCost, TotalDiscount, Currency, PaymentType,
+            ShippingType, ProductTitle, Phone, CreatedOn, ExpiredOn, UserId, Notes, CancellationReason, TrackingNumber
+        FROM [dbo].[Order]
+        WHERE id = @id;
+    END
+
+        ELSE IF @StatementType = 'Truncate'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            TRUNCATE TABLE [dbo].[Order];
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    ELSE
+    BEGIN
+        RAISERROR('Unsupported StatementType: %s', 16, 1, @StatementType);
+        RETURN 1;
+    END
+END

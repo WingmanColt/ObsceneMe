@@ -1,0 +1,97 @@
+CREATE PROCEDURE [dbo].[spFavourites]
+(
+    @id INT = NULL,
+    @ProductId INT = NULL,
+    @UserId VARCHAR(254) = NULL,
+    @CreatedOn VARCHAR(60) = NULL,
+    @ExpiredOn VARCHAR(60) = NULL,
+    @StatementType VARCHAR(100) = '',
+    @newId INT = NULL OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @defaultUserId VARCHAR(254) = ISNULL(@UserId, '');
+
+    -- Parameter validation for specific operations
+    IF @StatementType IN ('Select', 'Delete', 'GetByProductIdAndUser', 'DoesItemExist') AND @UserId IS NULL
+    BEGIN
+        RAISERROR('UserId is required for this operation', 16, 1);
+        RETURN;
+    END
+
+    IF @StatementType = 'Create'
+    BEGIN 
+        INSERT INTO Favourites (UserId, ProductId, CreatedOn, ExpiredOn) 
+        VALUES (@UserId, @ProductId, @CreatedOn, @ExpiredOn);	 
+        SELECT @newId = SCOPE_IDENTITY(); 
+        RETURN @newId; 
+    END 
+
+    ELSE IF @StatementType = 'Select'
+    BEGIN
+        SELECT Id, UserId, ProductId, CreatedOn, ExpiredOn FROM Favourites
+        WHERE Id = @id;
+    END
+
+    ELSE IF @StatementType = 'GetAllCountBy'
+    BEGIN
+        SELECT COUNT(*) FROM Favourites
+        WHERE UserId = @defaultUserId;
+    END
+
+    ELSE IF @StatementType = 'GetProductsByFavourite'
+    BEGIN
+        SELECT p.* FROM Product AS p
+        INNER JOIN Favourites AS f ON p.Id = f.ProductId
+        WHERE f.UserId = @UserId;
+    END
+
+    ELSE IF @StatementType = 'GetAllBy'
+    BEGIN
+        SELECT
+            p.*,
+            img.ImageSrc AS Src
+        FROM
+            Product AS p
+        INNER JOIN
+            Favourites AS f ON p.Id = f.ProductId
+        LEFT JOIN
+            (
+                SELECT
+                    ProductId,
+                    MIN(Src) AS ImageSrc
+                FROM
+                    Image
+                GROUP BY
+                    ProductId
+            ) AS img ON p.Id = img.ProductId
+        WHERE
+            f.UserId = @defaultUserId;
+    END
+
+    ELSE IF @StatementType = 'GetByProductIdAndUser'
+    BEGIN
+        SELECT * FROM Favourites
+        WHERE ProductId = @ProductId AND UserId = @defaultUserId;
+    END
+
+    ELSE IF @StatementType = 'DoesItemExist'
+    BEGIN
+        SELECT COUNT(*) FROM Favourites
+        WHERE ProductId = @ProductId AND UserId = @defaultUserId;
+    END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+        DELETE FROM Favourites
+        WHERE ProductId = @ProductId AND UserId = @defaultUserId;
+    END
+
+    ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        RETURN;
+    END
+END

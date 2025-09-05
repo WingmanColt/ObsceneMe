@@ -1,0 +1,81 @@
+CREATE PROCEDURE [dbo].[spPreCheckout](
+@id int = NULL, 
+@FullName nvarchar(254) = NULL,
+@Email varchar(254) = NULL,
+@PhoneNumber varchar(20) = NULL,
+@PostalCode varchar(50) = NULL,
+@PaymentCondition int = NULL, 
+@CreatedOn varchar(60) = NULL,
+@ExpiredOn varchar(60) = NULL,
+@StatementType varchar(100) = NULL,
+@newId int = null output)
+AS
+BEGIN
+SET NOCOUNT ON;
+
+    -- Validate parameters for specific operations
+    IF @StatementType IN ('Delete', 'GetById') AND @Id IS NULL
+    BEGIN
+        RAISERROR('ID is required for Delete operation', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction    
+        RETURN;
+    END
+
+
+      IF @StatementType = 'Create'
+       BEGIN 
+        BEGIN TRANSACTION;
+            INSERT INTO PreCheckout
+			(FullName, Email, PhoneNumber, PostalCode, PaymentCondition, CreatedOn, ExpiredOn) 
+			VALUES 
+			(@FullName, @Email, @PhoneNumber, @PostalCode, @PaymentCondition, @CreatedOn, @ExpiredOn)
+          
+          SET @newId = Scope_Identity() 
+        COMMIT TRANSACTION; -- Commit the transaction
+	       RETURN @newId 
+               END 
+
+       IF @StatementType = 'GetById'
+        BEGIN
+              SELECT 
+            id,
+            FullName,
+            Email,
+            PhoneNumber,
+            PostalCode,
+            PaymentCondition,
+            CreatedOn,
+            ExpiredOn
+            FROM PreCheckout
+			WHERE id = @id
+        END
+		
+       IF @StatementType = 'GetAll'
+        BEGIN
+          SELECT 
+            id,
+            FullName,
+            Email,
+            PhoneNumber,
+            PostalCode,
+            PaymentCondition,
+            CreatedOn,
+            ExpiredOn
+            FROM PreCheckout
+        END
+		
+      IF @StatementType = 'Delete'
+        BEGIN
+        BEGIN TRANSACTION;
+            DELETE FROM PreCheckout
+            WHERE id = @id
+        COMMIT TRANSACTION; 
+        END
+         ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN 1;
+    END
+END

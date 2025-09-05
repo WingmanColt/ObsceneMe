@@ -1,0 +1,98 @@
+CREATE PROCEDURE [dbo].[spVariantItem](
+@id int = NULL,
+@vId int = NULL,
+@Value varchar(254) = NULL, 
+@Image nvarchar(254) = NULL, 
+@StatementType VARCHAR(100) = '',
+@Take int = null,
+@newId int = null output)
+AS
+BEGIN
+SET NOCOUNT ON;
+
+    -- Parameter validation for specific operations
+    IF @StatementType IN ('Delete', 'GetById') AND @id IS NULL
+    BEGIN
+        RAISERROR('ID is required for Update and Delete operations', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+
+        -- Parameter validation for specific operations
+    IF @StatementType IN ('Update', 'GetByvId') AND @vId IS NULL
+    BEGIN
+        RAISERROR('VID is required for these operations', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+
+DECLARE @defaultValue varchar(254) = ISNULL(@Value, '');
+
+      IF @StatementType = 'Create'
+       BEGIN 
+        BEGIN TRANSACTION;
+            INSERT INTO VariantItem
+			(vId, Value, Image) VALUES (@vId, @Value, @Image)	 
+        SET @newId = SCOPE_IDENTITY();
+        COMMIT TRANSACTION; -- Commit the transaction
+        RETURN @newId; 
+       END 
+
+
+	 ELSE IF @StatementType = 'GetAll'
+        BEGIN
+
+		SELECT * FROM VariantItem AS ent
+		END
+
+
+     ELSE IF @StatementType = 'GetByValue'
+        BEGIN
+
+		SELECT * FROM VariantItem AS ent
+		   WHERE ent.Value LIKE '%'+@defaultValue+'%';
+		END
+        
+ELSE IF @StatementType = 'Update'
+BEGIN
+    BEGIN TRANSACTION;
+        UPDATE VariantItem SET 
+        Value = @Value,
+        Image = @Image
+        WHERE vId = @vId;
+
+        COMMIT TRANSACTION; -- Commit the transaction
+        RETURN @vId;  -- Return the value after the transaction is committed
+END
+     ELSE IF @StatementType = 'GetById'
+        BEGIN
+
+		SELECT * FROM VariantItem
+		WHERE id = @Id
+		END
+
+        IF @StatementType = 'GetByvId'
+        BEGIN
+
+		SELECT * FROM VariantItem
+		WHERE vId = @vId
+		END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+        DELETE FROM VariantItem
+        WHERE id = @id
+    END
+
+     ELSE IF @StatementType = 'Truncate'
+        BEGIN
+            TRUNCATE TABLE VariantItem;
+        END
+    ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+END

@@ -1,0 +1,107 @@
+CREATE PROCEDURE [dbo].[spVariantProductRelation](
+@id int = NULL,
+@ProductId int = NULL, 
+@VariantAndVariantItemRelationId int = NULL, 
+@StatementType varchar(100) = '',
+@newId int = null output)
+AS
+BEGIN
+SET NOCOUNT ON;
+
+
+DECLARE @defaultVariantAndVariantItemRelationId int = ISNULL(@VariantAndVariantItemRelationId, 0);
+DECLARE @defaultProductId int = ISNULL(@ProductId, 0);
+
+
+IF @StatementType = 'Create'
+BEGIN
+BEGIN TRANSACTION;
+BEGIN TRY
+    -- Insert the new row
+    INSERT INTO VariantProductRelation (ProductId, VariantAndVariantItemRelationId)
+    VALUES (@ProductId, @VariantAndVariantItemRelationId);
+
+    -- Retrieve the new identity value
+    SET @newId = SCOPE_IDENTITY();
+
+    -- Commit the transaction
+    COMMIT TRANSACTION;
+
+    -- Return the new identity value
+    RETURN @newId;
+END TRY
+BEGIN CATCH
+    -- Rollback the transaction in case of error
+    ROLLBACK TRANSACTION;
+    
+    -- Rethrow the error
+    THROW;
+END CATCH
+
+END
+
+        
+    ELSE IF @StatementType = 'Select'
+        BEGIN
+        SELECT * FROM VariantProductRelation
+		WHERE ProductId = @defaultProductId AND 
+        VariantAndVariantItemRelationId = @defaultVariantAndVariantItemRelationId
+        END
+
+ELSE IF @StatementType = 'Exists'
+BEGIN
+    SELECT CASE
+        WHEN EXISTS (
+            SELECT 1 FROM VariantProductRelation
+            WHERE ProductId = @defaultProductId AND
+            VariantAndVariantItemRelationId = @defaultVariantAndVariantItemRelationId
+        ) THEN 1
+        ELSE 0
+    END AS RecordExists
+END
+        
+
+	 ELSE IF @StatementType = 'Update'
+        BEGIN
+          BEGIN TRANSACTION;
+            UPDATE VariantProductRelation SET 
+			ProductId = @ProductId,
+            VariantAndVariantItemRelationId = @defaultVariantAndVariantItemRelationId
+			 WHERE Id = @id
+          COMMIT TRANSACTION; -- Commit the transaction
+        END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+BEGIN TRANSACTION;
+BEGIN TRY
+    -- Delete all existing rows with the same ProductId
+    DELETE FROM VariantProductRelation
+    WHERE ProductId = @ProductId;
+
+    -- Commit the transaction
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    -- Rollback the transaction in case of error
+    ROLLBACK TRANSACTION;
+    
+    -- Rethrow the error
+    THROW;
+END CATCH
+
+    END
+
+     ELSE IF @StatementType = 'Truncate'
+        BEGIN
+            TRUNCATE TABLE VariantProductRelation;
+        END
+    ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+
+END

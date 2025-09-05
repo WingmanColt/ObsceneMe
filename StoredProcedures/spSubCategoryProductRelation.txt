@@ -1,0 +1,96 @@
+CREATE PROCEDURE [dbo].[spSubCategoryProductRelation]
+(
+    @id INT = NULL,
+    @ProductId INT = NULL, 
+    @SubCategoryId INT = NULL, 
+    @StatementType VARCHAR(100) = '',
+    @newId INT = NULL OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @defaultProductId INT = ISNULL(@ProductId, 0);
+    DECLARE @defaultSubCategoryId INT = ISNULL(@SubCategoryId, 0);
+
+    IF @StatementType = 'Create'
+    BEGIN 
+     BEGIN TRANSACTION;
+        INSERT INTO SubCategoryProductRelation (ProductId, SubCategoryId) 
+        VALUES (@ProductId, @SubCategoryId);	
+        
+        SET @newId = SCOPE_IDENTITY();
+        COMMIT TRANSACTION; -- Commit the transaction
+        RETURN @newId;
+    END 
+
+    ELSE IF @StatementType = 'GetById'
+    BEGIN
+        SELECT Id, ProductId, SubCategoryId FROM SubCategoryProductRelation WHERE Id = @Id;
+    END
+
+    ELSE IF @StatementType = 'SubCategoryProductRelationExists'
+    BEGIN
+        SELECT COUNT(1) FROM SubCategoryProductRelation
+        WHERE SubCategoryId = @defaultSubCategoryId AND ProductId = @defaultProductId;
+    END
+        
+    ELSE IF @StatementType = 'GetAllByProductId'
+    BEGIN
+        SELECT Id, SubCategoryId FROM SubCategoryProductRelation WHERE ProductId = @ProductId;
+    END
+
+    ELSE IF @StatementType = 'GetAllBySubCategoryId'
+    BEGIN
+        SELECT Id, ProductId FROM SubCategoryProductRelation WHERE SubCategoryId = @defaultSubCategoryId;
+    END
+
+    ELSE IF @StatementType = 'GetAll'
+    BEGIN
+        SELECT Id, ProductId, SubCategoryId FROM SubCategoryProductRelation;
+    END
+
+    ELSE IF @StatementType = 'GetAllFull'
+    BEGIN
+        SELECT RELATION.Id AS RelationId, PRODUCT.Id AS ProductId, SubCategory.Id AS SubCategoryId
+        FROM SubCategoryProductRelation AS RELATION
+        LEFT JOIN Products AS PRODUCT ON RELATION.ProductId = PRODUCT.Id
+        LEFT JOIN SubCategory AS SubCategory ON RELATION.SubCategoryId = SubCategory.Id;
+    END
+
+    ELSE IF @StatementType = 'Update'
+    BEGIN
+      BEGIN TRANSACTION;
+        UPDATE SubCategoryProductRelation 
+        SET ProductId = @ProductId, SubCategoryId = @SubCategoryId
+        WHERE Id = @id;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+      BEGIN TRANSACTION;
+        DELETE FROM SubCategoryProductRelation WHERE SubCategoryId = @defaultSubCategoryId;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE IF @StatementType = 'DeleteByProduct'
+    BEGIN
+      BEGIN TRANSACTION;
+        DELETE FROM SubCategoryProductRelation WHERE ProductId = @defaultProductId;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE IF @StatementType = 'Truncate'
+    BEGIN
+        TRUNCATE TABLE SubCategoryProductRelation;
+    END
+
+    ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+END

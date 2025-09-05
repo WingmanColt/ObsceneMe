@@ -1,0 +1,82 @@
+CREATE PROCEDURE [dbo].[spPages]
+(
+@id int = NULL,
+@Title varchar(254) = NULL, 
+@Icon varchar(254) = NULL,
+@UrlAddress varchar(254) = NULL,
+@Shortname varchar(50) = NULL,
+@StatementType varchar(50) = '',
+@newId int = null output
+)
+AS
+BEGIN
+SET NOCOUNT ON;
+
+    -- Validate parameters for specific operations
+    IF @StatementType IN ('Delete', 'Update', 'GetById') AND @Id IS NULL
+    BEGIN
+        RAISERROR('ID is required for Delete operation', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction    
+        RETURN;
+    END
+
+DECLARE @defaultTitle varchar(254) = ISNULL(@Title, '');
+
+
+      IF @StatementType = 'Create'
+       BEGIN 
+        BEGIN TRANSACTION;
+             INSERT INTO Pages
+			 (Title, Icon, Shortname, UrlAddress) VALUES (@Title, @Icon, @Shortname, @UrlAddress)	 
+              SET @newId = Scope_Identity() 
+        COMMIT TRANSACTION; -- Commit the transaction
+			  RETURN @newId 
+               END 
+
+     ELSE IF @StatementType = 'GetById'
+        BEGIN
+            SELECT * FROM Pages
+			WHERE id = @id
+        END
+
+	 ELSE IF @StatementType = 'GetAll'
+        BEGIN
+
+		SELECT * FROM Pages AS ent
+        WHERE ent.Title LIKE '%'+@defaultTitle+'%';
+		END
+
+    ELSE IF @StatementType = 'Update'
+    BEGIN
+     BEGIN TRANSACTION;
+
+    UPDATE Pages
+    SET
+        Title = ISNULL(@Title, Title),
+        Icon = ISNULL(@Icon, Icon),
+        Shortname = ISNULL(@Shortname, Shortname),
+        UrlAddress = ISNULL(@UrlAddress, UrlAddress)
+    WHERE
+        Id = @Id;
+
+    COMMIT TRANSACTION; -- Commit the transaction
+END
+      ELSE IF @StatementType = 'Delete'
+        BEGIN
+         BEGIN TRANSACTION;
+        DELETE FROM Pages WHERE id = @id;  
+         COMMIT TRANSACTION; -- Commit the transaction
+        END
+
+      ELSE IF @StatementType = 'Truncate'
+        BEGIN
+             TRUNCATE TABLE Pages;
+        END
+        ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN 1;
+    END
+END

@@ -1,0 +1,141 @@
+CREATE PROCEDURE [dbo].[spReviews](
+    @id int = NULL,
+    @ProductId int = NULL, 
+    @ProductStars int = NULL,
+    @FirstName nvarchar(50) = NULL,
+    @LastName nvarchar(50) = NULL,
+    @Email varchar(254) = NULL,
+    @About nvarchar(254) = NULL,
+    @Src nvarchar(254) = NULL,
+    @SendToSupport bit = 0,
+    @OrderCode nvarchar(100) = NULL,
+    @CreatedOn varchar(60) = NULL,
+    @StatementType NVARCHAR(100) = NULL,
+    @newId int = null output
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Parameter validation for specific operations
+    IF @StatementType IN ('Delete') AND @id IS NULL
+    BEGIN
+        RAISERROR('ID is required for Update and Delete operations', 16, 1);
+        RETURN;
+    END
+
+    DECLARE @defaultProductId int = ISNULL(@ProductId, 0);
+    DECLARE @defaultProductStars int = ISNULL(@ProductStars, 0);
+
+    IF @StatementType = 'Create'
+    BEGIN 
+        BEGIN TRANSACTION;
+        INSERT INTO Reviews
+        (ProductId, ProductStars, FirstName, LastName, Email, About, Src, SendToSupport, OrderCode, CreatedOn) 
+        VALUES 
+        (@ProductId, @ProductStars, @FirstName, @LastName, @Email, @About, @Src, @SendToSupport, @OrderCode, @CreatedOn);	 
+        
+        SET @newId = SCOPE_IDENTITY();
+        COMMIT TRANSACTION; -- Commit the transaction
+        RETURN; -- Returning nothing explicitly
+    END 
+
+    ELSE IF @StatementType = 'getCards'
+    BEGIN
+        SELECT TOP 10
+            r.Id,
+            r.FirstName,
+            r.LastName,
+            r.Src AS ReviewImage,
+            r.About AS ReviewComment,
+            p.Rating AS ReviewRating,
+            p.RatingVotes AS ReviewRatingVotes,
+            r.ProductId,
+            r.ProductStars,
+            p.Details AS ProductAbout,
+            p.Title AS ProductTitle,
+            p.Price AS ProductPrice,
+            p.DiscountRate AS ProductDiscountRate,
+            i.Src AS ProductImageUrl,
+            r.CreatedOn
+        FROM Reviews r
+        LEFT JOIN Product p ON r.ProductId = p.Id
+        LEFT JOIN Image i ON i.ProductId = r.ProductId
+        WHERE r.ProductStars = 5
+        AND i.Id = (SELECT TOP 1 Id FROM Image WHERE ProductId = r.ProductId ORDER BY Id ASC);
+    END
+
+    ELSE IF @StatementType = 'GetAllByProductId'
+    BEGIN
+        SELECT * FROM Reviews
+        WHERE ProductId = @ProductId;
+    END
+
+ELSE IF @StatementType = 'GetAll'
+BEGIN
+    SELECT 
+        r.Id,
+        r.FirstName,
+        r.LastName,
+        r.Src AS ReviewImage,
+        r.About AS ReviewComment,
+        r.ProductStars,
+        r.ProductId,
+        r.CreatedOn,
+
+        p.Title AS ProductTitle,
+        p.Details AS ProductAbout,
+        p.Price AS ProductPrice,
+        p.DiscountRate AS ProductDiscountRate,
+        p.Rating AS ReviewRating,
+        p.RatingVotes AS ReviewRatingVotes,
+        p.PositiveRating AS productPositiveRating,
+        i.Src AS ProductImageUrl
+
+    FROM Reviews r
+    INNER JOIN Product p ON r.ProductId = p.Id
+    OUTER APPLY (
+        SELECT TOP 1 Src 
+        FROM Image 
+        WHERE ProductId = r.ProductId 
+        ORDER BY Id ASC
+    ) i
+    ORDER BY r.CreatedOn DESC;
+END
+
+		
+		
+    ELSE IF @StatementType = 'GetAllForSupport'
+    BEGIN
+        SELECT * FROM Reviews
+        WHERE SendToSupport = @SendToSupport;
+    END
+
+    ELSE IF @StatementType = 'GetAllCountBy'
+    BEGIN
+        SELECT COUNT(*) FROM Reviews
+        WHERE ProductId = @defaultProductId
+        OR SendToSupport = @SendToSupport;				
+    END
+
+    ELSE IF @StatementType = 'GetAllCountByStar'
+    BEGIN
+        SELECT COUNT(*) FROM Reviews
+        WHERE ProductId = @defaultProductId
+        AND ProductStars = @defaultProductStars;		
+    END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+        BEGIN TRANSACTION;
+        DELETE FROM Reviews
+        WHERE ProductId = @ProductId;
+        COMMIT TRANSACTION; -- Commit the transaction
+    END
+    ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        RETURN;
+    END
+END

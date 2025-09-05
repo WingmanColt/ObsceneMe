@@ -1,0 +1,86 @@
+ALTER PROCEDURE [dbo].[spBundle]
+    @Id INT = NULL,
+    @Name NVARCHAR(254) = NULL,
+    @Description NVARCHAR(300) = NULL,
+    @IsActive BIT = NULL,
+    @Status INT = NULL,
+    @CreatedOn DATETIME = NULL,
+    @ExpiredOn DATETIME = NULL,
+    @BundleItems dbo.BundleItemType READONLY,  -- TVP param
+    @StatementType VARCHAR(100) = '',
+    @newId INT = NULL OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF @StatementType IN ('Update', 'Delete', 'GetById') AND @Id IS NULL
+    BEGIN
+        RAISERROR('ID is required for this operation', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+
+    IF @StatementType = 'Create'
+    BEGIN
+        BEGIN TRANSACTION;
+        INSERT INTO Bundle (Name, Description, IsActive, Status,CreatedOn, ExpiredOn)
+        VALUES (@Name, @Description, @IsActive, @Status, @CreatedOn, @ExpiredOn);
+
+        SET @newId = SCOPE_IDENTITY();
+
+        -- Insert BundleItems linked to new BundleId
+        INSERT INTO [dbo].[BundleItems] (BundleId, ProductId, Title, Price, DiscountRate, Quantity, ImageSrc)
+        SELECT @newId, ProductId, Title, Price, DiscountRate, Quantity, ImageSrc
+        FROM @BundleItems;
+
+        COMMIT TRANSACTION;
+        RETURN;
+    END
+    ELSE IF @StatementType = 'Update'
+    BEGIN
+        BEGIN TRANSACTION;
+
+        UPDATE Bundle
+        SET Name = @Name,
+            Description = @Description,
+            IsActive = @IsActive,
+            Status = @Status,
+            CreatedOn = @CreatedOn,
+            ExpiredOn = @ExpiredOn
+        WHERE Id = @Id;
+
+        -- Remove existing BundleItems for this Bundle
+        DELETE FROM [dbo].[BundleItems] WHERE BundleId = @Id;
+
+        -- Insert new BundleItems
+        INSERT INTO [dbo].[BundleItems] (BundleId, ProductId, Title, Price, DiscountRate, Quantity, ImageSrc)
+        SELECT @Id, ProductId, Title, Price, DiscountRate, Quantity, ImageSrc
+        FROM @BundleItems;
+
+        COMMIT TRANSACTION;
+    END
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+        BEGIN TRANSACTION;
+
+        DELETE FROM BundleItem WHERE BundleId = @Id;
+        DELETE FROM Bundle WHERE Id = @Id;
+
+        COMMIT TRANSACTION;
+    END
+    ELSE IF @StatementType = 'GetById'
+    BEGIN
+        SELECT * FROM Bundle WHERE Id = @Id;
+        SELECT * FROM BundleItem WHERE BundleId = @Id;
+    END
+    ELSE IF @StatementType = 'GetAll'
+    BEGIN
+        SELECT * FROM Bundle;
+    END
+    ELSE
+    BEGIN
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+END

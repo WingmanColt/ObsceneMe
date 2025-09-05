@@ -1,0 +1,114 @@
+CREATE PROCEDURE [dbo].[spCategoryProductRelation]
+(
+    @id INT = NULL,
+    @ProductId INT = NULL, 
+    @CategoryId INT = NULL, 
+    @StatementType VARCHAR(100) = '',
+    @newId INT = NULL OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @defaultProductId INT = ISNULL(@ProductId, 0);
+    DECLARE @defaultCategoryId INT = ISNULL(@CategoryId, 0);
+
+IF @StatementType = 'Create'
+    BEGIN 
+        BEGIN TRANSACTION;
+        
+-- Check if the relation already exists
+IF EXISTS (SELECT 1 FROM CategoryProductRelation WHERE CategoryId = @CategoryId AND ProductId = @ProductId)
+BEGIN
+    -- Relation exists, so we update it
+    UPDATE CategoryProductRelation
+    SET CategoryId = @CategoryId, ProductId = @ProductId
+    WHERE CategoryId = @CategoryId AND ProductId = @ProductId;
+
+    SET @newId = (SELECT ID FROM CategoryProductRelation WHERE CategoryId = @CategoryId AND ProductId = @ProductId); 
+END
+ELSE
+BEGIN
+    -- Relation doesn't exist, so we insert it
+    INSERT INTO CategoryProductRelation (ProductId, CategoryId)
+    VALUES (@ProductId, @CategoryId);
+    
+    SET @newId = SCOPE_IDENTITY();
+END
+
+COMMIT TRANSACTION;
+
+RETURN @newId;
+    END 
+
+
+    ELSE IF @StatementType = 'GetById'
+    BEGIN
+        SELECT Id, ProductId, CategoryId FROM CategoryProductRelation WHERE Id = @Id;
+    END
+
+    ELSE IF @StatementType = 'CategoryProductRelationExists'
+    BEGIN
+        SELECT COUNT(1) FROM CategoryProductRelation
+        WHERE CategoryId = @defaultCategoryId AND ProductId = @defaultProductId;
+    END
+        
+    ELSE IF @StatementType = 'GetAllByProductId'
+    BEGIN
+        SELECT Id, CategoryId FROM CategoryProductRelation WHERE ProductId = @defaultProductId;
+    END
+
+    ELSE IF @StatementType = 'GetAllByCategoryId'
+    BEGIN
+        SELECT Id, ProductId FROM CategoryProductRelation WHERE CategoryId = @defaultCategoryId;
+    END
+
+    ELSE IF @StatementType = 'GetAll'
+    BEGIN
+        SELECT Id, ProductId, CategoryId FROM CategoryProductRelation;
+    END
+
+    ELSE IF @StatementType = 'GetAllFull'
+    BEGIN
+        SELECT RELATION.Id AS RelationId, PRODUCT.Id AS ProductId, Category.Id AS CategoryId
+        FROM CategoryProductRelation AS RELATION
+        LEFT JOIN Products AS PRODUCT ON RELATION.ProductId = PRODUCT.Id
+        LEFT JOIN Category AS Category ON RELATION.CategoryId = Category.Id;
+    END
+
+    ELSE IF @StatementType = 'Update'
+    BEGIN
+      BEGIN TRANSACTION;
+        UPDATE CategoryProductRelation 
+        SET ProductId = @ProductId, CategoryId = @CategoryId
+        WHERE Id = @id;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+      BEGIN TRANSACTION;
+        DELETE FROM CategoryProductRelation WHERE CategoryId = @defaultCategoryId;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE IF @StatementType = 'DeleteByProduct'
+    BEGIN
+      BEGIN TRANSACTION;
+        DELETE FROM CategoryProductRelation WHERE ProductId = @defaultProductId;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE IF @StatementType = 'Truncate'
+    BEGIN
+        TRUNCATE TABLE CategoryProductRelation;
+    END
+
+    ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+END

@@ -1,0 +1,132 @@
+CREATE PROCEDURE [dbo].[spSubBrands]
+    @id INT = NULL,
+    @BrandShortName NVARCHAR(50) = NULL,
+    @SeriesShortName NVARCHAR(50) = NULL,
+    @Title NVARCHAR(50) = NULL,
+    @Icon NVARCHAR(15) = NULL,
+    @Shortname NVARCHAR(50) = NULL,
+    @ProductsCount INT = 0,
+    @StatementType VARCHAR(100) = '',
+    @Take INT = NULL,
+    @newId INT = NULL OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Handle different StatementType cases
+    IF @StatementType = 'Create'
+    BEGIN 
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            INSERT INTO SubBrands (Title, BrandShortName, SeriesShortName, Icon, Shortname, ProductsCount)
+            VALUES (@Title, @BrandShortName, @SeriesShortName, @Icon, @Shortname, @ProductsCount);
+
+            SET @newId = SCOPE_IDENTITY(); 
+            COMMIT TRANSACTION;
+            RETURN @newId;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;  -- Re-throw the caught exception
+        END CATCH
+    END
+
+    ELSE IF @StatementType = 'GetAll'
+    BEGIN
+        -- Specify column names instead of using SELECT *
+        SELECT * FROM SubBrands;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetUsedSubBrands'
+    BEGIN
+        SELECT * 
+        FROM SubBrands
+        WHERE ProductsCount > 0;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetById'
+    BEGIN
+        SELECT *
+        FROM SubBrands 
+        WHERE Id = @Id;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetTotalProductsCount'
+    BEGIN
+        SELECT ProductsCount 
+        FROM SubBrands 
+        WHERE Id = @id;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'UpdateProductsCount'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            UPDATE SubBrands 
+            SET ProductsCount = @ProductsCount
+            WHERE Id = @id;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'Update'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            UPDATE SubBrands 
+            SET Title = @Title, Shortname = @Shortname, Icon = @Icon, BrandShortName = @BrandShortName, SeriesShortName = @SeriesShortName
+            WHERE Id = @id;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            DELETE FROM SubBrands 
+            WHERE Id = @id;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'Truncate'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            TRUNCATE TABLE SubBrands;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    -- Unsupported StatementType handling
+    ELSE
+    BEGIN
+        RAISERROR('Unsupported StatementType', 16, 1);
+        RETURN;
+    END
+END

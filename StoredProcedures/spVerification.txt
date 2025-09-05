@@ -1,0 +1,83 @@
+CREATE PROCEDURE [dbo].[spVerification]
+(
+    @Id INT = NULL,
+    @Email NVARCHAR(254) = NULL,
+    @Code NVARCHAR(100) = NULL,
+    @CreatedOn VARCHAR(60) = NULL,
+    @ExpiredOn VARCHAR(60) = NULL,
+    @StatementType VARCHAR(100) = '',
+    @newId INT = NULL OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+        -- Parameter validation for specific operations
+    IF @StatementType IN ('Delete') AND @id IS NULL
+    BEGIN
+        RAISERROR('ID is required for Delete operations', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+
+    DECLARE @defaultCode NVARCHAR(100) = ISNULL(@Code, '');
+    DECLARE @defaultEmail NVARCHAR(254) = ISNULL(@Email, '');
+
+    IF @StatementType = 'Create'
+    BEGIN
+      BEGIN TRANSACTION;
+        INSERT INTO Verifications
+        (Email, Code, CreatedOn, ExpiredOn)
+        VALUES
+        (@Email, @Code, @CreatedOn, @ExpiredOn)
+
+        SET @newId = SCOPE_IDENTITY();
+        COMMIT TRANSACTION; -- Commit the transaction
+        RETURN @newId;
+    END
+
+    ELSE IF @StatementType = 'GetByCode'
+    BEGIN
+        SELECT * FROM Verifications
+        WHERE Code = @defaultCode
+    END
+
+    ELSE IF @StatementType = 'GetByEmail'
+    BEGIN
+        SELECT * FROM Verifications
+        WHERE Email = @defaultEmail
+    END
+
+    ELSE IF @StatementType = 'GetCountByEmail'
+   BEGIN
+    SELECT COUNT(*) 
+    FROM Verifications
+    WHERE Email = @defaultEmail
+END
+    ELSE IF @StatementType = 'GetByEmailAndCode'
+    BEGIN
+        SELECT * FROM Verifications
+        WHERE Email = @defaultEmail AND Code = @defaultCode
+    END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+     BEGIN TRANSACTION;
+        DELETE FROM Verifications
+        WHERE Email = @defaultEmail OR Code = @defaultCode
+      COMMIT TRANSACTION;
+    END
+
+    ELSE IF @StatementType = 'Truncate'
+    BEGIN
+        TRUNCATE TABLE Verifications
+    END
+
+    ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+END

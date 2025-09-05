@@ -1,0 +1,103 @@
+CREATE PROCEDURE [dbo].[spVariants](
+@id int = NULL,
+@vId int = NULL,
+@Title varchar(254) = NULL, 
+@Icon varchar(254) = NULL, 
+@StatementType varchar(100) = '',
+@Take int = null,
+@newId int = null output)
+AS
+BEGIN
+SET NOCOUNT ON;
+
+    -- Parameter validation for specific operations
+    IF @StatementType IN ('GetById', 'Delete') AND @id IS NULL
+    BEGIN
+        RAISERROR('ID is required for these operations', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+
+        -- Parameter validation for specific operations
+    IF @StatementType IN ('GetByvId', 'Update') AND @vId IS NULL
+    BEGIN
+        RAISERROR('VID is required for these operations', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+
+DECLARE @defaultTitle varchar(254) = ISNULL(@Title, '');
+
+      IF @StatementType = 'Create'
+       BEGIN 
+       BEGIN TRANSACTION;
+        INSERT INTO Variants (vId, Title, Icon) 
+        VALUES (@vId, @Title, @Icon)	
+        SET @newId = SCOPE_IDENTITY();
+        COMMIT TRANSACTION; -- Commit the transaction
+        RETURN @newId;
+       END 
+
+
+	    ELSE IF @StatementType = 'GetAll'
+        BEGIN
+
+		SELECT * FROM Variants AS ent
+		END
+
+
+        ELSE IF @StatementType = 'GetById'
+        BEGIN
+
+		SELECT * FROM Variants AS ent
+		WHERE Id = @id
+		END
+
+       ELSE IF @StatementType = 'GetByvId'
+        BEGIN
+
+		SELECT * FROM Variants AS ent
+		WHERE vId = @vId
+		END
+
+       ELSE IF @StatementType = 'GetByTitle'
+        BEGIN
+
+		SELECT * FROM Variants AS ent
+		   WHERE ent.Title LIKE '%'+@defaultTitle+'%';
+		END
+
+	 ELSE IF @StatementType = 'Update'
+        BEGIN
+         BEGIN TRANSACTION;
+            UPDATE Variants SET 
+			Title = @Title,
+			Icon = @Icon
+			 WHERE vId = @vId
+
+           COMMIT TRANSACTION;
+			RETURN @id
+
+        END
+
+
+     ELSE IF @StatementType = 'Delete'
+    BEGIN
+      BEGIN TRANSACTION;
+        DELETE FROM Variants
+        WHERE Id = @id
+      COMMIT TRANSACTION;
+    END
+
+     ELSE IF @StatementType = 'Truncate'
+        BEGIN
+            TRUNCATE TABLE Variants;
+        END
+    ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END 
+END

@@ -1,0 +1,61 @@
+CREATE PROCEDURE [dbo].[spAffiliateProgram]
+    @StatementType VARCHAR(100) = '',
+    @AffiliateUserId NVARCHAR(254) = NULL,
+    @StartDateStr VARCHAR(60) = NULL,
+    @EndDateStr VARCHAR(60) = NULL,
+    @Status INT = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF @StatementType = 'GetPerformance'
+    BEGIN
+        -- Validate AffiliateUserId
+        IF @AffiliateUserId IS NULL
+        BEGIN
+            RAISERROR('AffiliateUserId is required for GetPerformance.', 16, 1);
+            RETURN;
+        END
+
+        -- Convert string dates to DATETIME with fallback
+        DECLARE @StartDate DATETIME;
+        DECLARE @EndDate DATETIME;
+
+        BEGIN TRY
+            SET @StartDate = CAST(@StartDateStr AS DATETIME);
+        END TRY
+        BEGIN CATCH
+            SET @StartDate = DATEADD(DAY, -30, GETUTCDATE()); -- Default last 30 days
+        END CATCH
+
+        BEGIN TRY
+            SET @EndDate = CAST(@EndDateStr AS DATETIME);
+        END TRY
+        BEGIN CATCH
+            SET @EndDate = GETUTCDATE();
+        END CATCH
+
+        -- Get ReferralCode for the given AffiliateUserId
+        DECLARE @ReferralCode NVARCHAR(254);
+
+SELECT 
+    CAST(TRY_CAST(o.CreatedOn AS DATETIME) AS DATE) AS [Date],
+    ROUND(SUM(o.TotalCost * (au.CommissionRate / 100.0)), 1) AS TotalRevenue,
+    COUNT(*) AS OrderCount
+FROM [dbo].[Order] o
+JOIN [dbo].[AffiliatedOrder] ao ON o.Code = ao.OrderCode
+JOIN [dbo].[AffiliateUser] au ON ao.AffiliateUserId = au.UserId
+WHERE 
+    ao.AffiliateUserId = @AffiliateUserId
+    AND TRY_CAST(o.CreatedOn AS DATETIME) >= @StartDate
+    AND TRY_CAST(o.CreatedOn AS DATETIME) <= @EndDate
+GROUP BY CAST(TRY_CAST(o.CreatedOn AS DATETIME) AS DATE)
+ORDER BY [Date];
+
+
+    END
+    ELSE
+    BEGIN
+        RAISERROR('Invalid StatementType provided.', 16, 1);
+    END
+END

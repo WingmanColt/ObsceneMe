@@ -1,0 +1,167 @@
+CREATE PROCEDURE [dbo].[spCategories](
+    @id INT = NULL,
+    @Title VARCHAR(254) = NULL, 
+    @Icon VARCHAR(254) = NULL,
+    @TotalProductsCount INT = 0,
+    @Shortname VARCHAR(100) = NULL,
+    @StatementType VARCHAR(200) = '',
+    @newId INT = NULL OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @defaultTitle VARCHAR(254) = ISNULL(@Title, '');
+
+    -- Parameter validation for operations that require an ID
+    IF @StatementType IN ('GetById', 'UpdateProductsCount', 'UpdateSubCategoriesCount', 'Update', 'Delete') AND @id IS NULL
+    BEGIN
+        RAISERROR('ID is required for this operation', 16, 1);
+        RETURN; -- No transaction is started here, so no need to rollback
+    END
+
+    -- Handle different StatementType cases
+    IF @StatementType = 'Create'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            INSERT INTO Category(Title, Icon, Shortname, TotalProductsCount) 
+            VALUES (@Title, @Icon, @Shortname, @TotalProductsCount);
+            SELECT @newId = SCOPE_IDENTITY(); 
+            COMMIT TRANSACTION;
+            RETURN @newId;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+    END
+
+    ELSE IF @StatementType = 'GetAll'
+    BEGIN
+        SELECT Id, Title, Icon, Shortname, TotalProductsCount FROM Category;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetAllWithSubCategories'
+    BEGIN
+        SELECT 
+            c.Id, c.Title, c.Icon, c.Shortname, c.TotalProductsCount, 
+            sc.Id AS SubCategoryId, sc.Title AS SubCategoryTitle, sc.Icon AS SubCategoryIcon, sc.Shortname AS SubCategoryShortname, sc.ProductsCount, sc.CategoryShortName 
+        FROM Category c
+        LEFT JOIN SubCategory sc ON c.Shortname = sc.CategoryShortName;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetUsedCategoriesWithSub'
+    BEGIN
+        SELECT DISTINCT
+            c.Id, c.Title, c.Icon, c.Shortname, c.TotalProductsCount, 
+            sc.Id AS SubCategoryId, sc.Title AS SubCategoryTitle, sc.Icon AS SubCategoryIcon, sc.Shortname AS SubCategoryShortname, sc.ProductsCount, sc.CategoryShortName 
+        FROM 
+            Category c
+        LEFT JOIN 
+            SubCategory sc ON c.Shortname = sc.CategoryShortName AND (sc.ProductsCount > 0 OR sc.ProductsCount IS NULL)
+        WHERE 
+            c.TotalProductsCount > 0;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetUsedCategories'
+    BEGIN
+        SELECT Id, Title, Icon, Shortname, TotalProductsCount 
+        FROM Category 
+        WHERE TotalProductsCount > 0;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetByTitle'
+    BEGIN
+        SELECT Id, Title, Icon, Shortname, TotalProductsCount
+        FROM Category
+        WHERE Title LIKE '%' + @defaultTitle + '%';
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetById'
+    BEGIN
+        SELECT Id, Title, Icon, Shortname, TotalProductsCount
+        FROM Category 
+        WHERE Id = @Id;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetTotalProductsCount'
+    BEGIN
+        SELECT TotalProductsCount FROM Category WHERE Id = @id;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'UpdateProductsCount'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            UPDATE Category
+            SET TotalProductsCount = @TotalProductsCount 
+            WHERE Id = @id;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'Update'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            UPDATE Category 
+            SET Title = @Title, Icon = @Icon, Shortname = @Shortname 
+            WHERE Id = @id;
+            SELECT @newId = SCOPE_IDENTITY();
+            COMMIT TRANSACTION;
+            RETURN @newId;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+    END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            DELETE FROM Category 
+            WHERE Id = @id OR Shortname = @Shortname;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END 
+
+    ELSE IF @StatementType = 'Truncate'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            TRUNCATE TABLE Category;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    -- Unsupported StatementType handling
+    ELSE
+    BEGIN
+        RAISERROR('Unsupported StatementType', 16, 1);
+        RETURN;
+    END
+END

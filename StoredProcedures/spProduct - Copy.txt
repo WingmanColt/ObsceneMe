@@ -1,0 +1,905 @@
+CREATE PROCEDURE [dbo].[spProduct](
+    @id int = NULL,
+    @Title nvarchar(200) = NULL,  
+    @Details nvarchar(200) = NULL, 
+    @Usage nvarchar(1000) = NULL,
+    @Composition nvarchar(1000) = NULL,
+    @Characteristic nvarchar(1000) = NULL,
+    @Description nvarchar(4000) = NULL, 
+    @VideoUrl nvarchar(2048) = NULL, 
+    @Price decimal(10,2) = 0.0,
+    @DiscountRate decimal(10,2) = 0.0,
+    @Quantity int = 0,
+    @IncrementCount bit = 0,
+    @Sold int = 0,
+    @IsFreeShipping bit = 0,
+    @IsReturnRequestAllowed bit = 0,
+    @Rating decimal(10,2) = 0.0,
+    @PositiveRating decimal(10,2) = 0.0,
+    @RatingVotes int = 0,
+    @VotedUsers int = 0,
+    @Views int = 0,
+    @ApproveType int = 0,
+    @ItemType int = 0,
+    @PremiumPackage int = 0,
+    @MarketStatus int = 0,
+    @Status int = 0,
+    @Gender int = 0,
+    @CreatedOn varchar(60) = NULL,
+    @ExpiredOn varchar(60) = NULL,
+    @IncludeImages bit = 0,
+    @IncludeVariants bit = 0,
+    @IncludeReviews bit = 0,
+    @IncludeBrands bit = 0,
+    @IncludeBundle bit = 0,
+    @IncludeCategory bit = 0,
+    @IncludeSubCategory bit = 0,
+    @ProductId int = NULL,
+    @CategoryId int = NULL,
+    @SubCategoryId int = NULL,
+    @BrandId int = NULL,
+    @SeriesId int = NULL,
+    @SubBrandId int = NULL,
+    @Brands NVARCHAR(MAX) = NULL,
+    @Series NVARCHAR(MAX) = NULL,
+    @SubBrands NVARCHAR(MAX) = NULL,
+    @Occasions NVARCHAR(MAX) = NULL,
+    @PageNumber INT = NULL,
+    @PageSize INT = NULL,
+    @LastProductId INT = NULL, 
+    @CategoryTitle NVARCHAR(150) = NULL,
+    @SubCategoryTitle NVARCHAR(150) = NULL,
+    @MinPrice decimal(10,2) = NULL,
+    @MaxPrice decimal(10,2) = NULL,
+    @SortBy NVARCHAR(50) = 'date',
+    @SortDirection NVARCHAR(4) = 'desc',
+    @Take int = null,
+    @StatementType NVARCHAR(100) = NULL,
+    @newId int = null output
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+
+    BEGIN TRY
+    -- Parameter validation for specific operations
+    IF @StatementType IN ('Update', 'Delete', 'GetById') AND @id IS NULL
+    BEGIN
+        RAISERROR('ID is required for these operations', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+
+    DECLARE @defaultTitle nvarchar(254) = ISNULL(@Title, '');
+    DECLARE @defaultQuantity int = ISNULL(@Quantity, 0);
+    DECLARE @defaultSold int = ISNULL(@Sold, 0);
+    DECLARE @ActualPageSize INT = ISNULL(@PageSize, 10); 
+
+
+-- Create index on Product.Id if it doesn't exist
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_Product_Id' AND object_id = OBJECT_ID('Product'))
+BEGIN
+    CREATE INDEX IX_Product_Id ON Product (Id);
+END;
+
+-- Create index on CategoryProductRelation.ProductId if it doesn't exist
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_CategoryProductRelation_ProductId' AND object_id = OBJECT_ID('CategoryProductRelation'))
+BEGIN
+    CREATE INDEX IX_CategoryProductRelation_ProductId ON CategoryProductRelation (ProductId);
+END;
+
+-- Create index on SubCategoryProductRelation.ProductId if it doesn't exist
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_SubCategoryProductRelation_ProductId' AND object_id = OBJECT_ID('SubCategoryProductRelation'))
+BEGIN
+    CREATE INDEX IX_SubCategoryProductRelation_ProductId ON SubCategoryProductRelation (ProductId);
+END;
+
+-- Create index on BrandProductRelation.ProductId if it doesn't exist
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_BrandProductRelation_ProductId' AND object_id = OBJECT_ID('BrandProductRelation'))
+BEGIN
+    CREATE INDEX IX_BrandProductRelation_ProductId ON BrandProductRelation (ProductId);
+END;
+
+-- Create index on OccasionProductRelation.ProductId if it doesn't exist
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_OccasionProductRelation_ProductId' AND object_id = OBJECT_ID('OccasionProductRelation'))
+BEGIN
+    CREATE INDEX IX_OccasionProductRelation_ProductId ON OccasionProductRelation (ProductId);
+END;
+
+-- Create index on VariantProductRelation.ProductId if it doesn't exist
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_VariantProductRelation_ProductId' AND object_id = OBJECT_ID('VariantProductRelation'))
+BEGIN
+    CREATE INDEX IX_VariantProductRelation_ProductId ON VariantProductRelation (ProductId);
+END;
+
+-- Create index on VariantProductRelation.VariantAndVariantItemRelationId if it doesn't exist
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_VariantProductRelation_VariantAndVariantItemRelationId' AND object_id = OBJECT_ID('VariantProductRelation'))
+BEGIN
+    CREATE INDEX IX_VariantProductRelation_VariantAndVariantItemRelationId ON VariantProductRelation (VariantAndVariantItemRelationId);
+END;
+
+-- Create index on VariantAndVariantItemRelation.Id if it doesn't exist
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_VariantAndVariantItemRelation_Id' AND object_id = OBJECT_ID('VariantAndVariantItemRelation'))
+BEGIN
+    CREATE INDEX IX_VariantAndVariantItemRelation_Id ON VariantAndVariantItemRelation (Id);
+END;
+
+-- Create index on Variants.Id if it doesn't exist
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_Variants_Id' AND object_id = OBJECT_ID('Variants'))
+BEGIN
+    CREATE INDEX IX_Variants_Id ON Variants (Id);
+END;
+
+-- Create index on VariantItem.Id if it doesn't exist
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_VariantItem_Id' AND object_id = OBJECT_ID('VariantItem'))
+BEGIN
+    CREATE INDEX IX_VariantItem_Id ON VariantItem (Id);
+END;
+
+-- Update statistics after creating indexes
+EXEC sp_updatestats;
+
+    IF @StatementType = 'Create'
+    BEGIN 
+        BEGIN TRANSACTION;
+        INSERT INTO Product(
+            Title, 
+            Details,
+            Characteristic,
+            Usage,
+            Composition,
+            Description,
+            VideoUrl,
+            Quantity,
+            Price,
+            DiscountRate,
+            IsFreeShipping,
+            IsReturnRequestAllowed,
+            Rating,
+            PositiveRating,
+            RatingVotes,
+            VotedUsers,
+            Views,
+            Gender,
+            ApproveType,
+            ItemType,
+            PremiumPackage,
+            MarketStatus,
+            Status,
+            CreatedOn,
+            ExpiredOn
+        ) VALUES (
+            @Title, 
+            @Details,
+            @Characteristic,
+            @Usage,
+            @Composition,
+            @Description,
+            @VideoUrl,
+            @Quantity,
+            @Price,
+            @DiscountRate,
+            @IsFreeShipping,
+            @IsReturnRequestAllowed,
+            @Rating,
+            @PositiveRating,
+            @RatingVotes,
+            @VotedUsers,
+            @Views,
+            @Gender,
+            @ApproveType,
+            @ItemType,
+            @PremiumPackage,
+            @MarketStatus,
+            @Status,
+            @CreatedOn,
+            @ExpiredOn
+        );	 
+        SET @newId = SCOPE_IDENTITY();
+        COMMIT TRANSACTION; -- Commit the transaction
+        RETURN @newId;
+    END 
+
+ELSE IF @StatementType = 'GetProductFull'
+BEGIN
+    -- Fetch product details
+    SELECT
+        T1.Id,
+        T1.Title,
+        T1.Details,
+        T1.Description,
+        T1.Usage,
+        T1.Composition,
+        T1.Characteristic,
+        T1.Quantity,
+        T1.Price,
+        T1.DiscountRate,
+        T1.MarketStatus,
+        T1.PremiumPackage,
+        T1.Rating,
+        T1.RatingVotes,
+        T1.IsFreeShipping,
+        T1.ItemType,
+        T1.Status,
+        CPR.CategoryId,
+        C.Title AS CategoryTitle,
+        SPR.SubCategoryId,
+        SC.Title AS SubCategoryTitle,
+        BPR.BrandId,
+        B.Title AS BrandTitle,
+        SSPR.SeriesId,
+        S.Title AS SeriesTitle,
+        SBPR.SubBrandId,
+        SB.Title AS SubBrandTitle,
+        (SELECT COALESCE(STRING_AGG(OPR.OccasionId, ','), '') 
+         FROM OccasionProductRelation AS OPR 
+         WHERE OPR.ProductId = T1.Id) AS OccasionIds
+
+    INTO #ProductDetails
+    FROM Product AS T1
+    LEFT JOIN CategoryProductRelation AS CPR ON T1.Id = CPR.ProductId
+    LEFT JOIN Category AS C ON CPR.CategoryId = C.Id
+    LEFT JOIN SubCategoryProductRelation AS SPR ON T1.Id = SPR.ProductId
+    LEFT JOIN SubCategory AS SC ON SPR.SubCategoryId = SC.Id
+    LEFT JOIN BrandProductRelation AS BPR ON T1.Id = BPR.ProductId
+    LEFT JOIN Brands AS B ON BPR.BrandId = B.Id
+    LEFT JOIN SeriesProductRelation AS SSPR ON T1.Id = SSPR.ProductId
+    LEFT JOIN Series AS S ON SSPR.SeriesId = S.Id
+    LEFT JOIN SubBrandProductRelation AS SBPR ON T1.Id = SBPR.ProductId
+    LEFT JOIN SubBrands AS SB ON SBPR.SubBrandId = SB.Id
+    WHERE T1.Id = @ProductId;
+
+        SELECT *
+        INTO #ProductImages
+        FROM Image
+        WHERE ProductId = @ProductId;
+
+
+        SELECT *
+        INTO #ProductReviews
+        FROM Reviews
+        WHERE ProductId = @ProductId;
+
+
+        SELECT VAVIR.VariantId, VAVIR.VariantItemId, V.Title, V.Icon,
+               VI.Value, VI.Image
+        INTO #VariantsAndItems
+        FROM VariantProductRelation AS VPR
+        INNER JOIN VariantAndVariantItemRelation AS VAVIR ON VPR.ProductId = @ProductId AND VPR.VariantAndVariantItemRelationId = VAVIR.Id
+        INNER JOIN Variants AS V ON VAVIR.VariantId = V.Id
+        INNER JOIN VariantItem AS VI ON VAVIR.VariantItemId = VI.Id;
+
+
+    SELECT * FROM #ProductDetails;
+    SELECT * FROM #ProductImages;
+    SELECT * FROM #ProductReviews;
+    SELECT * FROM #VariantsAndItems;
+
+
+    -- Drop the temporary tables at the end
+    DROP TABLE IF EXISTS #ProductDetails;
+    DROP TABLE IF EXISTS #ProductImages;
+    DROP TABLE IF EXISTS #ProductReviews;
+    DROP TABLE IF EXISTS #VariantsAndItems;
+END
+
+
+
+		ELSE IF @StatementType = 'SelectByTitle'
+        BEGIN
+            SELECT * FROM Product
+			WHERE Title = @Title
+        END
+
+        ELSE IF @StatementType = 'GetByIdWithImage'
+        BEGIN
+    SELECT
+    P.Id,
+    P.Title,
+    P.Details,
+    P.Quantity,
+    P.Price,
+    P.DiscountRate,
+    P.MarketStatus,
+    P.PremiumPackage,
+    P.Rating,
+    P.RatingVotes,
+    P.IsFreeShipping,
+    P.Sold,
+    TI.Image1 AS Image
+FROM Product AS P
+INNER JOIN (
+    SELECT 
+        ProductId,
+        MAX(CASE WHEN RowNum = 1 THEN Src END) AS Image1
+    FROM (
+        SELECT
+            ProductId,
+            Src,
+            VariantId,
+            IsMainImage,
+            ROW_NUMBER() OVER(PARTITION BY ProductId ORDER BY Id) AS RowNum
+        FROM Image
+        WHERE ProductId = @Id  -- Filter by specific ProductId
+    ) AS RankedImages
+    GROUP BY ProductId
+) AS TI ON P.Id = TI.ProductId
+WHERE P.Id = @Id  -- Add a filter for the specific ProductId
+ORDER BY P.Id DESC;
+        END
+
+                ELSE IF @StatementType = 'GetById'
+        BEGIN
+    SELECT *
+FROM Product AS P
+WHERE P.Id = @Id  -- Add a filter for the specific ProductId
+ORDER BY P.Id DESC;
+        END
+
+
+
+	--ELSE IF @StatementType = 'GetAllCountBy'
+     --   BEGIN
+       --     SELECT COUNT(*) FROM Product
+       --      WHERE CategoryId = @defaultCategoryId OR SubCategoryId = @defaultSubCategoryId
+      --  END
+
+      	ELSE IF @StatementType = 'GetByIdRatings'
+        BEGIN
+        SELECT Id, RatingVotes, Rating, VotedUsers, PositiveRating FROM Product
+			WHERE Id = @id
+        END
+
+ELSE IF @StatementType = 'AddRating'
+BEGIN
+    BEGIN TRANSACTION;
+
+    UPDATE Product
+    SET
+        RatingVotes = RatingVotes + @RatingVotes,
+        Rating = ((Rating * (RatingVotes - @RatingVotes) + @Rating) / (RatingVotes + 1)),
+        VotedUsers = VotedUsers + 1
+    WHERE Id = @Id;
+
+    COMMIT TRANSACTION;
+END
+
+
+ELSE IF @StatementType = 'GetDefaultProducts'
+BEGIN
+    -- Ensure any temporary objects are cleaned up first
+    IF OBJECT_ID('tempdb..#DefaultProductIds') IS NOT NULL DROP TABLE #DefaultProductIds;
+    CREATE TABLE #DefaultProductIds (Id INT);
+
+    -- Populate the temporary table with IDs of products that match the filters
+    INSERT INTO #DefaultProductIds (Id)
+    SELECT DISTINCT T1.Id
+    FROM Product AS T1   
+    LEFT JOIN CategoryProductRelation AS CPR ON T1.Id = CPR.ProductId
+    LEFT JOIN SubCategoryProductRelation AS SPR ON T1.Id = SPR.ProductId
+    LEFT JOIN BrandProductRelation AS BPR ON T1.Id = BPR.ProductId
+
+    -- Determine the total number of items matching the filters
+    SELECT COUNT(*) AS TotalItems FROM #DefaultProductIds;
+
+    ;WITH RankedImages AS (
+        SELECT
+            ProductId,
+            Src,
+            IsMainImage,
+           ROW_NUMBER() OVER(PARTITION BY ProductId ORDER BY 
+            CASE WHEN IsMainImage = 1 THEN 0 ELSE 1 END, Id) AS RowNum 
+        FROM Image
+        WHERE ProductId IN (SELECT Id FROM #DefaultProductIds)
+    ), 
+    TopImages AS (
+        SELECT
+            ProductId,
+            MAX(CASE WHEN RowNum = 1 THEN Src END) AS Image1, -- Fetch the first image
+            MAX(CASE WHEN RowNum = 2 THEN Src END) AS Image2, -- Fetch the second image
+            MAX(CASE WHEN RowNum = 3 THEN Src END) AS Image3  -- Fetch the third image
+        FROM RankedImages
+        GROUP BY ProductId
+    ),
+    GroupedBrands AS (
+        SELECT
+            BPR.ProductId,
+            STRING_AGG(BPR.BrandId, ',') AS BrandIds
+        FROM BrandProductRelation BPR
+        WHERE BPR.ProductId IN (SELECT Id FROM #DefaultProductIds)
+        GROUP BY BPR.ProductId
+    )
+    SELECT TOP (@ActualPageSize) 
+        T1.Id,
+        T1.Title,
+        T1.Quantity,
+        T1.Price,
+        T1.DiscountRate,
+        T1.MarketStatus,
+        T1.PremiumPackage,
+        T1.Rating,
+        T1.RatingVotes,
+        T1.IsFreeShipping,
+        T1.ItemType,
+        T1.Status,
+        CPR.CategoryId,
+        C.Title AS CategoryTitle,
+        SPR.SubCategoryId,
+        SC.Title AS SubCategoryTitle,
+        BI.BrandIds, -- Using Brand IDs from the grouped result
+        TI.Image1 AS Src1,
+        TI.Image2 AS Src2,
+        TI.Image3 AS Src3
+
+    FROM Product AS T1
+    INNER JOIN #DefaultProductIds FP ON T1.Id = FP.Id
+    LEFT JOIN CategoryProductRelation AS CPR ON T1.Id = CPR.ProductId
+    LEFT JOIN Category AS C ON CPR.CategoryId = C.Id
+    LEFT JOIN SubCategoryProductRelation AS SPR ON T1.Id = SPR.ProductId
+    LEFT JOIN SubCategory AS SC ON SPR.SubCategoryId = SC.Id
+    LEFT JOIN TopImages TI ON T1.Id = TI.ProductId
+    LEFT JOIN GroupedBrands BI ON T1.Id = BI.ProductId -- Joining the grouped brands
+    WHERE T1.Id < ISNULL(@LastProductId, 999999)
+    ORDER BY T1.Id DESC; 
+
+    DROP TABLE IF EXISTS #DefaultProductIds;
+END;
+
+
+ELSE IF @StatementType = 'GetFilteredProducts'
+BEGIN
+    -- Ensure any temporary objects are cleaned up first
+    IF OBJECT_ID('tempdb..#FilteredProductIds') IS NOT NULL DROP TABLE #FilteredProductIds;
+    CREATE TABLE #FilteredProductIds (Id INT);
+
+    -- Populate the temporary table with IDs of products that match the filters
+    INSERT INTO #FilteredProductIds (Id)
+    SELECT DISTINCT T1.Id
+    FROM Product AS T1
+    LEFT JOIN CategoryProductRelation AS CPR ON T1.Id = CPR.ProductId
+    LEFT JOIN SubCategoryProductRelation AS SPR ON T1.Id = SPR.ProductId
+    LEFT JOIN BrandProductRelation AS BPR ON T1.Id = BPR.ProductId
+    LEFT JOIN SeriesProductRelation AS SRPR ON T1.Id = SRPR.ProductId
+    LEFT JOIN SubBrandProductRelation AS SBPR ON T1.Id = SBPR.ProductId
+    LEFT JOIN OccasionProductRelation AS OPR ON T1.Id = OPR.ProductId
+
+    WHERE (@Title IS NULL OR T1.Title LIKE '%' + @Title + '%')
+        AND (@CategoryId IS NULL OR CPR.CategoryId = @CategoryId)
+        AND (@SubCategoryId IS NULL OR SPR.SubCategoryId = @SubCategoryId)
+        AND (@Gender IS NULL OR T1.Gender = @Gender)
+        AND (@Rating IS NULL OR 
+            (@Rating = 1 AND T1.Rating >= 0.0 AND T1.Rating < 1.0) OR
+            (@Rating = 2 AND T1.Rating >= 1.0 AND T1.Rating < 2.0) OR
+            (@Rating = 3 AND T1.Rating >= 2.0 AND T1.Rating < 3.0) OR
+            (@Rating = 4 AND T1.Rating >= 3.0 AND T1.Rating < 4.0) OR
+            (@Rating = 5 AND T1.Rating >= 4.0 AND T1.Rating <= 5.0))
+        AND (@Status IS NULL OR T1.Status = @Status)
+
+        AND (@Brands IS NULL OR BPR.BrandId IN (SELECT value FROM STRING_SPLIT(@Brands, ',')) OR @Brands = '') 
+        AND (@Series IS NULL OR SRPR.SeriesId IN (SELECT value FROM STRING_SPLIT(@Series, ',')) OR @Series = '') 
+        AND (@SubBrands IS NULL OR SBPR.SubBrandId IN (SELECT value FROM STRING_SPLIT(@SubBrands, ',')) OR @SubBrands = '') 
+        AND (@Occasions IS NULL OR OPR.OccasionId IN (SELECT value FROM STRING_SPLIT(@Occasions, ',')) OR @Occasions = '')
+
+        AND ((@MinPrice IS NULL OR T1.Price >= @MinPrice OR (@MinPrice = 0 AND @MaxPrice = 0)) 
+        AND (@MaxPrice IS NULL OR T1.Price <= @MaxPrice OR (@MinPrice = 0 AND @MaxPrice = 0))
+    );
+
+    -- Determine the total number of items matching the filters
+    SELECT COUNT(*) AS TotalItems FROM #FilteredProductIds;
+
+
+    ;WITH RankedImages AS (
+        SELECT
+            ProductId,
+            Src,
+            IsMainImage,
+           ROW_NUMBER() OVER(PARTITION BY ProductId ORDER BY 
+            CASE WHEN IsMainImage = 1 THEN 0 ELSE 1 END, Id) AS RowNum 
+        FROM Image
+        WHERE ProductId IN (SELECT Id FROM #FilteredProductIds)
+    ), 
+    TopImages AS (
+        SELECT
+            ProductId,
+            MAX(CASE WHEN RowNum = 1 THEN Src END) AS Image1, -- Fetch the first image
+            MAX(CASE WHEN RowNum = 2 THEN Src END) AS Image2, -- Fetch the second image
+            MAX(CASE WHEN RowNum = 3 THEN Src END) AS Image3  -- Fetch the third image
+        FROM RankedImages
+        GROUP BY ProductId
+    ), 
+    GroupedOccasions AS (
+        SELECT
+            OPR.ProductId,
+            STRING_AGG(OPR.OccasionId, ',') AS OccasionIds
+        FROM OccasionProductRelation OPR
+        WHERE OPR.ProductId IN (SELECT Id FROM #FilteredProductIds)
+        GROUP BY OPR.ProductId
+    ),
+    GroupedBrands AS (
+        SELECT
+            BPR.ProductId,
+            STRING_AGG(BPR.BrandId, ',') AS BrandIds
+        FROM BrandProductRelation BPR
+        WHERE BPR.ProductId IN (SELECT Id FROM #FilteredProductIds)
+        GROUP BY BPR.ProductId
+    ),
+        GroupedSeries AS (
+        SELECT
+            SRPR.ProductId,
+            STRING_AGG(SRPR.SeriesId, ',') AS SeriesIds
+        FROM SeriesProductRelation SRPR
+        WHERE SRPR.ProductId IN (SELECT Id FROM #FilteredProductIds)
+        GROUP BY SRPR.ProductId
+    ),
+        GroupedSubBrands AS (
+        SELECT
+            SBPR.ProductId,
+            STRING_AGG(SBPR.SubBrandId, ',') AS SubBrandIds
+        FROM SubBrandProductRelation SBPR
+        WHERE SBPR.ProductId IN (SELECT Id FROM #FilteredProductIds)
+        GROUP BY SBPR.ProductId
+    )
+    SELECT TOP (@ActualPageSize) 
+        T1.Id,
+        T1.Title,
+        T1.Quantity,
+        T1.Price,
+        T1.DiscountRate,
+        T1.MarketStatus,
+        T1.PremiumPackage,
+        T1.Rating,
+        T1.RatingVotes,
+        T1.IsFreeShipping,
+        T1.ItemType,
+        T1.Status,
+        CPR.CategoryId,
+        C.Title AS CategoryTitle,
+        SPR.SubCategoryId,
+        SC.Title AS SubCategoryTitle,
+        BI.BrandIds, -- Using Brand IDs from the grouped result
+        SI.SeriesIds,
+        SBI.SubBrandIds,
+        TI.Image1 AS Src1,
+        TI.Image2 AS Src2,
+        TI.Image3 AS Src3,
+        GO.OccasionIds -- Using Occasion IDs from the grouped result
+
+    FROM Product AS T1
+    INNER JOIN #FilteredProductIds FP ON T1.Id = FP.Id
+    LEFT JOIN CategoryProductRelation AS CPR ON T1.Id = CPR.ProductId
+    LEFT JOIN Category AS C ON CPR.CategoryId = C.Id
+    LEFT JOIN SubCategoryProductRelation AS SPR ON T1.Id = SPR.ProductId
+    LEFT JOIN SubCategory AS SC ON SPR.SubCategoryId = SC.Id
+    LEFT JOIN TopImages TI ON T1.Id = TI.ProductId
+    LEFT JOIN GroupedOccasions GO ON T1.Id = GO.ProductId
+    LEFT JOIN GroupedBrands BI ON T1.Id = BI.ProductId -- Joining the grouped brands
+    LEFT JOIN GroupedSeries SI ON T1.Id = SI.ProductId 
+    LEFT JOIN GroupedSubBrands SBI ON T1.Id = SBI.ProductId 
+    WHERE T1.Id < ISNULL(@LastProductId, 999999)
+    ORDER BY 
+        CASE WHEN @SortBy = 'title' AND @SortDirection = 'asc' THEN T1.Title END ASC,
+        CASE WHEN @SortBy = 'title' AND @SortDirection = 'desc' THEN T1.Title END DESC,
+        CASE WHEN @SortBy = 'price' AND @SortDirection = 'asc' THEN T1.Price END ASC,
+        CASE WHEN @SortBy = 'price' AND @SortDirection = 'desc' THEN T1.Price END DESC,
+        CASE WHEN @SortBy = 'rating' AND @SortDirection = 'asc' THEN T1.Rating END ASC,
+        CASE WHEN @SortBy = 'rating' AND @SortDirection = 'desc' THEN T1.Rating END DESC,
+        CASE WHEN @SortBy = 'date' AND @SortDirection = 'asc' THEN T1.CreatedOn END ASC,
+        CASE WHEN @SortBy = 'date' AND @SortDirection = 'desc' THEN T1.CreatedOn END DESC,
+        T1.Id DESC; -- Fallback sort
+
+    DROP TABLE IF EXISTS #FilteredProductIds;
+END;
+
+
+
+	ELSE IF @StatementType = 'GetAllShort'
+        BEGIN
+WITH RankedImages AS (
+    SELECT
+        ProductId,
+        Src,
+        IsMainImage,
+        ROW_NUMBER() OVER(PARTITION BY ProductId ORDER BY Id) AS RowNum
+    FROM Image
+)
+SELECT TOP (@Take)
+    P.Id,
+    P.Title,
+    P.Price,
+    P.DiscountRate,
+    P.MarketStatus,
+    P.Rating,
+    P.RatingVotes,
+    RI.Src AS Image
+FROM 
+    Product AS P
+LEFT JOIN RankedImages AS RI ON P.Id = RI.ProductId AND RI.RowNum = 1
+WHERE (@Title IS NULL OR P.Title LIKE '%' + @Title + '%')
+ORDER BY P.Id DESC;
+        END
+
+
+  ELSE IF @StatementType = 'GetSpecialProducts'
+       BEGIN
+
+WITH RankedImages AS (
+    SELECT
+        ProductId,
+        Src,
+        IsMainImage,
+        ROW_NUMBER() OVER(PARTITION BY ProductId ORDER BY Id) AS RowNum
+    FROM Image
+),
+TopImages AS (
+    SELECT
+        ProductId,
+        MAX(CASE WHEN RowNum = 1 THEN Src END) AS Image1,
+        MAX(CASE WHEN RowNum = 2 THEN Src END) AS Image2,
+        MAX(CASE WHEN RowNum = 3 THEN Src END) AS Image3
+    FROM RankedImages
+    GROUP BY ProductId
+)
+SELECT TOP (12)
+    P.Id,
+    P.Title,
+    P.Quantity,
+    P.Price,
+    P.DiscountRate,
+    P.MarketStatus,
+    P.PremiumPackage,
+    P.Rating,
+    P.RatingVotes,
+    P.IsFreeShipping,
+    P.ItemType,
+    P.Status,
+    CPR.CategoryId,
+    C.Title AS CategoryTitle,
+    TI.Image1 AS Src1,
+    TI.Image2 AS Src2,
+    TI.Image3 AS Src3
+FROM 
+    Product AS P
+INNER JOIN TopImages AS TI ON P.Id = TI.ProductId
+LEFT JOIN CategoryProductRelation AS CPR ON P.Id = CPR.ProductId
+LEFT JOIN Category AS C ON CPR.CategoryId = C.Id
+ORDER BY P.Id DESC;
+
+
+     END	
+
+
+     ELSE IF @StatementType = 'GetRelatedProducts'
+        BEGIN
+WITH RankedImages AS (
+    SELECT
+        ProductId,
+        Src,
+        IsMainImage,
+        ROW_NUMBER() OVER(PARTITION BY ProductId ORDER BY Id) AS RowNum
+    FROM Image
+),
+TopImages AS (
+    SELECT
+        ProductId,
+        MAX(CASE WHEN RowNum = 1 THEN Src END) AS Image1,
+        MAX(CASE WHEN RowNum = 2 THEN Src END) AS Image2,
+        MAX(CASE WHEN RowNum = 3 THEN Src END) AS Image3
+    FROM RankedImages
+    GROUP BY ProductId
+)
+SELECT TOP (@Take)
+    P.Id,
+    P.Title,
+    P.Quantity,
+    P.Price,
+    P.DiscountRate,
+    P.MarketStatus,
+    P.PremiumPackage,
+    P.Rating,
+    P.RatingVotes,
+    P.IsFreeShipping,
+    P.Sold,
+    CPR.CategoryId,
+    C.Title AS CategoryTitle,
+    SPR.SubCategoryId,
+    SC.Title AS SubCategoryTitle,
+    TI.Image1 AS Src1,
+    TI.Image2 AS Src2,
+    TI.Image3 AS Src3
+FROM 
+    Product AS P
+INNER JOIN TopImages AS TI ON P.Id = TI.ProductId
+LEFT JOIN CategoryProductRelation AS CPR ON P.Id = CPR.ProductId
+LEFT JOIN Category AS C ON CPR.CategoryId = C.Id
+LEFT JOIN SubCategoryProductRelation AS SPR ON P.Id = SPR.ProductId
+LEFT JOIN SubCategory AS SC ON SPR.SubCategoryId = SC.Id
+
+ORDER BY P.Sold DESC;
+
+     END	
+
+
+ELSE IF @StatementType = 'Update'
+        BEGIN
+         BEGIN TRANSACTION;
+            UPDATE Product SET 
+Title = @Title, 
+Details = @Details,
+Characteristic = @Characteristic,
+Usage = @Usage,
+Composition = @Composition,
+Description = @Description,
+VideoUrl = @VideoUrl,
+Quantity = @Quantity,
+Price = @Price,
+DiscountRate = @DiscountRate,
+--CategoryId = @CategoryId,
+--SubCategoryId = @SubCategoryId,
+--BrandId = @BrandId,
+IsFreeShipping = @IsFreeShipping,
+IsReturnRequestAllowed = @IsReturnRequestAllowed,
+Rating = @Rating,
+PositiveRating = @PositiveRating,
+RatingVotes = @RatingVotes,
+VotedUsers = @VotedUsers,
+Views = @Views,
+Gender = @Gender,
+ApproveType = @ApproveType,
+ItemType = @ItemType,
+PremiumPackage = @PremiumPackage,
+MarketStatus = @MarketStatus,
+Status = @Status,
+@newId = @id
+			 WHERE Id = @id
+             COMMIT TRANSACTION;
+
+			 RETURN @newId
+        END
+      ELSE IF @StatementType = 'Delete'
+        BEGIN
+        BEGIN TRANSACTION;
+            DELETE FROM Product
+            WHERE id = @id
+            COMMIT TRANSACTION;
+        END
+
+        	ELSE IF @StatementType = 'UpdateProductsCount'
+        BEGIN
+         BEGIN TRANSACTION;
+            UPDATE Product SET 
+			Quantity = @defaultQuantity,
+            Sold = @defaultSold,
+            MarketStatus = @MarketStatus,
+            PremiumPackage = @PremiumPackage
+			 WHERE Id = @id
+           COMMIT TRANSACTION;
+           RETURN @id
+        END
+
+      ELSE IF @StatementType = 'UpdateStatus'
+        BEGIN
+         BEGIN TRANSACTION;
+            UPDATE Product SET 
+            Status = @Status
+			 WHERE Id = @id
+           COMMIT TRANSACTION;
+           RETURN @id
+        END
+
+        	ELSE IF @StatementType = 'GetBestSoldProduct'
+        BEGIN
+            SELECT TOP 3 * FROM Product
+            --WHERE CategoryId = @defaultCategoryId 
+            --OR SubCategoryId = @defaultSubCategoryId
+            ORDER BY Sold DESC;
+  END
+
+
+-- For single relation
+ELSE IF @StatementType = 'UpdateCountOnRelations'
+BEGIN
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        -- Adjust @Quantity based on @IncrementCount
+        SET @Quantity = CASE 
+            WHEN @IncrementCount = 1 THEN ABS(@Quantity)  -- Ensure positive for increment
+            ELSE -ABS(@Quantity)                         -- Ensure negative for decrement
+        END;
+
+        -- Update Category TotalProductsCount
+        IF @CategoryId IS NOT NULL
+        BEGIN
+            UPDATE Category
+            SET TotalProductsCount = ISNULL(TotalProductsCount, 0) + @Quantity
+            WHERE Id = @CategoryId;
+        END
+
+        -- Update SubCategory ProductsCount
+        IF @SubCategoryId IS NOT NULL
+        BEGIN
+            UPDATE SubCategory
+            SET ProductsCount = ISNULL(ProductsCount, 0) + @Quantity
+            WHERE Id = @SubCategoryId;
+        END
+
+        -- Update Brands TotalProductsCount
+        IF @BrandId IS NOT NULL
+        BEGIN
+            UPDATE Brands
+            SET TotalProductsCount = ISNULL(TotalProductsCount, 0) + @Quantity
+            WHERE Id = @BrandId;
+        END
+
+        -- Update Series ProductsCount
+        IF @SeriesId IS NOT NULL
+        BEGIN
+            UPDATE Series
+            SET ProductsCount = ISNULL(ProductsCount, 0) + @Quantity
+            WHERE Id = @SeriesId;
+        END
+
+        -- Update SubBrands ProductsCount
+        IF @SubBrandId IS NOT NULL
+        BEGIN
+            UPDATE SubBrands
+            SET ProductsCount = ISNULL(ProductsCount, 0) + @Quantity
+            WHERE Id = @SubBrandId;
+        END
+               
+        -- Update Occasions ProductsCount
+        IF @Occasions IS NOT NULL
+        BEGIN
+            DECLARE @OccasionId INT;
+            DECLARE OccasionCursor CURSOR FOR SELECT value FROM STRING_SPLIT(@Occasions, ',');
+            OPEN OccasionCursor;
+            FETCH NEXT FROM OccasionCursor INTO @OccasionId;
+
+            WHILE @@FETCH_STATUS = 0
+            BEGIN
+                UPDATE Occasion
+                SET ProductsCount = ISNULL(ProductsCount, 0) + @Quantity
+                WHERE Id = @OccasionId;
+
+                FETCH NEXT FROM OccasionCursor INTO @OccasionId;
+            END;
+
+            CLOSE OccasionCursor;
+            DEALLOCATE OccasionCursor;
+        END
+
+
+        COMMIT TRANSACTION;
+        RETURN @id
+
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+      ELSE IF @StatementType = 'Truncate'
+    BEGIN
+        TRUNCATE TABLE Product;
+        TRUNCATE TABLE Image;
+    END
+
+  ELSE
+      BEGIN
+            RAISERROR('Unsupported StatementType', 16, 1);
+            RETURN;
+        END
+ END TRY
+    BEGIN CATCH
+    IF @@TRANCOUNT > 0
+    BEGIN
+        ROLLBACK TRANSACTION;
+    END
+    -- Consider logging the error or re-throwing
+    DECLARE @ErrorMessage NVARCHAR(2048) = ERROR_MESSAGE(); -- Retrieve the error message
+    RAISERROR(@ErrorMessage, 16, 1); -- Raise the error with the retrieved message
+END CATCH
+    END

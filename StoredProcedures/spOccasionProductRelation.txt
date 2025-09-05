@@ -1,0 +1,102 @@
+CREATE PROCEDURE [dbo].[spOccasionProductRelation]
+(
+    @id INT = NULL,
+    @ProductId INT = NULL, 
+    @OccasionId INT = NULL, 
+    @StatementType VARCHAR(100) = '',
+    @newId INT = NULL OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @defaultProductId INT = ISNULL(@ProductId, 0);
+    DECLARE @defaultOccasionId INT = ISNULL(@OccasionId, 0);
+
+
+    IF @StatementType = 'Create'
+    BEGIN 
+     BEGIN TRANSACTION;
+        INSERT INTO OccasionProductRelation (ProductId, OccasionId) 
+        VALUES (@ProductId, @OccasionId);	
+        
+        SET @newId = SCOPE_IDENTITY();
+        COMMIT TRANSACTION; -- Commit the transaction
+        RETURN @newId;
+    END 
+
+    ELSE IF @StatementType = 'Select'
+    BEGIN
+        SELECT Id, ProductId, OccasionId FROM OccasionProductRelation;
+    END
+
+    ELSE IF @StatementType = 'GetById'
+    BEGIN
+        SELECT Id, ProductId, OccasionId FROM OccasionProductRelation WHERE Id = @Id;
+    END
+
+    ELSE IF @StatementType = 'OccasionProductRelationExists'
+    BEGIN
+        SELECT COUNT(1) FROM OccasionProductRelation
+        WHERE OccasionId = @defaultOccasionId AND ProductId = @defaultProductId;
+    END
+        
+    ELSE IF @StatementType = 'GetAllByProductId'
+    BEGIN
+        SELECT Id, OccasionId FROM OccasionProductRelation WHERE ProductId = @ProductId;
+    END
+
+    ELSE IF @StatementType = 'GetAllByOccasionId'
+    BEGIN
+        SELECT Id, ProductId FROM OccasionProductRelation WHERE OccasionId = @OccasionId;
+    END
+
+    ELSE IF @StatementType = 'GetAll'
+    BEGIN
+        SELECT Id, ProductId, OccasionId FROM OccasionProductRelation;
+    END
+
+    ELSE IF @StatementType = 'GetAllFull'
+    BEGIN
+        SELECT RELATION.Id AS RelationId, PRODUCT.Id AS ProductId, OCCASION.Id AS OccasionId
+        FROM OccasionProductRelation AS RELATION
+        LEFT JOIN Products AS PRODUCT ON RELATION.ProductId = PRODUCT.Id
+        LEFT JOIN Occasion AS OCCASION ON RELATION.OccasionId = OCCASION.Id;
+    END
+
+    ELSE IF @StatementType = 'Update'
+    BEGIN
+      BEGIN TRANSACTION;
+        UPDATE OccasionProductRelation 
+        SET ProductId = @ProductId, OccasionId = @OccasionId
+        WHERE Id = @id;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+      BEGIN TRANSACTION;
+        DELETE FROM OccasionProductRelation WHERE Id = @id;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE IF @StatementType = 'DeleteByProduct'
+    BEGIN
+      BEGIN TRANSACTION;
+        DELETE FROM OccasionProductRelation WHERE ProductId = @defaultProductId;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE IF @StatementType = 'Truncate'
+    BEGIN
+        TRUNCATE TABLE OccasionProductRelation;
+    END
+
+    ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+END

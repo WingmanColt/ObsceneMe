@@ -1,0 +1,102 @@
+CREATE PROCEDURE [dbo].[spSubBrandProductRelation]
+(
+    @id INT = NULL,
+    @ProductId INT = NULL, 
+    @SubBrandId INT = NULL, 
+    @StatementType VARCHAR(100) = '',
+    @newId INT = NULL OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @defaultProductId INT = ISNULL(@ProductId, 0);
+    DECLARE @defaultSubBrandId INT = ISNULL(@SubBrandId, 0);
+
+
+    IF @StatementType = 'Create'
+    BEGIN 
+     BEGIN TRANSACTION;
+        INSERT INTO SubBrandProductRelation (ProductId, SubBrandId) 
+        VALUES (@ProductId, @SubBrandId);	
+        
+        SET @newId = SCOPE_IDENTITY();
+        COMMIT TRANSACTION; -- Commit the transaction
+        RETURN @newId;
+    END 
+
+    ELSE IF @StatementType = 'GetById'
+    BEGIN
+        SELECT * FROM SubBrandProductRelation WHERE Id = @Id;
+    END
+
+    ELSE IF @StatementType = 'SubBrandProductRelationExists'
+    BEGIN
+        SELECT COUNT(1) FROM SubBrandProductRelation
+        WHERE SubBrandId = @defaultSubBrandId AND ProductId = @defaultProductId;
+    END
+        
+    ELSE IF @StatementType = 'GetAllByProductId'
+    BEGIN
+        SELECT * FROM SubBrandProductRelation WHERE ProductId = @ProductId;
+    END
+
+    ELSE IF @StatementType = 'GetAllBySubBrandId'
+    BEGIN
+        SELECT * FROM SubBrandProductRelation WHERE SubBrandId = @defaultSubBrandId;
+    END
+
+    ELSE IF @StatementType = 'GetAll'
+    BEGIN
+        SELECT * FROM SubBrandProductRelation;
+    END
+
+    ELSE IF @StatementType = 'GetAllFull'
+    BEGIN
+        SELECT RELATION.Id AS RelationId, PRODUCT.Id AS ProductId, SubBrand.Id AS SubBrandId
+        FROM SubBrandProductRelation AS RELATION
+        LEFT JOIN Products AS PRODUCT ON RELATION.ProductId = PRODUCT.Id
+        LEFT JOIN SubBrand AS SubBrand ON RELATION.SubBrandId = SubBrand.Id;
+    END
+
+    ELSE IF @StatementType = 'Update'
+    BEGIN
+      BEGIN TRANSACTION;
+        UPDATE SubBrandProductRelation 
+        SET ProductId = @ProductId, SubBrandId = @SubBrandId
+        WHERE Id = @id;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+      BEGIN TRANSACTION;
+        DELETE FROM SubBrandProductRelation WHERE Id = @id;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE IF @StatementType = 'DeleteByProduct'
+    BEGIN
+        DELETE FROM SubBrandProductRelation WHERE ProductId = @ProductId;
+    END
+
+        ELSE IF @StatementType = 'DeleteBySubBrand'
+    BEGIN
+        DELETE FROM SubBrandProductRelation WHERE SubBrandId = @defaultSubBrandId;
+    END
+
+    ELSE IF @StatementType = 'Truncate'
+    BEGIN
+      BEGIN TRANSACTION;
+        TRUNCATE TABLE SubBrandProductRelation;
+      COMMIT TRANSACTION;
+    END
+
+    ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+END

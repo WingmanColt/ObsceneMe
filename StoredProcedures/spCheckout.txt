@@ -1,0 +1,139 @@
+CREATE PROCEDURE [dbo].[spCheckout](
+    @id INT = NULL, 
+    @FullName NVARCHAR(254) = NULL,
+    @Email VARCHAR(254) = NULL,
+    @PhoneNumber VARCHAR(20) = NULL,
+    @Address NVARCHAR(200) = NULL,
+    @Country NVARCHAR(50) = NULL,
+    @City NVARCHAR(50) = NULL,
+    @State NVARCHAR(50) = NULL,
+    @PostalCode VARCHAR(50) = NULL,
+    @IsGuest BIT = 0,
+    @PickUpAtHome BIT = 0,
+    @PaymentCondition INT = 0,
+    @ApproveType INT = 0,
+    @CreatedOn VARCHAR(60) = NULL,
+    @ExpiredOn VARCHAR(60) = NULL,
+    @UserId NVARCHAR(254) = NULL,
+    @StatementType VARCHAR(100) = '',
+    @newId INT = NULL OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Validate parameters for specific operations
+    IF @StatementType IN ('Update', 'Delete', 'GetById') AND @Id IS NULL
+    BEGIN
+        RAISERROR('ID is required for Update and Delete operations', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+
+    DECLARE @defaultUserId NVARCHAR(254) = ISNULL(@UserId, '');
+
+    IF @StatementType = 'Create'
+    BEGIN 
+     BEGIN TRANSACTION;
+           BEGIN TRY
+        INSERT INTO Checkout
+        (FullName, Email, PhoneNumber, Address, Country, City, State, PostalCode, IsGuest, PickupAtHome, CreatedOn, ExpiredOn, UserId, ApproveType, PaymentCondition) 
+        VALUES 
+        (@FullName, @Email, @PhoneNumber, @Address, @Country, @City, @State, @PostalCode, @IsGuest, @PickupAtHome, @CreatedOn, @ExpiredOn, @UserId, @ApproveType, @PaymentCondition);
+       
+        SET @newId = SCOPE_IDENTITY(); 
+        COMMIT TRANSACTION; -- Commit the transaction
+        RETURN @newId;
+            END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+    END
+
+    ELSE IF @StatementType = 'GetById'
+    BEGIN
+        SELECT Id, FullName, Email, PhoneNumber, Address, Country, City, State, PostalCode, IsGuest, PickupAtHome, CreatedOn, ExpiredOn, UserId, ApproveType, PaymentCondition
+        FROM Checkout
+        WHERE Id = @id;
+    END
+    
+    ELSE IF @StatementType = 'GetByUserId'
+    BEGIN
+        SELECT Id, FullName, Email, PhoneNumber, Address, Country, City, State, PostalCode, IsGuest, PickupAtHome, CreatedOn, ExpiredOn, UserId, ApproveType, PaymentCondition
+        FROM Checkout
+        WHERE UserId = @defaultUserId;
+    END
+
+    ELSE IF @StatementType = 'CheckExistingUser'
+    BEGIN
+        SELECT Id, FullName, Email, PhoneNumber, Address, Country, City, State, PostalCode, IsGuest, PickupAtHome, CreatedOn, ExpiredOn, UserId, ApproveType, PaymentCondition 
+        FROM Checkout
+        WHERE Email = @Email AND PhoneNumber = @PhoneNumber AND Address = @Address;
+    END
+
+
+     ELSE IF @StatementType = 'Update'
+    BEGIN
+        BEGIN TRANSACTION;
+         BEGIN TRY
+             UPDATE Checkout
+             SET FullName = @FullName,
+            Email = @Email,
+            PhoneNumber = @PhoneNumber,
+            Address = @Address,
+            Country = @Country,
+            City = @City,
+            State = @State,
+            PostalCode = @PostalCode,
+            PickUpAtHome = @PickUpAtHome,
+            ApproveType = @ApproveType,
+            PaymentCondition = @PaymentCondition
+        WHERE Id = @Id;
+            SELECT @newId = SCOPE_IDENTITY();
+            COMMIT TRANSACTION;
+            RETURN @newId;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+    END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            DELETE FROM Checkout
+            WHERE Id = @id;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END 
+
+            ELSE IF @StatementType = 'Truncate'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            TRUNCATE TABLE Checkout;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+END

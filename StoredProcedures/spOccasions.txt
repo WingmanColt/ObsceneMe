@@ -1,0 +1,124 @@
+CREATE PROCEDURE [dbo].[spOccasions]
+(
+    @id INT = NULL,
+    @Title VARCHAR(254) = NULL, 
+    @Icon VARCHAR(254) = NULL,
+    @Shortname VARCHAR(50) = NULL,
+    @ProductsCount INT = 0,
+    @StatementType VARCHAR(100) = '',
+    @newId INT = NULL OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Parameter validation for specific operations
+    IF @StatementType IN ('GetProductsCount', 'UpdateProductsCount', 'Update', 'Delete') AND @id IS NULL
+    BEGIN
+        RAISERROR('ID is required for Update, Delete, and ProductsCount operations', 16, 1);
+        RETURN;  -- No transaction to rollback here
+    END
+
+    -- Handle different StatementType cases
+    IF @StatementType = 'Create'
+    BEGIN 
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            INSERT INTO Occasion (Title, Icon, Shortname, ProductsCount)
+            VALUES (@Title, @Icon, @Shortname, @ProductsCount);
+
+            SET @newId = SCOPE_IDENTITY();
+            COMMIT TRANSACTION;
+            RETURN @newId;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW; -- Re-throw the exception
+        END CATCH
+    END
+
+    ELSE IF @StatementType = 'GetAll'
+    BEGIN
+        SELECT Id, Title, Icon, Shortname, ProductsCount FROM Occasion;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetUsedOccasions'
+    BEGIN
+        SELECT Id, Title, Icon, Shortname, ProductsCount 
+        FROM Occasion
+        WHERE ProductsCount > 0;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetById'
+    BEGIN
+        SELECT Id, Title, Icon, Shortname, ProductsCount 
+        FROM Occasion
+        WHERE Id = @Id;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetProductsCount'
+    BEGIN
+        SELECT ProductsCount FROM Occasion WHERE Id = @id;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'UpdateProductsCount'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            UPDATE Occasion SET ProductsCount = @ProductsCount WHERE Id = @id;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'Update'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            UPDATE Occasion 
+            SET Title = @Title, ProductsCount = @ProductsCount, Shortname = @Shortname, Icon = @Icon 
+            WHERE Id = @id;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'Truncate'
+    BEGIN
+        TRUNCATE TABLE Occasion;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            DELETE FROM Occasion WHERE id = @id OR Shortname = @Shortname;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    -- Unsupported operation
+    ELSE
+    BEGIN
+        RAISERROR('Unsupported StatementType', 16, 1);
+        RETURN;
+    END
+END

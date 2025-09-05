@@ -1,0 +1,103 @@
+CREATE PROCEDURE [dbo].[spVariantAndVariantItemRelation](
+@id int = NULL,
+@VariantId int = NULL, 
+@VariantItemId int = NULL, 
+@StatementType varchar(100) = '',
+@newId int = null output)
+AS
+BEGIN
+SET NOCOUNT ON;
+
+    -- Parameter validation for specific operations
+    IF @StatementType IN ('Update', 'Delete') AND @id IS NULL
+    BEGIN
+        RAISERROR('ID is required for Update and Delete operations', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+
+DECLARE @defaultVariantItemId int = ISNULL(@VariantItemId, 0);
+DECLARE @defaultVariantId int = ISNULL(@VariantId, 0);
+
+      IF @StatementType = 'Create'
+       BEGIN 
+        BEGIN TRANSACTION;
+             INSERT INTO VariantAndVariantItemRelation
+			(VariantId, VariantItemId) VALUES (@VariantId, @VariantItemId)	 
+        
+        SET @newId = SCOPE_IDENTITY();
+        COMMIT TRANSACTION; -- Commit the transaction
+        RETURN @newId;
+       END 
+
+
+    ELSE IF @StatementType = 'Select'
+        BEGIN
+        SELECT * FROM VariantAndVariantItemRelation
+		WHERE VariantId = @defaultVariantId AND 
+        VariantItemId = @defaultVariantItemId
+        END
+
+ELSE IF @StatementType = 'Exists'
+BEGIN
+    SELECT CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM VariantAndVariantItemRelation
+            WHERE VariantId = @VariantId AND VariantItemId = @VariantItemId
+        ) THEN 1
+        ELSE 0
+    END AS RecordExists
+END
+        
+  IF @StatementType = 'GetAll'
+   BEGIN
+SELECT DISTINCT
+    VVIR.Id AS VVIRelationId,
+    V.vId AS VariantId,
+    V.Title AS Title,
+    V.Icon AS Icon,
+    VI.Id AS VariantItemId,
+    VI.Value AS Value,
+    VI.Image AS Image
+FROM
+    VariantAndVariantItemRelation AS VVIR
+JOIN
+    Variants AS V ON VVIR.VariantId = V.Id
+JOIN
+    VariantItem AS VI ON VVIR.VariantItemId = VI.Id;
+
+   END
+
+
+	 ELSE IF @StatementType = 'Update'
+        BEGIN
+          BEGIN TRANSACTION;
+            UPDATE VariantAndVariantItemRelation SET 
+            VariantId = @VariantId,
+            VariantItemId = @VariantItemId
+			 WHERE Id = @id
+          COMMIT TRANSACTION; -- Commit the transaction
+        END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+     BEGIN TRANSACTION;
+        DELETE FROM VariantAndVariantItemRelation
+        WHERE Id = @id
+     COMMIT TRANSACTION; -- Commit the transaction
+    END
+
+     ELSE IF @StatementType = 'Truncate'
+        BEGIN
+            TRUNCATE TABLE VariantAndVariantItemRelation;
+        END
+    ELSE
+    BEGIN
+        PRINT CONCAT('Unsupported StatementType: ', @StatementType);
+        RAISERROR('Unsupported StatementType', 16, 1);
+        ROLLBACK TRANSACTION; -- Rollback the transaction
+        RETURN;
+    END
+
+END

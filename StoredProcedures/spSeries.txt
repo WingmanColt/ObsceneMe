@@ -1,0 +1,138 @@
+CREATE PROCEDURE [dbo].[spSeries]
+    @id INT = NULL,
+    @BrandShortName NVARCHAR(50) = NULL,
+    @Title NVARCHAR(50) = NULL,
+    @Icon NVARCHAR(15) = NULL,
+    @Shortname NVARCHAR(50) = NULL,
+    @ProductsCount INT = 0,
+    @StatementType VARCHAR(100) = '',
+    @Take INT = NULL,
+    @newId INT = NULL OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Parameter validation for operations that require an ID
+    IF @StatementType IN ('GetTotalProductsCount', 'GetById', 'UpdateProductsCount', 'Update', 'Delete') AND @id IS NULL
+    BEGIN
+        RAISERROR('ID is required for this operation', 16, 1);
+        RETURN;  -- No transaction is started here, so no need to rollback
+    END
+
+    -- Handle different StatementType cases
+    IF @StatementType = 'Create'
+    BEGIN 
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            INSERT INTO Series (Title, BrandShortName, Icon, Shortname, ProductsCount)
+            VALUES (@Title, @BrandShortName, @Icon, @Shortname, @ProductsCount);
+
+            SET @newId = SCOPE_IDENTITY(); 
+            COMMIT TRANSACTION;
+            RETURN @newId;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;  -- Re-throw the caught exception
+        END CATCH
+    END
+
+    ELSE IF @StatementType = 'GetAll'
+    BEGIN
+        -- Specify column names instead of using SELECT *
+        SELECT Id, BrandShortName, Title, Icon, Shortname, ProductsCount FROM Series;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetUsedSeries'
+    BEGIN
+        SELECT * 
+        FROM Series
+        WHERE ProductsCount > 0;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetById'
+    BEGIN
+        SELECT *
+        FROM Series 
+        WHERE Id = @Id;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'GetTotalProductsCount'
+    BEGIN
+        SELECT ProductsCount 
+        FROM Series 
+        WHERE Id = @id;
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'UpdateProductsCount'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            UPDATE Series 
+            SET ProductsCount = @ProductsCount
+            WHERE Id = @id;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'Update'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            UPDATE Series 
+            SET Title = @Title, Shortname = @Shortname, Icon = @Icon, BrandShortName = @BrandShortName
+            WHERE Id = @id;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'Delete'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            DELETE FROM Series 
+            WHERE Id = @id;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    ELSE IF @StatementType = 'Truncate'
+    BEGIN
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            TRUNCATE TABLE Series;
+            COMMIT TRANSACTION;
+        END TRY
+        BEGIN CATCH
+            ROLLBACK TRANSACTION;
+            THROW;
+        END CATCH
+        RETURN;
+    END
+
+    -- Unsupported StatementType handling
+    ELSE
+    BEGIN
+        RAISERROR('Unsupported StatementType', 16, 1);
+        RETURN;
+    END
+END
