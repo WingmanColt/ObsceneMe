@@ -1,0 +1,33 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+# Visual Studio
+.angular/
+dist/
+
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build folders
+bin/
+obj/
+Debug/
+Release/
+
+# Node modules
+node_modules/
+/node_modules
+
+# Config / sensitive files
+appsettings.json
+appsettings.Production.json
+appsettings.Development.json
+
+# Others
+*.log
+*.cache
+*.DS_Store
