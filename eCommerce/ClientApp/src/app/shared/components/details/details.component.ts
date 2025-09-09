@@ -130,10 +130,12 @@ export class DetailsComponent implements OnInit, OnDestroy {
     // if (!this.errorMessages($event.product, this.counter, $event.shouldSelectVariant)) return;
 
     if (!$event.instant) {
+      console.log(this.isInCart)
       if (this.isInCart != this.purchaseStatus.None) return;
 
+      console.log($event, this.isInCart)
       this.isInCart = this.purchaseStatus.Processing;
-
+      console.log($event, this.isInCart)
      // const variants = await this.filterArrays($event.product);
 
       await this.cartService.addToCartAsync($event.product, this.counter, $event.product.variants).then((result) => {

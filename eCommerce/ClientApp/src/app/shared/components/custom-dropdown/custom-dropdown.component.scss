@@ -73,3 +73,13 @@
     }
   }
 }
+
+.custom-dropdown.disabled {
+  opacity: 0.6;
+  pointer-events: none; // prevent interaction
+}
+
+.dropdown-option.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

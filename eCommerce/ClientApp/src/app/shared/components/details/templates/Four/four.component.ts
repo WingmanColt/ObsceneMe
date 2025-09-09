@@ -1,11 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { environment } from "environments/environment";
-import { Observable, of, switchMap } from "rxjs";
+import { Observable, of, Subscription, switchMap } from "rxjs";
 import { BaseService } from "src/app/Services/base.service";
 import { CartService } from "src/app/Services/Cart/cart.service";
 import { ProductsService } from "src/app/Services/Product/products.service";
+import { SiblingEventService } from "src/app/Services/Siblings/sibling-event.service";
 import { BundleItem } from "src/app/shared/classes/bundle";
 import { Trademarks } from "src/app/shared/classes/enums/trademarks";
 import { Images, MarketStatus, Products, PurchaseStatus } from "src/app/shared/classes/product";
@@ -18,7 +19,7 @@ import { GroupedVariant } from "src/app/shared/classes/variants";
  templateUrl: "./four.component.html",
  styleUrls: ["./four.component.scss"],
 })
-export class FourComponent implements OnInit {
+export class FourComponent implements OnInit, OnDestroy {
 
  @Input() product: ProductDetails;
  @Input() thumbImages: Images[];
@@ -45,7 +46,9 @@ export class FourComponent implements OnInit {
 
  purchaseStatus = PurchaseStatus;
  outputMessage: string;
+ 
  promoText$: Observable<string>;
+ private sub!: Subscription;
 
  @Output() chartModal = new EventEmitter<boolean>();
  @Output() decrement = new EventEmitter<any>();
@@ -59,12 +62,26 @@ export class FourComponent implements OnInit {
   public cartService: CartService, 
   private productService: ProductsService,
   public baseService: BaseService,
-  private translate: TranslateService) { }
+  private translate: TranslateService,
+  private siblingService: SiblingEventService) { }
 
  ngOnInit(): void {
   this.cols = this.isMobile ? "col-12" : "col-6";
   this.promoText$ = this.getBundlePromoText(this.product);
+
+  this.sub = this.siblingService.emitChange.subscribe(() => {
+    // Reset all bundle items
+    this.product.bundle?.bundleItems?.forEach(item => (item.checked = false));
+
+    // Reset purchase status
+    this.isInCart = this.purchaseStatus.None;
+  });
  }
+  ngOnDestroy() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
+  }
 
 incrementCounter() {
     this.increment.emit();
@@ -79,10 +96,12 @@ AddToCart(mainBtn: boolean, product: Products, instant: boolean) {
     this.outputMessage = `You cannot purchase more items than available.`;
     return;
   }
-
+ 
   if (mainBtn && this.isInCart !== this.purchaseStatus.Finish) {
     let shouldSelectVariant = true; // if variants are required
     this.addToCart.emit({ product, shouldSelectVariant, instant });
+    
+  console.log("emited")
   }
 }
 
@@ -130,8 +149,6 @@ async onBundleChange($event): Promise<void> {
   const allProducts = await this.productService.getProductsAsync();
   const product = allProducts.find(p => p.id === selectedItem.productId);
 
-  console.log("📦 Selected item:", selectedItem);
-
   if (!product) {
     console.warn('Product not found for bundle item:', selectedItem);
     this.isInCart = this.purchaseStatus.None;
@@ -160,7 +177,6 @@ async onBundleChange($event): Promise<void> {
     }, 500);
   }
 
-  console.log("✅ Final cart update:", selectedItem.checked ? "Added" : "Removed", selectedItem);
 }
 
 

@@ -15,13 +15,17 @@ export class FastOrderComponent {
     @Input() product: Products;
     @Input() col: string;
     @Input() isVariantSelected: boolean;
+    @Input() isMobile: boolean;
 
     @ViewChild("fastOrderModal") FastOrderModal: AlertModalComponent | undefined;
 
     checkoutForm: UntypedFormGroup | undefined;
     isInCart: number = 0;
 
-    constructor(private fb: UntypedFormBuilder, private orderService: OrderService) {
+    constructor(
+        private fb: UntypedFormBuilder, 
+        private orderService: OrderService) {
+
         this.buildForm();
     }
 
@@ -44,25 +48,14 @@ export class FastOrderComponent {
 
             if (res?.success) {
                 this.isInCart = 2;
-                this.FastOrderModal.text = "Order Placed Successfully. Order Code: " + res.successMessage;
-                this.FastOrderModal.icon = "play las la-mobile-alt";
-                this.FastOrderModal.iconColor = "color:rgb(205, 121, 81)";
-                this.FastOrderModal?.openModal();
             } else {
                 this.isInCart = 3;
                 this.FastOrderModal.text = res.failureMessage;
-                this.FastOrderModal.icon = "play las la-times";
-                this.FastOrderModal.iconColor = "color:rgb(205, 100, 61)";
-                this.FastOrderModal?.openModal();
             }
         } catch (error) {
             // Handle errors as needed
             console.error('Error during order creation:', error);
             this.isInCart = 3;
-            this.FastOrderModal.text = 'An error occurred during order creation.';
-            this.FastOrderModal.icon = 'play las la-times';
-            this.FastOrderModal.iconColor = 'color:rgb(205, 100, 61)';
-            this.FastOrderModal?.openModal();
         }
     }
 

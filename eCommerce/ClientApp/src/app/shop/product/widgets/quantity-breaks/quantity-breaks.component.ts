@@ -61,7 +61,6 @@ toggleSelection(selectedItem: BundleItem) {
     selectedItem: updatedBundleItem
   });
 
-  console.log("✅ Final toggle state:", updatedBundleItem);
 }
 
 }

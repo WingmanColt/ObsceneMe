@@ -221,13 +221,14 @@ button:focus {
 
 .fast-order {
   .form-control {
-    height: 40px;
+    height: 30px;
     border-bottom-left-radius: 8px;
     border-top-left-radius: 8px;
   }
 
   .btn {
-    height: 40px;
+    height: 30px;
+    font-size: .9em;
     border-bottom-right-radius: 8px;
     border-top-right-radius: 8px;
   }

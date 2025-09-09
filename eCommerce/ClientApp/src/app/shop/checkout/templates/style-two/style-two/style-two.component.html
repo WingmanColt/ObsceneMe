@@ -184,87 +184,143 @@
                     <label for="country" class="label shipping__row-label"
                       >{{ "Country" | translate }} *</label
                     >
-                    <div class="input-wrap profile-form-group">
+                    <div class="input-wrap profile-form-group"
+                        [ngClass]="{'is-invalid': checkoutForm?.controls['country']?.invalid && checkoutForm?.controls['country']?.touched}">
                       <app-custom-dropdown
                         [dropdownArray]="avaliableCountries"
                         [iconUrl]="'./assets/icons/'"
                         [iconExt]="'.svg'"
                         (selectedValues)="setCountryValue($event)"
                         [defaultValue]="selectedCountry"
-                      ></app-custom-dropdown>
+                        [formControl]="checkoutForm?.controls['country']"
+                        [disabled]="true">
+                      </app-custom-dropdown>
                     </div>
+                    <div class="invalid-feedback" *ngIf="checkoutForm?.controls['country']?.invalid && checkoutForm?.controls['country']?.touched">
+                      {{ 'Country is required' | translate }}
+                    </div>
+
                   </div>
-                  <div id="shipping_methods">
-                    <div class="checkout__row shipping__row">
-                        <label for="order-delivery" class="label shipping__row-label">{{ "Shipping" | translate }}</label>
-                        <div class="input-wrap">
-                            <div class="payment-section container" *ngIf="settings.shipping == 'expandable'">
-                                <div class="border rounded mb-2" *ngFor="
-                                              let option of shippingMethods;
-                                              let i = index
-                                            " [ngClass]="{ active: i === selectedShippingIndex }">
-                                    <!-- This line is updated -->
-                                    <div class="d-flex justify-content-between align-items-center p-2">
-                                        <input type="radio" [formControl]="
-                                                  checkoutForm?.controls['shippingType']
-                                                " name="shippingOption" [(ngModel)]="selectedShippingIndex" [value]="i" (change)="toggleCollapseShipping(i)" />
-                                        <label class="flex-grow-1 ms-3">{{ option.label | translate }}</label>
-                                        <ul role="list">
-                                            <li class="payment-icon" [ngClass]="option.icon" aria-current="false">
-                                                <span class="visually-hidden">
-                                                    {{ option.label | translate }}
-                                                </span>
-                                            </li>
-                                        </ul>
-                                        <span *ngIf="option.freeShipping" class="badge badge-dark">{{ "Free Shipping" | translate }}</span>
-                                    </div>
-                                    <div [ngbCollapse]="!option.isExpanded">
-                                        <div class="p-2">
-                                            <p class="bold text-default">
-                                                <i class="las la-exclamation-circle"></i> {{ option.content | translate }}
-                                            </p>
-                                            <div class="row">
-                                                <div class="custom-control custom-checkbox collection-filter-checkbox col-6" *ngFor="let ent of orderReceivePlace">
-                                                    <input type="checkbox" [value]="ent" [checked]="checked(ent)" [id]="ent" (change)="appliedFilter($event)" class="custom-control-input" [formControl]="
-                                                        checkoutForm?.controls['pickupAtHome']
-                                                      " />
-                                                    <label class="custom-control-label" for="{{ ent }}">{{ ent | translate }}</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                
-                            <app-custom-dropdown *ngIf="settings.shipping == 'select'" [iconUrl]="'./assets/icons/'" [iconExt]="'.svg'" [dropdownArray]="shippingMethods" [defaultValue]="selectedShipping" (selectedValues)="setShippingValue($event)"></app-custom-dropdown>
+
+                  
+              <div id="shipping_methods">
+                <div class="checkout__row shipping__row">
+                  <label for="order-delivery" class="label shipping__row-label">
+                    {{ "Shipping" | translate }}
+                  </label>
+                  <div class="input-wrap"
+                      [ngClass]="{'is-invalid': checkoutForm?.controls['shippingType']?.invalid && checkoutForm?.controls['shippingType']?.touched}">
+                    
+                    <!-- Expandable shipping -->
+                    <div class="payment-section container" *ngIf="settings.shipping == 'expandable'">
+                      <div class="border rounded mb-2"
+                          *ngFor="let option of shippingMethods; let i = index"
+                          [ngClass]="{ active: i === selectedShippingIndex }">
+                        
+                        <div class="d-flex justify-content-between align-items-center p-2">
+                          <input type="radio"
+                                [formControl]="checkoutForm?.controls['shippingType']"
+                                name="shippingOption"
+                                [(ngModel)]="selectedShippingIndex"
+                                [value]="i"
+                                (change)="toggleCollapseShipping(i)"
+                                [ngClass]="{'is-invalid': checkoutForm?.controls['shippingType']?.invalid && checkoutForm?.controls['shippingType']?.touched}" />
+                          
+                          <label class="flex-grow-1 ms-3">{{ option.label | translate }}</label>
+                          
+                          <ul role="list">
+                            <li class="payment-icon" [ngClass]="option.icon" aria-current="false">
+                              <span class="visually-hidden">
+                                {{ option.label | translate }}
+                              </span>
+                            </li>
+                          </ul>
+                          
+                          <span *ngIf="option.freeShipping" class="badge badge-dark">
+                            {{ "Free Shipping" | translate }}
+                          </span>
                         </div>
+                        
+                        <!-- Collapsible shipping content -->
+                        <div [ngbCollapse]="!option.isExpanded">
+                          <div class="p-2">
+                            <p class="bold text-default">
+                              <i class="las la-exclamation-circle"></i> {{ option.content | translate }}
+                            </p>
+                            <div class="row">
+                              <div class="custom-control custom-checkbox collection-filter-checkbox col-6"
+                                  *ngFor="let ent of orderReceivePlace">
+                                <input type="checkbox"
+                                      [value]="ent"
+                                      [checked]="checked(ent)"
+                                      [id]="ent"
+                                      (change)="appliedFilter($event)"
+                                      class="custom-control-input"
+                                      [formControl]="checkoutForm?.controls['pickupAtHome']"
+                                      [ngClass]="{'is-invalid': checkoutForm?.controls['pickupAtHome']?.invalid && checkoutForm?.controls['pickupAtHome']?.touched}" />
+                                <label class="custom-control-label" for="{{ ent }}">
+                                  {{ ent | translate }}
+                                </label>
+                              </div>
+                            </div>
+                            
+                            <!-- Error for pickupAtHome -->
+                            <div class="invalid-feedback"
+                                *ngIf="checkoutForm?.controls['pickupAtHome']?.invalid && checkoutForm?.controls['pickupAtHome']?.touched">
+                              {{ 'Please select at least one option' | translate }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                    
+                    <!-- Select dropdown shipping -->
+                    <app-custom-dropdown *ngIf="settings.shipping == 'select'"
+                                        [iconUrl]="'./assets/icons/'"
+                                        [iconExt]="'.svg'"
+                                        [dropdownArray]="shippingMethods"
+                                        [defaultValue]="selectedShipping"
+                                        (selectedValues)="setShippingValue($event)"
+                                        [formControl]="checkoutForm?.controls['shippingType']"
+                                        [ngClass]="{'is-invalid': checkoutForm?.controls['shippingType']?.invalid && checkoutForm?.controls['shippingType']?.touched}">
+                    </app-custom-dropdown>
+                  </div>
+
+                  <!-- Error for shippingType -->
+                  <div class="invalid-feedback"
+                      *ngIf="checkoutForm?.controls['shippingType']?.invalid && checkoutForm?.controls['shippingType']?.touched">
+                    {{ 'Please select a shipping method' | translate }}
+                  </div>
                 </div>
-                  <div *ngIf="this.selectedShippingModel">
-                    <div class="checkout__row checkout__row_auth">
-                      <div class="input-wrap profile-form-group">
-                        <div
-                          class="custom-control custom-checkbox"
-                          *ngFor="let ent of orderReceivePlace"
-                        >
-                          <input
-                            type="checkbox"
+              </div>
+
+              <!-- Extra pickup block -->
+              <div *ngIf="this.selectedShippingModel">
+                <div class="checkout__row checkout__row_auth">
+                  <div class="input-wrap profile-form-group">
+                    <div class="custom-control custom-checkbox"
+                        *ngFor="let ent of orderReceivePlace">
+                      <input type="checkbox"
                             [value]="ent"
                             [checked]="checked(ent)"
                             [id]="ent"
                             (change)="appliedFilter($event)"
                             class="custom-control-input"
-                            [formControl]="
-                              checkoutForm?.controls['pickupAtHome']
-                            "
-                          />
-                          <label class="custom-control-label" for="{{ ent }}">{{
-                            ent | translate
-                          }}</label>
-                        </div>
-                      </div>
+                            [formControl]="checkoutForm?.controls['pickupAtHome']"
+                            [ngClass]="{'is-invalid': checkoutForm?.controls['pickupAtHome']?.invalid && checkoutForm?.controls['pickupAtHome']?.touched}" />
+                      <label class="custom-control-label" for="{{ ent }}">
+                        {{ ent | translate }}
+                      </label>
+                    </div>
+                    
+                    <!-- Error for pickupAtHome -->
+                    <div class="invalid-feedback"
+                        *ngIf="checkoutForm?.controls['pickupAtHome']?.invalid && checkoutForm?.controls['pickupAtHome']?.touched">
+                      {{ 'Please select at least one option' | translate }}
                     </div>
                   </div>
+                </div>
+              </div>
                   <div>
                     <div class="checkout__row checkout__row_auth">
                       <div class="input-wrap profile-form-group">
@@ -330,6 +386,7 @@
                           </div>
                         </div>
                       </div>
+
                     </div>
                   </div>
                 </div>
@@ -486,7 +543,7 @@
                     </div>
                   </div>
                   <br />
-                  <div class="checkout__row checkout__row_checkbox">
+                     <div class="checkout__row checkout__row_checkbox">
                     <div class="custom-control custom-checkbox">
                       <input
                         class="custom-control-input"
@@ -508,7 +565,7 @@
                       </label>
                     </div>
                   </div>
-                  <div class="checkout__row checkout__row_checkbox">
+                   <div class="checkout__row checkout__row_checkbox">
                     <div class="read-more">
                       <a
                         [routerLink]="['/pages/returns-warranty']"
@@ -520,7 +577,8 @@
                       }}</a>
                     </div>
                   </div>
-                  <div class="checkout__row checkout__row_submit desktop-only">
+                <br />
+                  <div class="checkout__row checkout__row_submit" *ngIf="!isMobile">
                     <div
                       class="alert-box"
                       *ngIf="this.outputMessage?.length > 0"
@@ -574,9 +632,9 @@
               </div>
               <button
                 type="submit"
-                class="button-submit mobile-only"
+                class="button-submit" 
                 [class.disabled]="!checkoutForm?.valid"
-                *ngIf="this.products?.length && isFinalTab"
+                *ngIf="this.products?.length && isFinalTab && isMobile"
               >
                 <span *ngIf="!this.btnSubmitLoader">
                   <i class="las la-credit-card"> </i>

@@ -1,5 +1,6 @@
-<div class="custom-dropdown">
-  <div class="selected-item" (click)="toggleDropdown()">
+<div class="custom-dropdown" [ngClass]="{ 'disabled': disabled }">
+  <div class="selected-item"
+       (click)="!disabled && toggleDropdown()">
     <div class="selected-content">
       <!-- Display selected item icon and label -->
       <ng-container *ngIf="selectedItems.length > 0; else defaultOption">
@@ -14,19 +15,25 @@
         <span class="default-label">{{ 'Select Option' | translate }}</span>
       </ng-template>
     </div>
-    <span class="dropdown-arrow" [class.active]="showDropdown" *ngIf="!openDirectionBottom" ></span>
-    <span class="dropdown-arrow" [class.active]="!showDropdown" *ngIf="openDirectionBottom" ></span>
-
+    
+    <!-- Only show arrows if not disabled -->
+    <span class="dropdown-arrow" 
+          [class.active]="showDropdown" 
+          *ngIf="!openDirectionBottom && !disabled"></span>
+    <span class="dropdown-arrow" 
+          [class.active]="!showDropdown" 
+          *ngIf="openDirectionBottom && !disabled"></span>
   </div>
 
+  <!-- Dropdown options -->
   <div class="dropdown-options" 
-       [class.active]="showDropdown" 
+       [class.active]="showDropdown && !disabled" 
        [ngStyle]="{'top': openDirectionBottom ? '100%' : 'auto', 'bottom': openDirectionBottom ? 'auto' : '100%'}">
     
     <!-- First dropdown array -->
     <div class="dropdown-option" *ngFor="let ent of dropdownArray" 
-         [ngClass]="{'active': ent.isSelected}" 
-         (click)="selectItem(ent, true)">
+         [ngClass]="{ 'active': ent.isSelected, 'disabled': ent.disabled }" 
+         (click)="!ent.disabled && selectItem(ent, true)">
       <div class="option-content">
         <img *ngIf="ent.image?.length > 0 && !ent.icon" 
              [src]="getIconUrl(ent.image)" class="option-icon" />
@@ -37,13 +44,13 @@
       <span *ngIf="ent.badge?.length > 0" class="badge">{{ ent.badge | translate }}</span>
     </div>
 
-    <!-- Divider between the two arrays -->
+    <!-- Divider -->
     <hr *ngIf="dropdownArrayTwo?.length > 0" class="dropdown-divider" />
 
     <!-- Second dropdown array -->
     <div class="dropdown-option" *ngFor="let ent of dropdownArrayTwo" 
-         [ngClass]="{'active': ent.isSelected}" 
-         (click)="selectItem(ent, false)">
+         [ngClass]="{ 'active': ent.isSelected, 'disabled': ent.disabled }" 
+         (click)="!ent.disabled && selectItem(ent, false)">
       <div class="option-content">
         <img *ngIf="ent.image?.length > 0 && !ent.icon" 
              [src]="getIconUrl(ent.image)" class="option-icon" />

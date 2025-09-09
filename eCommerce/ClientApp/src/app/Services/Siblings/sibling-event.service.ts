@@ -4,7 +4,6 @@ import { EventEmitter, Injectable, Output } from "@angular/core";
  providedIn: "root",
 })
 export class SiblingEventService {
- @Output() public slideTo: EventEmitter<any> = new EventEmitter();
-
+ public emitChange: EventEmitter<any> = new EventEmitter<any>();
  constructor() {}
 }

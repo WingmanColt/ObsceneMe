@@ -16,7 +16,7 @@ export class CustomDropdownComponent implements OnInit, OnChanges {
   @Input() openDirectionBottom: boolean = true;
   @Input() multipleSelection: boolean = false; // Allow multiple selections by default
   @Input() selectedValue: string = ''; // expect the label string to select
-
+  @Input() disabled: boolean = false;
   @Output() selectedValues = new EventEmitter<DropdownItem[]>(); // Emits an array of selected values
 
   showDropdown: boolean = false;

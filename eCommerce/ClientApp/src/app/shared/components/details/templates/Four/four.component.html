@@ -141,7 +141,11 @@
           (bundleChanged)="onBundleChange($event)">
         </app-quantity-breaks>
         </div>
-        
+
+        <div class="product-item__info">
+        <app-fast-order [isMobile]="isMobile"></app-fast-order>
+        </div>
+
         <div class="alert-box" *ngIf="this.outputMessage?.length > 0">
           <svg
             xmlns="http://www.w3.org/2000/svg"

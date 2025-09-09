@@ -9,6 +9,7 @@ import {
 import { UntypedFormGroup } from "@angular/forms";
 import { environment } from "environments/environment";
 import { CartService } from "src/app/Services/Cart/cart.service";
+import { BreakpointDetectorService } from "src/app/Services/Devices/breakpoint-detector.service";
 import { DiscountModalService } from "src/app/Services/Modal/modal.service";
 import { SubscriptionTrackerService } from "src/app/Services/Tracker/subscription-tracker.service";
 import { BaseService } from "src/app/Services/base.service";
@@ -29,6 +30,7 @@ export class StyleTwoComponent implements OnInit, OnDestroy {
   settings = this.env.pagesSettings.CheckoutSettings;
   paymentMethods: PaymentType[]  = this.settings.PaymentTypes;
   shippingMethods: ShippingType[] = this.settings.ShippingTypes;
+  isMobile: boolean;
 
   @Input() products: ProductById[];
   @Input() checkoutForm: UntypedFormGroup | undefined;
@@ -50,7 +52,6 @@ export class StyleTwoComponent implements OnInit, OnDestroy {
   selectedShippingIndex: number | null = null;
   selectedShippingModel: ShippingType;
 
-  
   selectedShipping: string;
   selectedPayment: string;
   selectedCountry: string;
@@ -71,10 +72,12 @@ export class StyleTwoComponent implements OnInit, OnDestroy {
     public cartService: CartService,
     public baseService: BaseService,
     private modalService: DiscountModalService,
-    private subTracker: SubscriptionTrackerService
+    private subTracker: SubscriptionTrackerService,
+    private deviceService: BreakpointDetectorService
   ) {}
 
   async ngOnInit() {
+  this.isMobile = this.deviceService.isDevice("Mobile");
   const welcomeCoupon = await this.modalService.getModalState();
 
     if (welcomeCoupon == 2) {

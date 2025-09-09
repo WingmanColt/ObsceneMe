@@ -6,6 +6,7 @@ import { Currency } from "../../classes/settings";
 import { BaseService } from "src/app/Services/base.service";
 import { environment } from "environments/environment";
 import { Products } from "../../classes/product";
+import { SiblingEventService } from "src/app/Services/Siblings/sibling-event.service";
 
 @Component({
     selector: "app-cart-menu",
@@ -33,7 +34,8 @@ export class CartMenuComponent implements OnInit, OnDestroy {
         public productsService: ProductsService,
         public cartService: CartService,
         public baseService: BaseService,
-        private rendererFactory: RendererFactory2
+        private rendererFactory: RendererFactory2,
+        private siblingService: SiblingEventService
     ) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
     }
@@ -55,6 +57,9 @@ export class CartMenuComponent implements OnInit, OnDestroy {
         if (this.settings.myCartSettings.overlay) 
             this.toggleOverlay(false);
     }
+      emitProductRemove() {
+        this.siblingService.emitChange.emit();
+     }
 
     private initSubscriptions(): void {
         this.cartService.cartProducts$
@@ -90,6 +95,7 @@ export class CartMenuComponent implements OnInit, OnDestroy {
     async removeItem(product: Products): Promise<void> {
         this.isRemoving = true;
         await this.cartService.removeCartItem(product);
+        this.emitProductRemove();
         this.isRemoving = false;
     }
     async toggleCart(): Promise<void> {
